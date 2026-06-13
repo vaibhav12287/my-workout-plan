@@ -1030,7 +1030,7 @@ const stats = {
   ],
 };
 
-function TagBadge({ type }) {
+function TagBadge({ type }: { type: string }) {
   const map = {
     sleep: { bg: "#1a1a3a", text: "#6a6aff", label: "SLEEP" },
     health: { bg: "#1a3a1a", text: "#47ff8a", label: "HEALTH" },
@@ -1038,7 +1038,7 @@ function TagBadge({ type }) {
     work: { bg: "#1a2a3a", text: "#47b8ff", label: "WORK" },
     gym: { bg: "#3a1a1a", text: "#ff4747", label: "GYM" },
   };
-  const s = map[type] || map.health;
+  const s = map[type as keyof typeof map] || map.health;
   return (
     <span
       style={{
@@ -1056,7 +1056,7 @@ function TagBadge({ type }) {
   );
 }
 
-function ExerciseTag({ tag }) {
+function ExerciseTag({ tag }: { tag: string }) {
   if (!tag) return null;
   const isCompound = tag.startsWith("COMPOUND");
   const isHealth = tag.includes("health");
@@ -1080,10 +1080,10 @@ function ExerciseTag({ tag }) {
 
 export default function CoachDashboard() {
   const [activeTab, setActiveTab] = useState(0);
-  const [expandedDay, setExpandedDay] = useState(null);
-  const [expandedExercise, setExpandedExercise] = useState(null);
+  const [expandedDay, setExpandedDay] = useState<number | null>(null);
+  const [expandedExercise, setExpandedExercise] = useState<string | null>(null);
 
-  const tabStyle = (i) => ({
+  const tabStyle = (i: number) => ({
     padding: "9px 13px",
     fontSize: 12,
     fontWeight: activeTab === i ? 700 : 500,
