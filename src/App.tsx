@@ -1,81 +1,4 @@
-import { useState, useEffect } from "react";
-
-// ─── TYPES ────────────────────────────────────────────────────────────────────
-
-interface SetLog {
-  weight: string;
-  reps: string;
-  done: boolean;
-}
-
-interface ExerciseLog {
-  [setIndex: number]: SetLog;
-}
-
-interface WorkoutDayLog {
-  [exerciseKey: string]: ExerciseLog;
-}
-
-interface WorkoutLog {
-  [dateKey: string]: WorkoutDayLog;
-}
-
-interface CalorieEntry {
-  id: string;
-  label: string;
-  kcal: number;
-  time: string;
-}
-
-interface CalorieLog {
-  [dateKey: string]: CalorieEntry[];
-}
-
-interface SleepEntry {
-  bedtime: string; // "23:00"
-  wakeTime: string; // "07:30"
-  quality: number; // 1–5
-  notes: string;
-}
-
-interface SleepLog {
-  [dateKey: string]: SleepEntry;
-}
-
-// ─── HELPERS ──────────────────────────────────────────────────────────────────
-
-function todayKey(): string {
-  return new Date().toISOString().slice(0, 10);
-}
-
-function getTodayDayName(): string {
-  return [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ][new Date().getDay()];
-}
-
-function loadLS<T>(key: string, fallback: T): T {
-  try {
-    const v = localStorage.getItem(key);
-    return v ? (JSON.parse(v) as T) : fallback;
-  } catch {
-    return fallback;
-  }
-}
-
-function saveLS(key: string, value: unknown): void {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch {}
-}
-
-// ─── COLORS ───────────────────────────────────────────────────────────────────
+import { useState } from "react";
 
 const COLORS = {
   bg: "#0f0f0f",
@@ -93,41 +16,38 @@ const COLORS = {
   textDim: "#aaaaaa",
 };
 
-const tabs = [
-  "📅 Schedule",
-  "🏋️ Workout",
-  "🥗 Meals",
-  "😴 Sleep",
-  "📊 Goals",
-  "🔥 Calories",
-  "📋 Sets",
-  "🌙 Sleep Log",
-];
-
-// ─── SCHEDULE DATA ────────────────────────────────────────────────────────────
+const tabs = ["📅 Schedule", "🏋️ Workout", "🥗 Meals", "😴 Sleep", "📊 Goals"];
 
 const scheduleData = [
   {
     time: "07:30",
-    label: "WAKE UP",
+    label: "WAKE UP — Zero Snooze",
     detail:
-      "No snooze. Open curtains — morning sunlight resets your circadian clock. Splash cold water on face.",
+      "One alarm. Stand up immediately. Snooze fragments sleep and makes grogginess worse (sleep inertia). Open curtains right away — morning sunlight resets your circadian clock.",
     type: "sleep",
     icon: "🌅",
   },
   {
-    time: "07:35",
-    label: "Hydrate First",
+    time: "07:31",
+    label: "☀️ Sunlight — 5 min",
     detail:
-      "400ml water immediately. You're dehydrated after 7+ hours of sleep. Do this before anything else.",
+      "Step to window or outside for 2–5 min. Morning sunlight on face/arms triggers cortisol rise (your body's natural wake signal), suppresses residual melatonin, and sets your sleep timer for exactly 16 hours later — meaning you'll feel sleepy right at 23:00. Even on cloudy days, do this.",
     type: "health",
+    icon: "☀️",
+  },
+  {
+    time: "07:35",
+    label: "💧 Water #1 — 400ml",
+    detail:
+      "2 full glasses immediately on waking. You've had zero water for 7.5 hours — most dehydrated point of your day. Do this before phone, before anything else.",
+    type: "water",
     icon: "💧",
   },
   {
     time: "07:40",
     label: "Pre-Workout Power Shake",
     detail:
-      "Blend: 2 bananas + 1.5 scoops whey + 3 tbsp oats + 300ml milk + 1 tsp peanut butter. ~550 kcal, 65g carbs, 45g protein. This is breakfast + pre-workout in one. Drink fast.",
+      "Blend: 2 bananas + 1.5 scoops whey + 3 tbsp oats + 300ml milk + 1 tbsp peanut butter + 1 tbsp ground alsi (flaxseeds) + 1 tsp creatine powder. ~560 kcal | 65g carbs | 46g protein. Drink fast — you leave in 15 min.",
     type: "food",
     icon: "🥤",
   },
@@ -135,7 +55,7 @@ const scheduleData = [
     time: "07:55",
     label: "Leave for Gym",
     detail:
-      "Bag packed the night before. Carry: 1L water, shaker with dry post-workout scoop, earphones.",
+      "Bag packed the night before. Carry: 1L water bottle, shaker with 1 dry scoop whey for post-workout, earphones.",
     type: "work",
     icon: "🎧",
   },
@@ -143,23 +63,39 @@ const scheduleData = [
     time: "08:30",
     label: "GYM — Dynamic Warm-Up (5 min)",
     detail:
-      "Never skip: arm circles, hip circles, bodyweight squats x10, leg swings. You've been asleep 1 hour ago — cold muscles = injury.",
+      "Never skip: arm circles x10, hip circles x10, bodyweight squats x10, leg swings x10 each side, band pull-aparts if available. Cold muscles + heavy weights = injury. You woke up 1 hour ago.",
     type: "gym",
     icon: "🔥",
   },
   {
     time: "08:35",
-    label: "GYM — Main Session (75–80 min)",
+    label: "💧 Water #2 — 500–750ml during gym",
     detail:
-      "Per weekly split. Compounds first, accessories after. Log every set and weight in Notes app.",
+      "Sip every 2–3 sets throughout. Don't chug all at once — causes cramps mid-set. Finish the bottle by the time you're done. 1% dehydration = 10% drop in strength output.",
+    type: "water",
+    icon: "💧",
+  },
+  {
+    time: "08:35",
+    label: "GYM — Main Session (75 min)",
+    detail:
+      "Per weekly split (see Workout tab). Compounds first, accessories after. LOG EVERY SET — weight used + reps done — in your Notes app. This is how you track progressive overload. No log = no progress.",
     type: "gym",
     icon: "🏋️",
+  },
+  {
+    time: "09:50",
+    label: "GYM — Cool Down (5 min)",
+    detail:
+      "Static stretches: chest doorway stretch, lat stretch, quad stretch, hamstring stretch. 30 sec each. Reduces DOMS for the next day.",
+    type: "health",
+    icon: "🧘",
   },
   {
     time: "09:55",
     label: "Post-Workout Shake — AT GYM",
     detail:
-      "Mix your dry scoop with water. Drink BEFORE showering. 20 min post-workout window = peak muscle protein synthesis. Don't skip.",
+      "Mix 1 scoop whey in 300ml water from shaker. Drink BEFORE showering — within 20 min of last set. Muscle protein synthesis peaks now. Don't wait until office (11:00+ = too late).",
     type: "food",
     icon: "🥛",
   },
@@ -167,7 +103,7 @@ const scheduleData = [
     time: "10:00",
     label: "Shower at Gym",
     detail:
-      "End with 30–60 sec cold water. Reduces DOMS, improves alertness before office.",
+      "End with 30–60 sec cold water on back and legs. Reduces muscle soreness, improves alertness. Gets you sharp before office.",
     type: "health",
     icon: "🚿",
   },
@@ -175,23 +111,39 @@ const scheduleData = [
     time: "11:00",
     label: "Office — Deep Work Block",
     detail:
-      "Post-workout endorphin + focus window. Block meetings here if possible. No social media until 13:00.",
+      "Post-workout endorphins + focus window = your best cognitive time of day. Block meetings here if possible. No social media until 13:00.",
     type: "work",
     icon: "💻",
+  },
+  {
+    time: "11:00",
+    label: "💧 Water #3 — 500ml (11:00–13:00)",
+    detail:
+      "1 full bottle at desk over 2 hours. Sip constantly — don't wait until thirsty. Thirst = already 1–2% dehydrated. Urine check: should be pale yellow, not dark.",
+    type: "water",
+    icon: "💧",
   },
   {
     time: "13:30",
     label: "Mid-Morning Snack (only if hungry)",
     detail:
-      "10–12 almonds + 1 apple OR small bowl makhana. Skip entirely if you're not hungry — don't force calories.",
+      "10–12 almonds + 1 apple OR small bowl makhana. Skip entirely if not hungry — don't force calories.",
     type: "food",
     icon: "🍎",
   },
   {
     time: "14:00",
+    label: "💧 Water #4 — 200ml with lunch",
+    detail:
+      "Small glass with food only. Don't overdrink during meals — dilutes stomach acid and slows digestion. Small sips only.",
+    type: "water",
+    icon: "💧",
+  },
+  {
+    time: "14:00",
     label: "LUNCH — Biggest Meal",
     detail:
-      "Full vegetarian meal. Eat away from desk — no screens. 20 min minimum. See Meals tab.",
+      "Dal (per rotation) + paneer/tofu + sabzi (per rotation) + dahi + salad + 2 rotis or rice. Eat away from desk — no screens. 20 min minimum. 5 walnuts on the side.",
     type: "food",
     icon: "🍱",
   },
@@ -199,15 +151,39 @@ const scheduleData = [
     time: "14:25",
     label: "Post-Lunch Walk",
     detail:
-      "5–10 min walk outside or around office. Critical for blood sugar regulation and avoiding the 3pm crash.",
+      "5–10 min walk outside or around office block. Non-negotiable — regulates blood sugar and prevents the 3pm energy crash.",
     type: "health",
     icon: "🚶",
   },
   {
-    time: "17:00",
-    label: "Pre-Badminton Snack",
+    time: "14:30",
+    label: "💧 Water #5 — 400ml (14:30–17:00)",
     detail:
-      "150g Greek yogurt + 1 banana OR 4 multigrain crackers + peanut butter. Eat at 17:00 sharp — 90 min before court is the sweet spot for sustained court energy.",
+      "Another bottle at desk over the afternoon. This is the most neglected window. Afternoon dehydration shows up as 3pm brain fog — people blame the food, it's usually the water.",
+    type: "water",
+    icon: "💧",
+  },
+  {
+    time: "16:00",
+    label: "☕ Last Coffee Cut-Off",
+    detail:
+      "No caffeine after 16:00. Caffeine half-life is 5–6 hours — coffee at 4pm = half of it still in your bloodstream at 10pm. Switch to water or herbal tea from here.",
+    type: "health",
+    icon: "☕",
+  },
+  {
+    time: "17:00",
+    label: "💧 Water #6 — 200ml before snack",
+    detail:
+      "Glass of water before eating your pre-badminton snack. Pre-hydrates you for court and helps with satiety.",
+    type: "water",
+    icon: "💧",
+  },
+  {
+    time: "17:00",
+    label: "Pre-Badminton Snack (Tue/Thu/Sat/Sun)",
+    detail:
+      "150g Greek yogurt / hung curd + 1 banana OR 1 cup roasted makhana. Eat at 17:00 sharp — exactly 90 min before court. On non-badminton days (Mon/Wed/Fri): skip or have 10 almonds only.",
     type: "food",
     icon: "⚡",
   },
@@ -215,15 +191,23 @@ const scheduleData = [
     time: "18:50",
     label: "Leave Office",
     detail:
-      "Drink 300ml water on the way. No coffee after 16:00 — it has a 5–6 hour half-life and will be in your bloodstream at midnight.",
+      "Carry electrolyte bottle for badminton: 500ml water + pinch salt + lemon, pre-mixed. No coffee since 16:00.",
     type: "work",
     icon: "🚗",
   },
   {
     time: "19:30",
+    label: "💧 Water #7 — 500–600ml during badminton",
+    detail:
+      "Sip between every 2–3 rallies, not just at breaks. Electrolyte mix replaces sodium lost in sweat. On non-badminton Mon/Wed/Fri evenings: still drink 300ml water around this time.",
+    type: "water",
+    icon: "💧",
+  },
+  {
+    time: "19:30",
     label: "BADMINTON (60 min)",
     detail:
-      "Your cardio. Play hard. Electrolyte water: 500ml + pinch salt + lemon. On non-badminton evenings, this slot is full rest.",
+      "Your cardio for the day. Tue + Thu evenings, Sat + Sun mornings. Play hard — this is HIIT-level intensity. No gym on these days.",
     type: "gym",
     icon: "🏸",
   },
@@ -231,31 +215,54 @@ const scheduleData = [
     time: "20:30",
     label: "Post-Badminton Stretch",
     detail:
-      "10 min non-negotiable — hip flexors, calves, hamstrings, rotator cuff. Badminton is brutal on ankles and knees. This is injury prevention.",
+      "10 min non-negotiable: hip flexors (lunge stretch 30s each), calves (wall stretch), hamstrings (seated), rotator cuff (cross-arm stretch). Badminton is brutal on ankles and knees long-term.",
     type: "health",
     icon: "🧘",
   },
   {
     time: "21:15",
+    label: "💧 Water #8 — 200ml with dinner",
+    detail: "Small glass with dinner. Last proper meal of the day.",
+    type: "water",
+    icon: "💧",
+  },
+  {
+    time: "21:15",
     label: "DINNER",
     detail:
-      "Lighter than lunch. High protein, lower carbs. Finish by 21:45 latest. See Meals tab.",
+      "Ragi roti (or 1–2 wheat rotis) + greens sabzi per rotation + lighter dal (moong/masoor/toor only) + 150g dahi. Finish eating by 21:45. After dinner: 30g pumpkin seeds + 10–12 almonds = magnesium stack.",
     type: "food",
     icon: "🍽️",
+  },
+  {
+    time: "21:45",
+    label: "💧 Water #9 — LAST 200ml",
+    detail:
+      "Final water of the day. Hard stop here. Drinking after 22:00 = bathroom at 2–3am = broken sleep architecture. Your kidneys will thank you.",
+    type: "water",
+    icon: "💧",
   },
   {
     time: "22:00",
     label: "Wind-Down Begins",
     detail:
-      "Dim all lights. Urgent messages OK but no reels/Twitter/news. Bright screens now = harder to fall asleep.",
+      "Dim all overhead lights — use a bedside lamp only. Bright light suppresses melatonin. Reply to urgent messages is fine but no reels, Twitter, or news from here.",
     type: "sleep",
     icon: "🌙",
   },
   {
-    time: "22:30",
-    label: "📵 PHONE DOWN",
+    time: "22:15",
+    label: "Pack Gym Bag for Tomorrow",
     detail:
-      "Phone on charger outside the bedroom. Phone in bedroom = 45 min less sleep on average (clinical studies). Alarm is fine — just put it across the room.",
+      "Lay out gym clothes, refill water bottle, put dry whey scoop in shaker, keep earphones charged. 5 minutes now = no scrambling at 07:50 tomorrow.",
+    type: "health",
+    icon: "🎒",
+  },
+  {
+    time: "22:30",
+    label: "📵 PHONE DOWN — Non-Negotiable",
+    detail:
+      "Phone on charger outside the bedroom or face-down across the room. Phone in bedroom = average 45 min less sleep per night (clinical data). Alarm is fine — just make yourself get up to turn it off.",
     type: "sleep",
     icon: "📵",
   },
@@ -263,15 +270,15 @@ const scheduleData = [
     time: "22:30",
     label: "Read for 30 min",
     detail:
-      "Physical book or Kindle on warm mode. Fiction or light non-fiction. No work content. This transitions your brain from alert → sleep mode.",
+      "Physical book or Kindle on warm/night mode. Fiction works best — absorbing but not stimulating. No work content, no news. This shifts your brain from alert → sleep mode passively.",
     type: "sleep",
     icon: "📚",
   },
   {
     time: "22:45",
-    label: "Magnesium Glycinate",
+    label: "Magnesium Glycinate — 300mg",
     detail:
-      "300mg with water. Reduces time to fall asleep and improves sleep quality. Not a sedative — removes friction.",
+      "With a small sip of water only (you've hit cut-off). Reduces time to fall asleep and improves sleep depth. Not a sedative — removes nervous system friction. Take every night.",
     type: "health",
     icon: "💊",
   },
@@ -279,13 +286,11 @@ const scheduleData = [
     time: "23:00",
     label: "Lights Out",
     detail:
-      "23:00 → 07:30 = 8.5 hrs in bed, ~7.5 hrs sleep = 5 full 90-min cycles. After 2–3 weeks of consistency, you'll wake naturally before the alarm.",
+      "23:00 → 07:30 = 7.5 hrs = exactly 5 complete 90-min sleep cycles. Growth hormone, testosterone, muscle repair, and fat metabolism all peak during deep sleep. This is the most anabolic part of your day.",
     type: "sleep",
     icon: "😴",
   },
 ];
-
-// ─── WORKOUT DATA ─────────────────────────────────────────────────────────────
 
 const workoutPlan = {
   split: "4-Day Upper/Lower Split — Mon, Wed, Fri, Sat",
@@ -726,8 +731,6 @@ const workoutPlan = {
   ],
 };
 
-// ─── MEAL DATA ────────────────────────────────────────────────────────────────
-
 const mealPlan = {
   tdee: "~2,600–2,700 kcal",
   target: "~2,350–2,400 kcal/day",
@@ -834,7 +837,6 @@ const mealPlan = {
       label: "Pre-Workout Shake (07:40)",
       icon: "🥤",
       color: "#e8ff47",
-      kcal: 560,
       items: [
         "2 ripe bananas",
         "1.5 scoops whey protein (37g protein) — mix into shake",
@@ -852,7 +854,6 @@ const mealPlan = {
       label: "Post-Workout (09:55 — at gym)",
       icon: "🥛",
       color: "#47ff8a",
-      kcal: 230,
       items: [
         "1 scoop whey in 300ml water — carry dry powder in shaker",
         "1 small banana or 5 dates",
@@ -865,7 +866,6 @@ const mealPlan = {
       label: "Lunch (14:00) — BIGGEST MEAL",
       icon: "🍱",
       color: "#47b8ff",
-      kcal: 640,
       items: [
         "2 whole wheat rotis OR 1 cup brown rice / quinoa",
         "1 cup dal — see Dal Rotation below ↓",
@@ -882,7 +882,6 @@ const mealPlan = {
       label: "Pre-Badminton Snack (17:00) — Tue, Thu, Sat, Sun only",
       icon: "⚡",
       color: "#ff9447",
-      kcal: 270,
       items: [
         "150g Greek yogurt / hung curd + 1 tsp honey",
         "1 banana OR 1 cup roasted makhana",
@@ -896,7 +895,6 @@ const mealPlan = {
       label: "Dinner (21:15) — LIGHTER",
       icon: "🍽️",
       color: "#c47aff",
-      kcal: 530,
       items: [
         "1–2 ragi rotis (preferred) OR whole wheat rotis — ragi = highest magnesium flour",
         "1 cup greens sabzi — spinach/methi/lauki per rotation",
@@ -926,6 +924,57 @@ const mealPlan = {
       note: "Rare — just drop the pre-workout shake",
     },
   ],
+  supplements: [
+    {
+      name: "Whey Protein ✅ Keep",
+      timing: "Pre-workout shake (07:40) + Post-workout (09:55)",
+      dose: "2.5 scoops/day",
+      canReplace: true,
+      foodAlt:
+        "Whey is just concentrated milk protein — your parents likely won't object to this. If they do: add 250g paneer + extra dal + 200ml milk to replace 1 scoop.",
+    },
+    {
+      name: "Creatine Monohydrate ✅ Added Back",
+      timing:
+        "In pre-workout shake (07:40) — just mix 5g into shake, tasteless",
+      dose: "5g/day, every single day",
+      canReplace: true,
+      foodAlt:
+        "BUY: AS-IT-IS Nutrition Creatine Monohydrate or Optimum Nutrition (ON) Micronised Creatine — both unflavoured, pure, third-party tested. Available on Amazon India. ~₹800–1,200 for 250g (50 days supply). Mix 1 level teaspoon (5g) into your morning shake — completely tasteless and odourless. Take every day including rest days — consistency matters more than timing. Takes 3–4 weeks to feel the effect (muscles saturate gradually). No loading phase needed — just 5g/day from day 1.",
+    },
+    {
+      name: "Vitamin D3 ✅ Fully Replaceable",
+      timing: "Morning sunlight + sun-treated mushrooms",
+      dose: "~600–800 IU achievable",
+      canReplace: true,
+      foodAlt:
+        "1. SUNLIGHT: 15–20 min direct sun on arms/face before 9am, 5x/week — your skin makes D3 directly. 2. MUSHROOMS: Place button/oyster mushrooms gills-up in direct sunlight for 45–60 min before cooking — 100g gives 300–400 IU. Do this 3–4x/week. 3. FORTIFIED MILK: 2 glasses/day. 4. Add ghee or peanut butter with every meal — Vit D is fat-soluble, needs fat to absorb.",
+    },
+    {
+      name: "Magnesium ✅ Fully Replaceable",
+      timing: "Pumpkin seeds + almonds after dinner",
+      dose: "Target 340mg/day",
+      canReplace: true,
+      foodAlt:
+        "MAGNESIUM EVENING STACK (eat after dinner for sleep benefit): 30g pumpkin seeds = 150mg. 10–12 almonds = 80mg. 1 cup spinach sabzi at dinner = 78mg. 1 ragi roti instead of wheat roti = 70mg. Dal at every meal + whole wheat rotis covers the rest. Total from above: ~380mg — meets the full daily target without any pill.",
+    },
+    {
+      name: "Omega-3 ✅ Replaceable",
+      timing: "Add to morning shake daily",
+      dose: "2 tbsp flaxseeds + 5 walnuts",
+      canReplace: true,
+      foodAlt:
+        "1 tbsp ground flaxseeds (alsi) in your morning shake = 1.6g ALA omega-3. 5 walnuts daily = 2.5g ALA. IMPORTANT: grind flaxseeds before adding — whole seeds pass through undigested. Note: plant-based ALA converts to EPA/DHA at only 5–10% efficiency. Good enough for general health. Chia seeds (sabja) are also a good option.",
+    },
+    {
+      name: "Electrolytes ✅ Always food-based",
+      timing: "During gym + badminton",
+      dose: "Pinch salt + lemon in 500ml water",
+      canReplace: true,
+      foodAlt:
+        "Already food-based. On badminton days: 1 glass coconut water after playing = natural electrolytes + potassium. Works better than most commercial sports drinks.",
+    },
+  ],
   avoid: [
     "Maida / refined flour (white bread, samosas, biscuits, namkeen) — swap to whole wheat always",
     "Fruit juices — eat whole fruit instead. Juice = sugar without fibre",
@@ -936,8 +985,6 @@ const mealPlan = {
     "Under-eating (below 2,000 kcal) — slows metabolism and destroys muscle",
   ],
 };
-
-// ─── SLEEP + STATS DATA ───────────────────────────────────────────────────────
 
 const sleepProtocol = [
   {
@@ -1078,35 +1125,19 @@ const stats = {
   ],
 };
 
-// ─── QUICK-ADD MEAL PRESETS ───────────────────────────────────────────────────
-// Pre-filled kcal from the meal plan for one-tap logging
-
-const MEAL_PRESETS = [
-  { label: "Pre-WO Shake", kcal: 560, icon: "🥤" },
-  { label: "Post-WO Shake", kcal: 230, icon: "🥛" },
-  { label: "Lunch", kcal: 640, icon: "🍱" },
-  { label: "Pre-Badminton Snack", kcal: 270, icon: "⚡" },
-  { label: "Dinner", kcal: 530, icon: "🍽️" },
-  { label: "Almonds (12)", kcal: 84, icon: "🌰" },
-  { label: "Banana", kcal: 90, icon: "🍌" },
-  { label: "Apple", kcal: 72, icon: "🍎" },
-  { label: "Dahi 150g", kcal: 90, icon: "🥛" },
-  { label: "Paneer 100g", kcal: 265, icon: "🧀" },
-  { label: "Roti (1)", kcal: 120, icon: "🫓" },
-  { label: "Brown Rice 1c", kcal: 215, icon: "🍚" },
-];
-
-// ─── SMALL COMPONENTS ─────────────────────────────────────────────────────────
-
 function TagBadge({ type }: { type: string }) {
-  const map: Record<string, { bg: string; text: string; label: string }> = {
+  const map = {
     sleep: { bg: "#1a1a3a", text: "#6a6aff", label: "SLEEP" },
     health: { bg: "#1a3a1a", text: "#47ff8a", label: "HEALTH" },
     food: { bg: "#3a1a00", text: "#ff9447", label: "FOOD" },
     work: { bg: "#1a2a3a", text: "#47b8ff", label: "WORK" },
     gym: { bg: "#3a1a1a", text: "#ff4747", label: "GYM" },
+    water: { bg: "#001a2a", text: "#00ccff", label: "💧 WATER" },
   };
-  const s = map[type as keyof typeof map] || map.health;
+  const s =
+    (map as Record<string, { bg: string; text: string; label: string }>)[
+      type
+    ] || map.health;
   return (
     <span
       style={{
@@ -1127,6 +1158,7 @@ function TagBadge({ type }: { type: string }) {
 function ExerciseTag({ tag }: { tag: string }) {
   if (!tag) return null;
   const isCompound = tag.startsWith("COMPOUND");
+  const isHealth = tag.includes("health");
   return (
     <span
       style={{
@@ -1145,1371 +1177,10 @@ function ExerciseTag({ tag }: { tag: string }) {
   );
 }
 
-// ─── CALORIE TRACKER TAB ─────────────────────────────────────────────────────
-
-function CalorieTracker() {
-  const [calorieLog, setCalorieLog] = useState<CalorieLog>(() =>
-    loadLS("vb_calorie_log", {})
-  );
-  const [customLabel, setCustomLabel] = useState("");
-  const [customKcal, setCustomKcal] = useState("");
-
-  const today = todayKey();
-  const dayName = getTodayDayName();
-  const entries: CalorieEntry[] = calorieLog[today] || [];
-
-  // Target depends on day type
-  const isGymDay = ["Monday", "Tuesday", "Thursday", "Friday"].includes(
-    dayName
-  );
-  const isBadmintonOnly = ["Wednesday", "Saturday", "Sunday"].includes(dayName);
-  const target = isGymDay ? 2400 : isBadmintonOnly ? 2200 : 2000;
-  const total = entries.reduce((s, e) => s + e.kcal, 0);
-  const pct = Math.min(100, Math.round((total / target) * 100));
-  const remaining = target - total;
-
-  function addEntry(label: string, kcal: number) {
-    const entry: CalorieEntry = {
-      id: Date.now().toString(),
-      label,
-      kcal,
-      time: new Date().toLocaleTimeString("en-IN", {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
-    const updated: CalorieLog = { ...calorieLog, [today]: [...entries, entry] };
-    setCalorieLog(updated);
-    saveLS("vb_calorie_log", updated);
-  }
-
-  function removeEntry(id: string) {
-    const updated: CalorieLog = {
-      ...calorieLog,
-      [today]: entries.filter((e) => e.id !== id),
-    };
-    setCalorieLog(updated);
-    saveLS("vb_calorie_log", updated);
-  }
-
-  function addCustom() {
-    const k = parseInt(customKcal, 10);
-    if (!customLabel.trim() || isNaN(k) || k <= 0) return;
-    addEntry(customLabel.trim(), k);
-    setCustomLabel("");
-    setCustomKcal("");
-  }
-
-  const barColor =
-    pct >= 100 ? COLORS.red : pct >= 80 ? COLORS.orange : COLORS.green;
-
-  return (
-    <div>
-      {/* Day header */}
-      <div
-        style={{
-          background: COLORS.card,
-          border: `1px solid ${COLORS.cardBorder}`,
-          borderRadius: 10,
-          padding: 14,
-          marginBottom: 14,
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-            marginBottom: 10,
-          }}
-        >
-          <div>
-            <div
-              style={{ fontSize: 13, fontWeight: 700, color: COLORS.accent }}
-            >
-              {dayName} — {today}
-            </div>
-            <div style={{ fontSize: 11, color: COLORS.muted, marginTop: 2 }}>
-              {isGymDay
-                ? "🏋️ Gym day — 2,400 kcal target"
-                : isBadmintonOnly
-                ? "🏸 Badminton day — 2,200 kcal target"
-                : "😴 Rest day — 2,000 kcal target"}
-            </div>
-          </div>
-          <div style={{ textAlign: "right" }}>
-            <div style={{ fontSize: 22, fontWeight: 800, color: barColor }}>
-              {total}
-            </div>
-            <div style={{ fontSize: 10, color: COLORS.muted }}>
-              of {target} kcal
-            </div>
-          </div>
-        </div>
-        {/* Progress bar */}
-        <div
-          style={{
-            background: "#2a2a2a",
-            borderRadius: 6,
-            height: 8,
-            overflow: "hidden",
-            marginBottom: 6,
-          }}
-        >
-          <div
-            style={{
-              width: `${pct}%`,
-              height: "100%",
-              background: barColor,
-              borderRadius: 6,
-              transition: "width 0.3s",
-            }}
-          />
-        </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            fontSize: 10,
-            color: COLORS.muted,
-          }}
-        >
-          <span>{pct}% of target</span>
-          <span style={{ color: remaining > 0 ? COLORS.green : COLORS.red }}>
-            {remaining > 0
-              ? `${remaining} kcal remaining`
-              : `${Math.abs(remaining)} kcal over`}
-          </span>
-        </div>
-        {/* Macro summary (approximate) */}
-        <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
-          {[
-            { label: "Protein goal", val: "155–165g", color: COLORS.green },
-            { label: "Carbs goal", val: "260–280g", color: COLORS.blue },
-            { label: "Fat goal", val: "60–70g", color: COLORS.orange },
-          ].map((m, i) => (
-            <div
-              key={i}
-              style={{
-                flex: 1,
-                background: "#111",
-                borderRadius: 6,
-                padding: "6px 8px",
-                textAlign: "center",
-              }}
-            >
-              <div style={{ fontSize: 9, color: COLORS.muted }}>{m.label}</div>
-              <div style={{ fontSize: 11, fontWeight: 700, color: m.color }}>
-                {m.val}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Quick-add presets */}
-      <div
-        style={{
-          fontSize: 11,
-          color: COLORS.muted,
-          letterSpacing: 1,
-          textTransform: "uppercase",
-          marginBottom: 8,
-        }}
-      >
-        ⚡ Quick Add
-      </div>
-      <div
-        style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 16 }}
-      >
-        {MEAL_PRESETS.map((p, i) => (
-          <button
-            key={i}
-            onClick={() => addEntry(p.label, p.kcal)}
-            style={{
-              background: COLORS.card,
-              border: `1px solid ${COLORS.cardBorder}`,
-              borderRadius: 8,
-              padding: "6px 10px",
-              cursor: "pointer",
-              color: COLORS.text,
-              fontSize: 11,
-              display: "flex",
-              alignItems: "center",
-              gap: 5,
-            }}
-          >
-            <span>{p.icon}</span>
-            <span>{p.label}</span>
-            <span style={{ color: COLORS.accent, fontWeight: 700 }}>
-              {p.kcal}
-            </span>
-          </button>
-        ))}
-      </div>
-
-      {/* Custom entry */}
-      <div
-        style={{
-          fontSize: 11,
-          color: COLORS.muted,
-          letterSpacing: 1,
-          textTransform: "uppercase",
-          marginBottom: 8,
-        }}
-      >
-        ✏️ Custom Entry
-      </div>
-      <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
-        <input
-          value={customLabel}
-          onChange={(e) => setCustomLabel(e.target.value)}
-          placeholder="Food / meal name"
-          style={{
-            flex: 2,
-            background: COLORS.card,
-            border: `1px solid ${COLORS.cardBorder}`,
-            borderRadius: 8,
-            padding: "8px 12px",
-            color: COLORS.text,
-            fontSize: 12,
-            outline: "none",
-          }}
-        />
-        <input
-          value={customKcal}
-          onChange={(e) => setCustomKcal(e.target.value)}
-          placeholder="kcal"
-          type="number"
-          style={{
-            flex: 1,
-            background: COLORS.card,
-            border: `1px solid ${COLORS.cardBorder}`,
-            borderRadius: 8,
-            padding: "8px 12px",
-            color: COLORS.text,
-            fontSize: 12,
-            outline: "none",
-          }}
-        />
-        <button
-          onClick={addCustom}
-          style={{
-            background: COLORS.accent,
-            color: COLORS.bg,
-            border: "none",
-            borderRadius: 8,
-            padding: "8px 14px",
-            cursor: "pointer",
-            fontWeight: 700,
-            fontSize: 12,
-          }}
-        >
-          Add
-        </button>
-      </div>
-
-      {/* Today's log */}
-      <div
-        style={{
-          fontSize: 11,
-          color: COLORS.muted,
-          letterSpacing: 1,
-          textTransform: "uppercase",
-          marginBottom: 8,
-        }}
-      >
-        📋 Today's Log{" "}
-        {entries.length > 0 && (
-          <span style={{ color: COLORS.accent }}>
-            ({entries.length} entries)
-          </span>
-        )}
-      </div>
-      {entries.length === 0 ? (
-        <div
-          style={{
-            background: COLORS.card,
-            border: `1px solid ${COLORS.cardBorder}`,
-            borderRadius: 10,
-            padding: 20,
-            textAlign: "center",
-            color: COLORS.muted,
-            fontSize: 12,
-          }}
-        >
-          Nothing logged yet. Use Quick Add above or add a custom entry.
-        </div>
-      ) : (
-        <div>
-          {entries.map((entry) => (
-            <div
-              key={entry.id}
-              style={{
-                background: COLORS.card,
-                border: `1px solid ${COLORS.cardBorder}`,
-                borderRadius: 8,
-                padding: "10px 14px",
-                marginBottom: 8,
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <div>
-                <div style={{ fontSize: 13, fontWeight: 600 }}>
-                  {entry.label}
-                </div>
-                <div
-                  style={{ fontSize: 10, color: COLORS.muted, marginTop: 2 }}
-                >
-                  {entry.time}
-                </div>
-              </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <span
-                  style={{
-                    fontSize: 14,
-                    fontWeight: 800,
-                    color: COLORS.accent,
-                  }}
-                >
-                  {entry.kcal} kcal
-                </span>
-                <button
-                  onClick={() => removeEntry(entry.id)}
-                  style={{
-                    background: "transparent",
-                    border: "none",
-                    color: COLORS.muted,
-                    cursor: "pointer",
-                    fontSize: 14,
-                    padding: "0 4px",
-                  }}
-                >
-                  ✕
-                </button>
-              </div>
-            </div>
-          ))}
-          <div
-            style={{
-              background: "#1a1500",
-              border: "1px solid #3a3000",
-              borderRadius: 8,
-              padding: "10px 14px",
-              display: "flex",
-              justifyContent: "space-between",
-              marginTop: 4,
-            }}
-          >
-            <span
-              style={{ fontSize: 12, color: COLORS.muted, fontWeight: 600 }}
-            >
-              TOTAL TODAY
-            </span>
-            <span style={{ fontSize: 14, fontWeight: 800, color: barColor }}>
-              {total} / {target} kcal
-            </span>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ─── SET TRACKER TAB ─────────────────────────────────────────────────────────
-
-function SetTracker() {
-  const [workoutLog, setWorkoutLog] = useState<WorkoutLog>(() =>
-    loadLS("vb_workout_log", {})
-  );
-  const [expandedDay, setExpandedDay] = useState<number | null>(null);
-
-  const today = todayKey();
-  const dayName = getTodayDayName();
-
-  // Map today's day name → workout plan index
-  const dayMap: Record<string, number> = {
-    Monday: 0,
-    Wednesday: 1,
-    Friday: 2,
-    Saturday: 3,
-    Tuesday: 4,
-    Thursday: 4,
-    Sunday: 4,
-  };
-  const todayPlanIdx = dayMap[dayName] ?? -1;
-
-  function getSetLog(dayIdx: number, exIdx: number, setIdx: number): SetLog {
-    const dateStr = today;
-    return (
-      workoutLog[dateStr]?.[`${dayIdx}-${exIdx}`]?.[setIdx] ?? {
-        weight: "",
-        reps: "",
-        done: false,
-      }
-    );
-  }
-
-  function updateSetLog(
-    dayIdx: number,
-    exIdx: number,
-    setIdx: number,
-    field: keyof SetLog,
-    value: string | boolean
-  ) {
-    const dateStr = today;
-    const exKey = `${dayIdx}-${exIdx}`;
-    const prev = workoutLog[dateStr] ?? {};
-    const prevEx = prev[exKey] ?? {};
-    const prevSet = prevEx[setIdx] ?? { weight: "", reps: "", done: false };
-    const updated: WorkoutLog = {
-      ...workoutLog,
-      [dateStr]: {
-        ...prev,
-        [exKey]: {
-          ...prevEx,
-          [setIdx]: { ...prevSet, [field]: value },
-        },
-      },
-    };
-    setWorkoutLog(updated);
-    saveLS("vb_workout_log", updated);
-  }
-
-  function countCompletedSets(
-    dayIdx: number,
-    exIdx: number,
-    totalSets: number
-  ): number {
-    const exKey = `${dayIdx}-${exIdx}`;
-    const exLog = workoutLog[today]?.[exKey] ?? {};
-    return Array.from({ length: totalSets }, (_, i) => exLog[i]?.done).filter(
-      Boolean
-    ).length;
-  }
-
-  function isDayComplete(dayIdx: number): boolean {
-    const plan = workoutPlan.days[dayIdx];
-    if (!plan) return false;
-    return plan.exercises.every((ex, exIdx) => {
-      const total = parseInt(ex.sets) || 0;
-      if (total === 0) return true;
-      return countCompletedSets(dayIdx, exIdx, total) >= total;
-    });
-  }
-
-  // History: last 7 days for a given exercise
-  function getHistory(
-    dayIdx: number,
-    exIdx: number
-  ): { date: string; sets: SetLog[] }[] {
-    const exKey = `${dayIdx}-${exIdx}`;
-    const results: { date: string; sets: SetLog[] }[] = [];
-    const plan = workoutPlan.days[dayIdx];
-    if (!plan) return results;
-    const totalSets = parseInt(plan.exercises[exIdx]?.sets) || 0;
-    Object.keys(workoutLog)
-      .filter((d) => d !== today)
-      .sort((a, b) => b.localeCompare(a))
-      .slice(0, 5)
-      .forEach((date) => {
-        const exLog = workoutLog[date]?.[exKey];
-        if (exLog) {
-          const sets = Array.from(
-            { length: totalSets },
-            (_, i) => exLog[i]
-          ).filter(Boolean) as SetLog[];
-          if (sets.some((s) => s.weight || s.reps))
-            results.push({ date, sets });
-        }
-      });
-    return results;
-  }
-
-  return (
-    <div>
-      {/* Today badge */}
-      <div
-        style={{
-          background: COLORS.card,
-          border: `1px solid ${COLORS.cardBorder}`,
-          borderRadius: 10,
-          padding: 14,
-          marginBottom: 14,
-        }}
-      >
-        <div
-          style={{
-            fontSize: 13,
-            fontWeight: 700,
-            color: COLORS.accent,
-            marginBottom: 4,
-          }}
-        >
-          {dayName} — {today}
-        </div>
-        {todayPlanIdx >= 0 ? (
-          <div style={{ fontSize: 12, color: COLORS.textDim }}>
-            Today's plan:{" "}
-            <span
-              style={{
-                color: workoutPlan.days[todayPlanIdx].color,
-                fontWeight: 700,
-              }}
-            >
-              {workoutPlan.days[todayPlanIdx].type}
-            </span>
-            {isDayComplete(todayPlanIdx) && (
-              <span style={{ color: COLORS.green, marginLeft: 8 }}>
-                ✅ Complete!
-              </span>
-            )}
-          </div>
-        ) : (
-          <div style={{ fontSize: 12, color: COLORS.muted }}>
-            No gym today — rest or badminton day.
-          </div>
-        )}
-      </div>
-
-      {/* All workout days */}
-      <div
-        style={{
-          fontSize: 11,
-          color: COLORS.muted,
-          letterSpacing: 1,
-          textTransform: "uppercase",
-          marginBottom: 10,
-        }}
-      >
-        🏋️ Tap a day to log sets
-      </div>
-      {workoutPlan.days.map((plan, dayIdx) => {
-        const isToday = dayIdx === todayPlanIdx;
-        const complete = isDayComplete(dayIdx);
-        return (
-          <div
-            key={dayIdx}
-            style={{
-              background: COLORS.card,
-              border: `1px solid ${isToday ? plan.color : COLORS.cardBorder}`,
-              borderRadius: 10,
-              marginBottom: 12,
-              overflow: "hidden",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                padding: "12px 16px",
-                cursor: "pointer",
-                borderLeft: `4px solid ${plan.color}`,
-              }}
-              onClick={() =>
-                setExpandedDay(expandedDay === dayIdx ? null : dayIdx)
-              }
-            >
-              <div>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <div
-                    style={{ fontSize: 14, fontWeight: 700, color: plan.color }}
-                  >
-                    {plan.type}
-                  </div>
-                  {isToday && (
-                    <span
-                      style={{
-                        background: COLORS.accent,
-                        color: COLORS.bg,
-                        fontSize: 9,
-                        fontWeight: 800,
-                        padding: "2px 6px",
-                        borderRadius: 4,
-                      }}
-                    >
-                      TODAY
-                    </span>
-                  )}
-                  {complete && <span style={{ fontSize: 14 }}>✅</span>}
-                </div>
-                <div
-                  style={{ fontSize: 11, color: COLORS.muted, marginTop: 2 }}
-                >
-                  {plan.day}
-                </div>
-              </div>
-              <div style={{ fontSize: 18, color: COLORS.muted }}>
-                {expandedDay === dayIdx ? "▲" : "▼"}
-              </div>
-            </div>
-
-            {expandedDay === dayIdx && (
-              <div style={{ padding: "0 16px 16px" }}>
-                {plan.exercises.map((ex, exIdx) => {
-                  const totalSets = parseInt(ex.sets) || 0;
-                  const doneSets = countCompletedSets(dayIdx, exIdx, totalSets);
-                  const history = getHistory(dayIdx, exIdx);
-                  if (totalSets === 0)
-                    return (
-                      <div
-                        key={exIdx}
-                        style={{
-                          borderTop: `1px solid ${COLORS.cardBorder}`,
-                          paddingTop: 10,
-                          marginTop: 10,
-                        }}
-                      >
-                        <div style={{ fontSize: 13, fontWeight: 600 }}>
-                          {ex.name}
-                        </div>
-                        <div style={{ fontSize: 11, color: COLORS.muted }}>
-                          {ex.reps}
-                        </div>
-                      </div>
-                    );
-                  return (
-                    <div
-                      key={exIdx}
-                      style={{
-                        borderTop: `1px solid ${COLORS.cardBorder}`,
-                        paddingTop: 12,
-                        marginTop: 12,
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          marginBottom: 8,
-                        }}
-                      >
-                        <div>
-                          <div style={{ fontSize: 13, fontWeight: 600 }}>
-                            {ex.name}
-                          </div>
-                          {ex.tag && <ExerciseTag tag={ex.tag} />}
-                        </div>
-                        <div
-                          style={{
-                            fontSize: 11,
-                            color:
-                              doneSets >= totalSets
-                                ? COLORS.green
-                                : COLORS.muted,
-                            fontWeight: 700,
-                          }}
-                        >
-                          {doneSets}/{totalSets} sets
-                        </div>
-                      </div>
-
-                      {/* Header row */}
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: 6,
-                          marginBottom: 4,
-                          fontSize: 9,
-                          color: COLORS.muted,
-                          letterSpacing: 1,
-                          paddingLeft: 2,
-                        }}
-                      >
-                        <div style={{ width: 24 }}></div>
-                        <div style={{ flex: 1 }}>WEIGHT (kg)</div>
-                        <div style={{ flex: 1 }}>REPS</div>
-                        <div style={{ width: 36, textAlign: "center" }}>
-                          DONE
-                        </div>
-                      </div>
-
-                      {/* Set rows */}
-                      {Array.from({ length: totalSets }, (_, setIdx) => {
-                        const s = getSetLog(dayIdx, exIdx, setIdx);
-                        return (
-                          <div
-                            key={setIdx}
-                            style={{
-                              display: "flex",
-                              gap: 6,
-                              marginBottom: 6,
-                              alignItems: "center",
-                            }}
-                          >
-                            <div
-                              style={{
-                                width: 24,
-                                fontSize: 10,
-                                color: COLORS.muted,
-                                fontWeight: 700,
-                                textAlign: "center",
-                              }}
-                            >
-                              S{setIdx + 1}
-                            </div>
-                            <input
-                              value={s.weight}
-                              onChange={(e) =>
-                                updateSetLog(
-                                  dayIdx,
-                                  exIdx,
-                                  setIdx,
-                                  "weight",
-                                  e.target.value
-                                )
-                              }
-                              placeholder={
-                                history[0]?.sets[setIdx]?.weight
-                                  ? `last: ${history[0].sets[setIdx].weight}`
-                                  : "kg"
-                              }
-                              style={{
-                                flex: 1,
-                                background: s.done ? "#1a2a1a" : "#111",
-                                border: `1px solid ${
-                                  s.done
-                                    ? COLORS.green + "44"
-                                    : COLORS.cardBorder
-                                }`,
-                                borderRadius: 6,
-                                padding: "6px 8px",
-                                color: COLORS.text,
-                                fontSize: 12,
-                                outline: "none",
-                              }}
-                            />
-                            <input
-                              value={s.reps}
-                              onChange={(e) =>
-                                updateSetLog(
-                                  dayIdx,
-                                  exIdx,
-                                  setIdx,
-                                  "reps",
-                                  e.target.value
-                                )
-                              }
-                              placeholder={
-                                history[0]?.sets[setIdx]?.reps
-                                  ? `last: ${history[0].sets[setIdx].reps}`
-                                  : ex.reps
-                              }
-                              style={{
-                                flex: 1,
-                                background: s.done ? "#1a2a1a" : "#111",
-                                border: `1px solid ${
-                                  s.done
-                                    ? COLORS.green + "44"
-                                    : COLORS.cardBorder
-                                }`,
-                                borderRadius: 6,
-                                padding: "6px 8px",
-                                color: COLORS.text,
-                                fontSize: 12,
-                                outline: "none",
-                              }}
-                            />
-                            <button
-                              onClick={() =>
-                                updateSetLog(
-                                  dayIdx,
-                                  exIdx,
-                                  setIdx,
-                                  "done",
-                                  !s.done
-                                )
-                              }
-                              style={{
-                                width: 36,
-                                height: 34,
-                                borderRadius: 6,
-                                border: `1px solid ${
-                                  s.done ? COLORS.green : COLORS.cardBorder
-                                }`,
-                                background: s.done
-                                  ? COLORS.green + "22"
-                                  : "transparent",
-                                cursor: "pointer",
-                                fontSize: 14,
-                                color: s.done ? COLORS.green : COLORS.muted,
-                              }}
-                            >
-                              {s.done ? "✓" : "○"}
-                            </button>
-                          </div>
-                        );
-                      })}
-
-                      {/* Last session history */}
-                      {history.length > 0 && (
-                        <div
-                          style={{
-                            marginTop: 6,
-                            padding: "6px 8px",
-                            background: "#111",
-                            borderRadius: 6,
-                            fontSize: 10,
-                            color: COLORS.muted,
-                          }}
-                        >
-                          <span style={{ color: COLORS.blue, fontWeight: 700 }}>
-                            Last session ({history[0].date}):{" "}
-                          </span>
-                          {history[0].sets.map((hs, i) => (
-                            <span key={i} style={{ marginRight: 8 }}>
-                              S{i + 1}: {hs.weight ? `${hs.weight}kg` : "—"} ×{" "}
-                              {hs.reps || "—"}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-// ─── SLEEP TRACKER ───────────────────────────────────────────────────────────
-
-function calcDuration(bed: string, wake: string): number | null {
-  if (!bed || !wake) return null;
-  const [bh, bm] = bed.split(":").map(Number);
-  const [wh, wm] = wake.split(":").map(Number);
-  let mins = wh * 60 + wm - (bh * 60 + bm);
-  if (mins < 0) mins += 24 * 60; // crossed midnight
-  return Math.round((mins / 60) * 10) / 10;
-}
-
-function sleepQualityLabel(q: number): { label: string; color: string } {
-  return (
-    [
-      { label: "Terrible", color: "#ff4747" },
-      { label: "Poor", color: "#ff9447" },
-      { label: "Okay", color: "#ffcc00" },
-      { label: "Good", color: "#a0ff47" },
-      { label: "Great", color: "#47ff8a" },
-    ][q - 1] ?? { label: "—", color: COLORS.muted }
-  );
-}
-
-function SleepTracker() {
-  const [sleepLog, setSleepLog] = useState<SleepLog>(() =>
-    loadLS("vb_sleep_log", {})
-  );
-  const today = todayKey();
-
-  // We log sleep for the *previous* night, so show last 7 days
-  const last7: string[] = Array.from({ length: 7 }, (_, i) => {
-    const d = new Date();
-    d.setDate(d.getDate() - i);
-    return d.toISOString().slice(0, 10);
-  });
-
-  function updateEntry(
-    date: string,
-    field: keyof SleepEntry,
-    value: string | number
-  ) {
-    const prev = sleepLog[date] ?? {
-      bedtime: "",
-      wakeTime: "",
-      quality: 0,
-      notes: "",
-    };
-    const updated: SleepLog = {
-      ...sleepLog,
-      [date]: { ...prev, [field]: value },
-    };
-    setSleepLog(updated);
-    saveLS("vb_sleep_log", updated);
-  }
-
-  // Streak: how many consecutive days hit ≥7h
-  function calcStreak(): number {
-    let streak = 0;
-    for (const date of last7) {
-      const e = sleepLog[date];
-      if (!e) break;
-      const dur = calcDuration(e.bedtime, e.wakeTime);
-      if (dur === null || dur < 7) break;
-      streak++;
-    }
-    return streak;
-  }
-
-  const streak = calcStreak();
-  const todayEntry = sleepLog[today] ?? {
-    bedtime: "",
-    wakeTime: "",
-    quality: 0,
-    notes: "",
-  };
-  const todayDur = calcDuration(todayEntry.bedtime, todayEntry.wakeTime);
-
-  // Weekly average
-  const validDurs = last7
-    .map((d) => {
-      const e = sleepLog[d];
-      return e ? calcDuration(e.bedtime, e.wakeTime) : null;
-    })
-    .filter((d): d is number => d !== null && d > 0);
-  const avgDur = validDurs.length
-    ? Math.round(
-        (validDurs.reduce((a, b) => a + b, 0) / validDurs.length) * 10
-      ) / 10
-    : null;
-
-  return (
-    <div>
-      {/* Summary strip */}
-      <div style={{ display: "flex", gap: 10, marginBottom: 14 }}>
-        {[
-          { label: "Tonight's target", val: "7.5 hrs", color: COLORS.accent },
-          {
-            label: "7-day avg",
-            val: avgDur ? `${avgDur}h` : "—",
-            color: avgDur && avgDur >= 7 ? COLORS.green : COLORS.red,
-          },
-          {
-            label: "≥7h streak",
-            val: streak > 0 ? `${streak}d 🔥` : "0d",
-            color: streak >= 3 ? COLORS.green : COLORS.muted,
-          },
-        ].map((s, i) => (
-          <div
-            key={i}
-            style={{
-              flex: 1,
-              background: COLORS.card,
-              border: `1px solid ${COLORS.cardBorder}`,
-              borderRadius: 10,
-              padding: "10px 12px",
-            }}
-          >
-            <div
-              style={{
-                fontSize: 9,
-                color: COLORS.muted,
-                letterSpacing: 1,
-                marginBottom: 4,
-                textTransform: "uppercase",
-              }}
-            >
-              {s.label}
-            </div>
-            <div style={{ fontSize: 15, fontWeight: 800, color: s.color }}>
-              {s.val}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Log tonight (today's entry = last night for most users) */}
-      <div
-        style={{
-          background: COLORS.card,
-          border: `1px solid ${COLORS.accent}44`,
-          borderRadius: 10,
-          padding: 14,
-          marginBottom: 16,
-        }}
-      >
-        <div
-          style={{
-            fontSize: 12,
-            fontWeight: 700,
-            color: COLORS.accent,
-            marginBottom: 12,
-          }}
-        >
-          🌙 Log Last Night ({today})
-          {todayDur !== null && (
-            <span
-              style={{
-                marginLeft: 10,
-                color:
-                  todayDur >= 7.5
-                    ? COLORS.green
-                    : todayDur >= 6
-                    ? COLORS.orange
-                    : COLORS.red,
-                fontWeight: 800,
-              }}
-            >
-              {todayDur}h {todayDur >= 7.5 ? "✅" : todayDur >= 6 ? "⚠️" : "❌"}
-            </span>
-          )}
-        </div>
-
-        {/* Bedtime + Wake */}
-        <div style={{ display: "flex", gap: 10, marginBottom: 12 }}>
-          <div style={{ flex: 1 }}>
-            <div
-              style={{
-                fontSize: 10,
-                color: COLORS.muted,
-                marginBottom: 4,
-                letterSpacing: 1,
-              }}
-            >
-              LIGHTS OUT
-            </div>
-            <input
-              type="time"
-              value={todayEntry.bedtime}
-              onChange={(e) => updateEntry(today, "bedtime", e.target.value)}
-              style={{
-                width: "100%",
-                background: "#111",
-                border: `1px solid ${COLORS.cardBorder}`,
-                borderRadius: 8,
-                padding: "8px 10px",
-                color: COLORS.text,
-                fontSize: 14,
-                outline: "none",
-                boxSizing: "border-box",
-              }}
-            />
-            <div style={{ fontSize: 10, color: COLORS.muted, marginTop: 3 }}>
-              Target: 23:00
-            </div>
-          </div>
-          <div style={{ flex: 1 }}>
-            <div
-              style={{
-                fontSize: 10,
-                color: COLORS.muted,
-                marginBottom: 4,
-                letterSpacing: 1,
-              }}
-            >
-              WAKE UP
-            </div>
-            <input
-              type="time"
-              value={todayEntry.wakeTime}
-              onChange={(e) => updateEntry(today, "wakeTime", e.target.value)}
-              style={{
-                width: "100%",
-                background: "#111",
-                border: `1px solid ${COLORS.cardBorder}`,
-                borderRadius: 8,
-                padding: "8px 10px",
-                color: COLORS.text,
-                fontSize: 14,
-                outline: "none",
-                boxSizing: "border-box",
-              }}
-            />
-            <div style={{ fontSize: 10, color: COLORS.muted, marginTop: 3 }}>
-              Target: 07:30
-            </div>
-          </div>
-        </div>
-
-        {/* Quality */}
-        <div style={{ marginBottom: 12 }}>
-          <div
-            style={{
-              fontSize: 10,
-              color: COLORS.muted,
-              marginBottom: 8,
-              letterSpacing: 1,
-            }}
-          >
-            SLEEP QUALITY
-          </div>
-          <div style={{ display: "flex", gap: 6 }}>
-            {[1, 2, 3, 4, 5].map((q) => {
-              const { label, color } = sleepQualityLabel(q);
-              const active = todayEntry.quality === q;
-              return (
-                <button
-                  key={q}
-                  onClick={() => updateEntry(today, "quality", q)}
-                  style={{
-                    flex: 1,
-                    padding: "8px 4px",
-                    borderRadius: 8,
-                    border: `1px solid ${active ? color : COLORS.cardBorder}`,
-                    background: active ? color + "22" : "transparent",
-                    cursor: "pointer",
-                    color: active ? color : COLORS.muted,
-                    fontSize: 10,
-                    fontWeight: active ? 700 : 400,
-                    textAlign: "center",
-                  }}
-                >
-                  <div style={{ fontSize: 14 }}>
-                    {["😫", "😕", "😐", "🙂", "😄"][q - 1]}
-                  </div>
-                  <div>{label}</div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Notes */}
-        <div>
-          <div
-            style={{
-              fontSize: 10,
-              color: COLORS.muted,
-              marginBottom: 4,
-              letterSpacing: 1,
-            }}
-          >
-            NOTES (optional — late coffee? stress? woke up early?)
-          </div>
-          <textarea
-            value={todayEntry.notes}
-            onChange={(e) => updateEntry(today, "notes", e.target.value)}
-            placeholder="e.g. Woke at 4am, couldn't sleep. Had coffee at 5pm."
-            rows={2}
-            style={{
-              width: "100%",
-              background: "#111",
-              border: `1px solid ${COLORS.cardBorder}`,
-              borderRadius: 8,
-              padding: "8px 10px",
-              color: COLORS.text,
-              fontSize: 12,
-              outline: "none",
-              resize: "none",
-              boxSizing: "border-box",
-              fontFamily: "inherit",
-            }}
-          />
-        </div>
-      </div>
-
-      {/* 7-day history */}
-      <div
-        style={{
-          fontSize: 11,
-          color: COLORS.muted,
-          letterSpacing: 1,
-          textTransform: "uppercase",
-          marginBottom: 10,
-        }}
-      >
-        📅 Last 7 Nights
-      </div>
-      {last7.map((date, i) => {
-        const e = sleepLog[date] ?? {
-          bedtime: "",
-          wakeTime: "",
-          quality: 0,
-          notes: "",
-        };
-        const dur = calcDuration(e.bedtime, e.wakeTime);
-        const durColor =
-          dur === null
-            ? COLORS.muted
-            : dur >= 7.5
-            ? COLORS.green
-            : dur >= 6
-            ? COLORS.orange
-            : COLORS.red;
-        const dayLabel =
-          i === 0
-            ? "Today"
-            : i === 1
-            ? "Yesterday"
-            : new Date(date + "T12:00:00").toLocaleDateString("en-IN", {
-                weekday: "short",
-                day: "numeric",
-                month: "short",
-              });
-        const { label: qLabel, color: qColor } = e.quality
-          ? sleepQualityLabel(e.quality)
-          : { label: "—", color: COLORS.muted };
-        const pct = dur ? Math.min(100, Math.round((dur / 8) * 100)) : 0;
-
-        return (
-          <div
-            key={date}
-            style={{
-              background: COLORS.card,
-              border: `1px solid ${COLORS.cardBorder}`,
-              borderRadius: 10,
-              padding: "12px 14px",
-              marginBottom: 8,
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: 6,
-              }}
-            >
-              <div>
-                <span
-                  style={{
-                    fontSize: 12,
-                    fontWeight: 700,
-                    color: i === 0 ? COLORS.accent : COLORS.text,
-                  }}
-                >
-                  {dayLabel}
-                </span>
-                <span
-                  style={{ fontSize: 10, color: COLORS.muted, marginLeft: 8 }}
-                >
-                  {date}
-                </span>
-              </div>
-              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                {e.quality > 0 && (
-                  <span
-                    style={{ fontSize: 11, color: qColor, fontWeight: 600 }}
-                  >
-                    {qLabel}
-                  </span>
-                )}
-                <span
-                  style={{ fontSize: 14, fontWeight: 800, color: durColor }}
-                >
-                  {dur !== null ? `${dur}h` : "—"}
-                </span>
-              </div>
-            </div>
-            {/* Sleep bar */}
-            <div
-              style={{
-                background: "#2a2a2a",
-                borderRadius: 4,
-                height: 5,
-                overflow: "hidden",
-                marginBottom: 6,
-              }}
-            >
-              <div
-                style={{
-                  width: `${pct}%`,
-                  height: "100%",
-                  background: durColor,
-                  borderRadius: 4,
-                  transition: "width 0.3s",
-                }}
-              />
-            </div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                fontSize: 10,
-                color: COLORS.muted,
-              }}
-            >
-              <span>
-                {e.bedtime ? `Bed: ${e.bedtime}` : "No bedtime logged"}
-              </span>
-              <span>{e.wakeTime ? `Wake: ${e.wakeTime}` : ""}</span>
-            </div>
-            {e.notes ? (
-              <div
-                style={{
-                  marginTop: 6,
-                  fontSize: 11,
-                  color: COLORS.textDim,
-                  fontStyle: "italic",
-                  padding: "4px 8px",
-                  background: "#111",
-                  borderRadius: 6,
-                }}
-              >
-                💬 {e.notes}
-              </div>
-            ) : null}
-          </div>
-        );
-      })}
-
-      {/* Reminder box */}
-      <div
-        style={{
-          background: "#0a0a1a",
-          border: "1px solid #1a1a3a",
-          borderRadius: 10,
-          padding: 14,
-          marginTop: 8,
-        }}
-      >
-        <div
-          style={{
-            fontSize: 12,
-            fontWeight: 700,
-            color: "#6a6aff",
-            marginBottom: 8,
-          }}
-        >
-          🎯 Your sleep targets
-        </div>
-        {[
-          ["In bed by", "23:00 — gives 7.5h before 07:30 alarm"],
-          ["Minimum", "7h — below this recovery is compromised"],
-          ["Ideal", "7.5h = 5 complete 90-min cycles"],
-          [
-            "Consistency",
-            "Same bedtime ±30 min is more important than duration alone",
-          ],
-        ].map(([k, v], i) => (
-          <div
-            key={i}
-            style={{ display: "flex", gap: 8, marginBottom: 6, fontSize: 11 }}
-          >
-            <span
-              style={{ color: COLORS.accent, fontWeight: 700, flexShrink: 0 }}
-            >
-              {k}:
-            </span>
-            <span style={{ color: COLORS.textDim }}>{v}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ─── MAIN COMPONENT ──────────────────────────────────────────────────────────
-
 export default function CoachDashboard() {
   const [activeTab, setActiveTab] = useState(0);
   const [expandedDay, setExpandedDay] = useState<number | null>(null);
   const [expandedExercise, setExpandedExercise] = useState<string | null>(null);
-
-  // Auto-open today's workout when landing on Workout tab
-  useEffect(() => {
-    if (activeTab === 1) {
-      const dayName = getTodayDayName();
-      const dayMap: Record<string, number> = {
-        Monday: 0,
-        Wednesday: 1,
-        Friday: 2,
-        Saturday: 3,
-        Tuesday: 4,
-        Thursday: 4,
-        Sunday: 4,
-      };
-      const idx = dayMap[dayName];
-      if (idx !== undefined) setExpandedDay(idx);
-    }
-  }, [activeTab]);
 
   const tabStyle = (i: number) => ({
     padding: "9px 13px",
@@ -2520,7 +1191,7 @@ export default function CoachDashboard() {
     border: "none",
     borderRadius: 8,
     cursor: "pointer",
-    whiteSpace: "nowrap" as const,
+    whiteSpace: "nowrap",
     transition: "all 0.15s",
   });
 
@@ -2601,7 +1272,7 @@ export default function CoachDashboard() {
         ))}
       </div>
 
-      {/* ── TAB: SCHEDULE ── */}
+      {/* TAB: SCHEDULE */}
       {activeTab === 0 && (
         <div>
           <div
@@ -2688,7 +1359,7 @@ export default function CoachDashboard() {
         </div>
       )}
 
-      {/* ── TAB: WORKOUT ── */}
+      {/* TAB: WORKOUT */}
       {activeTab === 1 && (
         <div>
           <div
@@ -2716,6 +1387,8 @@ export default function CoachDashboard() {
               {workoutPlan.note}
             </div>
           </div>
+
+          {/* Week template */}
           <div
             style={{
               fontSize: 11,
@@ -2786,6 +1459,8 @@ export default function CoachDashboard() {
               </div>
             </div>
           ))}
+
+          {/* Mesocycle note */}
           <div
             style={{
               background: "#1a1500",
@@ -2811,6 +1486,7 @@ export default function CoachDashboard() {
               {workoutPlan.mesocycleNote}
             </div>
           </div>
+
           <div
             style={{
               background: "#001a0a",
@@ -2840,6 +1516,7 @@ export default function CoachDashboard() {
               novelty. Keep your compounds the same for months.
             </div>
           </div>
+
           <div
             style={{
               fontSize: 11,
@@ -3052,9 +1729,10 @@ export default function CoachDashboard() {
         </div>
       )}
 
-      {/* ── TAB: MEALS ── */}
+      {/* TAB: MEALS */}
       {activeTab === 2 && (
         <div>
+          {/* Calorie reality check */}
           <div
             style={{
               background: "#1a0a00",
@@ -3125,6 +1803,8 @@ export default function CoachDashboard() {
               {mealPlan.note}
             </div>
           </div>
+
+          {/* Macros */}
           <div
             style={{
               display: "flex",
@@ -3168,6 +1848,8 @@ export default function CoachDashboard() {
               </div>
             ))}
           </div>
+
+          {/* Meals */}
           {mealPlan.meals.map((meal, i) => (
             <div
               key={i}
@@ -3213,6 +1895,8 @@ export default function CoachDashboard() {
               </div>
             </div>
           ))}
+
+          {/* Dal Rotation */}
           <div style={{ marginTop: 20, marginBottom: 20 }}>
             <div
               style={{
@@ -3299,6 +1983,8 @@ export default function CoachDashboard() {
               </div>
             ))}
           </div>
+
+          {/* Sabzi Rotation */}
           <div style={{ marginBottom: 20 }}>
             <div
               style={{
@@ -3362,6 +2048,8 @@ export default function CoachDashboard() {
               </div>
             ))}
           </div>
+
+          {/* Calorie cycling */}
           <div style={{ marginTop: 8 }}>
             <div
               style={{
@@ -3420,6 +2108,8 @@ export default function CoachDashboard() {
               </div>
             ))}
           </div>
+
+          {/* Avoid */}
           <div
             style={{
               marginTop: 20,
@@ -3459,7 +2149,7 @@ export default function CoachDashboard() {
         </div>
       )}
 
-      {/* ── TAB: SLEEP ── */}
+      {/* TAB: SLEEP */}
       {activeTab === 3 && (
         <div>
           <div
@@ -3585,7 +2275,7 @@ export default function CoachDashboard() {
         </div>
       )}
 
-      {/* ── TAB: GOALS ── */}
+      {/* TAB: GOALS */}
       {activeTab === 4 && (
         <div>
           <div
@@ -3677,6 +2367,7 @@ export default function CoachDashboard() {
               ))}
             </div>
           </div>
+
           <div
             style={{
               fontSize: 11,
@@ -3720,6 +2411,7 @@ export default function CoachDashboard() {
               </div>
             </div>
           ))}
+
           <div
             style={{
               fontSize: 11,
@@ -3766,6 +2458,7 @@ export default function CoachDashboard() {
               </div>
             </div>
           ))}
+
           <div
             style={{
               background: "#001a00",
@@ -3810,6 +2503,7 @@ export default function CoachDashboard() {
               </div>
             ))}
           </div>
+
           <div
             style={{
               background: "#1a1500",
@@ -3845,15 +2539,6 @@ export default function CoachDashboard() {
           </div>
         </div>
       )}
-
-      {/* ── TAB: CALORIES ── */}
-      {activeTab === 5 && <CalorieTracker />}
-
-      {/* ── TAB: SETS ── */}
-      {activeTab === 6 && <SetTracker />}
-
-      {/* ── TAB: SLEEP LOG ── */}
-      {activeTab === 7 && <SleepTracker />}
 
       <div
         style={{
