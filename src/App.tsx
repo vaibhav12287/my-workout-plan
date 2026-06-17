@@ -252,9 +252,9 @@ const scheduleData = [
   },
   {
     time: "22:15",
-    label: "Pack Gym Bag for Tomorrow",
+    label: "Pack Gym Bag + Soak Seeds/Nuts",
     detail:
-      "Lay out gym clothes, refill water bottle, put dry whey scoop in shaker, keep earphones charged. 5 minutes now = no scrambling at 07:50 tomorrow.",
+      "1. Lay out gym clothes, refill water bottle, put dry whey scoop in shaker, earphones charged. 2. SOAK FOR TOMORROW: small bowl — 30g pumpkin seeds + 10–12 almonds + 5 walnuts in water. Cover and leave on counter or fridge. Eat them tomorrow evening after dinner. Soaking removes phytic acid which blocks magnesium and mineral absorption — dry seeds give ~40% less benefit.",
     type: "health",
     icon: "🎒",
   },
@@ -794,42 +794,81 @@ const mealPlan = {
       sabzi: "Palak Paneer (or Palak Tofu)",
       why: "Spinach = highest magnesium (~78mg/cup) + iron + Vit K. Paneer = 18g protein/100g. Most nutritionally dense sabzi.",
       cook: "Blanch spinach 2 min, blend smooth. Cook with paneer cubes 5 min. Use dahi instead of cream — same texture, less fat.",
+      seasons: {
+        available: "Winter (Oct–Mar) — peak season, use freely",
+        summer:
+          "🌞 Summer/Monsoon (Apr–Sep): Palak unavailable or wilted. Replace with → Tinda + Paneer (tinda sabzi with paneer cubes) OR Kaddu + Paneer (pumpkin) OR Paneer Bhurji with any available veg. Keep paneer in all cases — that's the protein.",
+      },
     },
     {
       day: "Tuesday",
       sabzi: "Bhindi (Okra) Masala — dry",
-      why: "Very low calorie (35 kcal/100g) but high zinc + magnesium. Good on leg day when you want lighter food. High fibre.",
+      why: "Very low calorie (35 kcal/100g) but high zinc + magnesium. Good on upper pull day. High fibre.",
       cook: "Dry preparation only — no gravy. Mustard seeds + onion + tomato + amchur. Don't cover while cooking — keeps crispy.",
+      seasons: {
+        available:
+          "Summer + Monsoon (Apr–Sep) — peak season, best availability",
+        winter:
+          "❄️ Winter (Oct–Mar): Bhindi out of season, expensive and limp. Replace with → Gobhi + Matar (cauliflower + peas, 5g protein from peas) OR Gajar Matar (carrots + peas) OR Beans Sabzi (French beans, high fibre).",
+      },
     },
     {
       day: "Wednesday",
       sabzi: "Methi Sabzi (fresh fenugreek leaves)",
-      why: "Methi = extremely high magnesium + iron + reduces inflammation. Great on badminton recovery days.",
-      cook: "Fresh methi leaves, roughly chopped. Light tadka: jeera + onion + tiny bit of garlic + tomato. 8 min max — don't overcook.",
+      why: "Methi = extremely high magnesium + iron + reduces inflammation. Great on badminton day.",
+      cook: "Fresh methi leaves, roughly chopped. Light tadka: jeera + onion + garlic + tomato. 8 min max — don't overcook.",
+      seasons: {
+        available: "Winter (Oct–Mar) — peak season",
+        summer:
+          "🌞 Summer/Monsoon (Apr–Sep): Fresh methi unavailable. Replace with → Tori (ridge gourd) sabzi — similar anti-inflammatory properties, very light, 94% water. OR Karela (bitter gourd) — high chromium, controls blood sugar well on active badminton days. OR Raw Papaya sabzi.",
+      },
     },
     {
       day: "Thursday",
       sabzi: "Gobhi + Matar (cauliflower + peas)",
-      why: "Cauliflower: Vit C + B6 + folate. Peas: 5g protein per half cup + iron. Good carb source without being heavy.",
-      cook: "Dry sabzi. Jeera + onion + ginger-garlic + tomato + standard masalas. Finish with fresh coriander.",
+      why: "Cauliflower: Vit C + B6 + folate. Peas: 5g protein per half cup + iron. Good carb source.",
+      cook: "Dry sabzi. Jeera + onion + ginger-garlic + tomato + standard masalas. Finish with coriander.",
+      seasons: {
+        available: "Winter (Oct–Mar) — peak season",
+        summer:
+          "🌞 Summer/Monsoon (Apr–Sep): Gobhi and fresh matar both unavailable. Replace with → Arbi (colocasia/taro) sabzi — earthy, filling, good complex carbs. OR Kathal (raw jackfruit) dry sabzi — meaty texture, decent fibre. OR Tinda + Matar (frozen peas are fine year-round).",
+      },
     },
     {
       day: "Friday",
       sabzi: "Baingan Bharta (roasted brinjal)",
-      why: "Brinjal = 25 kcal/100g — filling but very low calorie. High in nasunin (powerful antioxidant for cell protection).",
+      why: "Brinjal = 25 kcal/100g — filling but very low calorie. High in nasunin (antioxidant).",
       cook: "Roast whole baingan directly on gas flame until charred. Peel, mash. Tadka: mustard seeds + onion + tomato + green chilli.",
+      seasons: {
+        available:
+          "Year-round ✅ — baingan is available all 12 months in Gurgaon. No swap needed.",
+        winter:
+          "❄️ Winter bonus: Add a handful of fresh matar into the bharta for extra protein.",
+      },
     },
     {
       day: "Saturday",
       sabzi: "Lauki (bottle gourd) + Chana",
-      why: "Lauki = 96% water — perfect hydration recovery after morning badminton. Extremely easy on digestion.",
-      cook: "Cubed lauki + soaked chana together in pressure cooker. Light jeera + tomato tadka. Add dahi at end for creaminess.",
+      why: "Lauki = 96% water — perfect hydration recovery. Full rest day so light digestion is ideal.",
+      cook: "Cubed lauki + soaked chana together in pressure cooker. Light jeera + tomato tadka. Add dahi at end.",
+      seasons: {
+        available:
+          "Summer + Monsoon (Apr–Sep) — peak season, cheapest and freshest",
+        winter:
+          "❄️ Winter (Oct–Mar): Lauki gets expensive and dry. Replace with → Sarson ka Saag (mustard greens) — winter superfood, extremely high iron + calcium. OR Gajar Halwa (small portion, rest day treat). OR Palak + Chana — spinach replaces lauki, keeps the chana protein.",
+      },
     },
     {
       day: "Sunday",
-      sabzi: "Shimla Mirch + Paneer Bhurji (capsicum + scrambled paneer)",
-      why: "Capsicum = highest Vit C of any Indian sabzi — supports collagen for joint health. Paneer bhurji = 22g protein, 10 min prep.",
-      cook: "Crumble paneer with fingers. Cook with chopped onion + capsicum + tomato + haldi + red chilli. One pan, 10 min.",
+      sabzi: "Shimla Mirch + Paneer Bhurji",
+      why: "Capsicum = highest Vit C of any Indian sabzi. Paneer bhurji = 22g protein, 10 min prep.",
+      cook: "Crumble paneer. Cook with onion + capsicum + tomato + haldi + red chilli. One pan, 10 min.",
+      seasons: {
+        available:
+          "Year-round ✅ — capsicum available all 12 months. Paneer always available. No swap needed.",
+        winter:
+          "❄️ Winter bonus: Add chopped spinach or methi into the bhurji for extra micronutrients.",
+      },
     },
   ],
   meals: [
@@ -843,7 +882,7 @@ const mealPlan = {
         "3 tbsp rolled oats — blend in, gives sustained energy",
         "300ml low-fat milk",
         "1 tsp peanut butter",
-        "1 tbsp ground flaxseeds (alsi) — omega-3 source, grind before adding",
+        "1 tbsp ground flaxseeds (alsi) — grind DRY in mixer, do NOT soak. Add to shake after grinding. Soaking makes them slimy and unusable in shake.",
         "5g creatine powder (1 level tsp) — tasteless, dissolves fully",
         "→ BUY: AS-IT-IS or ON Micronised Creatine, unflavoured — Amazon India ~₹900/250g",
         "~560 kcal | 65g carbs | 46g protein | 14g fat",
@@ -873,7 +912,7 @@ const mealPlan = {
         "1 cup sabzi — see Sabzi Rotation below ↓",
         "150g dahi (room temp, not cold from fridge)",
         "Salad: cucumber + tomato + onion + lemon + chaat masala",
-        "With lunch: 5 walnuts (omega-3 boost, 2.5g ALA)",
+        "With lunch: 5 soaked walnuts (soak overnight 6–8 hrs — removes tannins, improves omega-3 bioavailability)",
         "~640 kcal | 50g protein | 70g carbs",
       ],
       why: "Dal + paneer/tofu = complete amino acid profile. Walnuts with lunch = second omega-3 hit, habit-free. Dahi at room temp digests better and has more active probiotics than cold curd.",
@@ -900,8 +939,8 @@ const mealPlan = {
         "1 cup greens sabzi — spinach/methi/lauki per rotation",
         "1 bowl lighter dal — moong / masoor / toor (not rajma/chole at night — too heavy)",
         "150g dahi",
-        "AFTER DINNER — Magnesium Stack: 30g pumpkin seeds (kaddu ke beej) + 10–12 almonds",
-        "→ Pumpkin seeds 150mg + almonds 80mg + spinach 78mg + ragi 70mg = ~380mg magnesium total",
+        "AFTER DINNER — Magnesium Stack: 30g soaked pumpkin seeds + 10–12 soaked almonds + 5 soaked walnuts",
+        "→ SOAK TONIGHT for tomorrow: pumpkin seeds (4–8 hrs) + almonds (8 hrs overnight) + walnuts (6–8 hrs). Soaking removes phytic acid which BLOCKS magnesium + mineral absorption. Dry seeds = ~40% less absorption. Keep in a small bowl of water in fridge.",
         "~530 kcal | 40g protein | 55g carbs",
       ],
       why: "Pumpkin seeds + almonds after dinner = full magnesium replacement, no pill needed. Ragi roti is the single best swap in this plan — swap one wheat roti for ragi every day. Also: SUNLIGHT for Vit D — 15 min morning sun on arms before 9am, 5x/week. Sun-treat mushrooms gills-up for 45 min before cooking 3x/week.",
@@ -1265,7 +1304,7 @@ export default function CoachDashboard() {
           paddingBottom: 4,
         }}
       >
-        {tabs.map((t, i) => (
+        {(tabs as any[]).map((t: any, i: number) => (
           <button key={i} style={tabStyle(i)} onClick={() => setActiveTab(i)}>
             {t}
           </button>
@@ -1286,7 +1325,7 @@ export default function CoachDashboard() {
           >
             Your optimised daily routine
           </div>
-          {scheduleData.map((item, i) => (
+          {(scheduleData as any[]).map((item: any, i: number) => (
             <div key={i} style={{ display: "flex", gap: 14, marginBottom: 12 }}>
               <div style={{ minWidth: 52, textAlign: "right", paddingTop: 10 }}>
                 <div
@@ -1400,7 +1439,7 @@ export default function CoachDashboard() {
           >
             📅 Weekly Template
           </div>
-          {workoutPlan.weekTemplate.map((d, i) => (
+          {(workoutPlan.weekTemplate as any[]).map((d: any, i: number) => (
             <div
               key={i}
               style={{
@@ -1528,7 +1567,7 @@ export default function CoachDashboard() {
           >
             🏋️ Tap day to see exercises + variations
           </div>
-          {workoutPlan.days.map((day, i) => (
+          {(workoutPlan.days as any[]).map((day: any, i: number) => (
             <div
               key={i}
               style={{
@@ -1584,7 +1623,7 @@ export default function CoachDashboard() {
               </div>
               {expandedDay === i && (
                 <div style={{ padding: "0 16px 16px" }}>
-                  {day.exercises.map((ex, j) => {
+                  {(day.exercises as any[]).map((ex: any, j: number) => {
                     const exKey = `${i}-${j}`;
                     return (
                       <div
@@ -1703,18 +1742,20 @@ export default function CoachDashboard() {
                                   borderLeft: `2px solid ${COLORS.orange}`,
                                 }}
                               >
-                                {ex.variations.map((v, k) => (
-                                  <div
-                                    key={k}
-                                    style={{
-                                      fontSize: 11,
-                                      color: COLORS.textDim,
-                                      marginBottom: 4,
-                                    }}
-                                  >
-                                    • {v}
-                                  </div>
-                                ))}
+                                {(ex.variations as any[]).map(
+                                  (v: any, k: number) => (
+                                    <div
+                                      key={k}
+                                      style={{
+                                        fontSize: 11,
+                                        color: COLORS.textDim,
+                                        marginBottom: 4,
+                                      }}
+                                    >
+                                      • {v}
+                                    </div>
+                                  )
+                                )}
                               </div>
                             )}
                           </div>
@@ -1772,7 +1813,7 @@ export default function CoachDashboard() {
                   val: mealPlan.deficit,
                   col: COLORS.green,
                 },
-              ].map((m, i) => (
+              ].map((m: any, i: number) => (
                 <div
                   key={i}
                   style={{
@@ -1821,7 +1862,7 @@ export default function CoachDashboard() {
               },
               { label: "Carbs", val: mealPlan.macros.carbs, col: COLORS.blue },
               { label: "Fat", val: mealPlan.macros.fat, col: COLORS.orange },
-            ].map((m, i) => (
+            ].map((m: any, i: number) => (
               <div
                 key={i}
                 style={{
@@ -1850,7 +1891,7 @@ export default function CoachDashboard() {
           </div>
 
           {/* Meals */}
-          {mealPlan.meals.map((meal, i) => (
+          {(mealPlan.meals as any[]).map((meal: any, i: number) => (
             <div
               key={i}
               style={{
@@ -1866,7 +1907,7 @@ export default function CoachDashboard() {
                 {meal.icon} {meal.label}
               </div>
               <ul style={{ margin: 0, paddingLeft: 16 }}>
-                {meal.items.map((item, j) => (
+                {meal.items.map((item: any, j: number) => (
                   <li
                     key={j}
                     style={{
@@ -1920,7 +1961,7 @@ export default function CoachDashboard() {
               Rotating dals weekly gives you different proteins, amino acids,
               and micronutrients. Never eat the same dal every day.
             </div>
-            {mealPlan.dalRotation.map((d, i) => (
+            {(mealPlan.dalRotation as any[]).map((d: any, i: number) => (
               <div
                 key={i}
                 style={{
@@ -2005,10 +2046,11 @@ export default function CoachDashboard() {
                 lineHeight: 1.6,
               }}
             >
-              Each sabzi is chosen for specific nutritional purpose — not just
-              taste. Follow this as a default, swap if not available.
+              Each sabzi chosen for specific nutritional purpose. Seasonal swaps
+              shown below each — use whatever is fresh and available in the
+              market.
             </div>
-            {mealPlan.sabziRotation.map((s, i) => (
+            {(mealPlan.sabziRotation as any[]).map((s: any, i: number) => (
               <div
                 key={i}
                 style={{
@@ -2041,10 +2083,57 @@ export default function CoachDashboard() {
                     padding: "6px 8px",
                     borderRadius: 6,
                     lineHeight: 1.6,
+                    marginBottom: 6,
                   }}
                 >
                   🍳 {s.cook}
                 </div>
+                {s.seasons && (
+                  <div>
+                    <div
+                      style={{
+                        fontSize: 11,
+                        color: COLORS.green,
+                        background: "#001a00",
+                        padding: "5px 8px",
+                        borderRadius: 6,
+                        marginBottom: 4,
+                        lineHeight: 1.5,
+                      }}
+                    >
+                      ✅ {s.seasons.available}
+                    </div>
+                    {s.seasons.summer && (
+                      <div
+                        style={{
+                          fontSize: 11,
+                          color: "#ffcc00",
+                          background: "#1a1200",
+                          padding: "5px 8px",
+                          borderRadius: 6,
+                          marginBottom: 4,
+                          lineHeight: 1.6,
+                        }}
+                      >
+                        {s.seasons.summer}
+                      </div>
+                    )}
+                    {s.seasons.winter && (
+                      <div
+                        style={{
+                          fontSize: 11,
+                          color: "#88ccff",
+                          background: "#001020",
+                          padding: "5px 8px",
+                          borderRadius: 6,
+                          lineHeight: 1.6,
+                        }}
+                      >
+                        {s.seasons.winter}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -2062,7 +2151,7 @@ export default function CoachDashboard() {
             >
               🔄 Calorie Cycling by Day Type
             </div>
-            {mealPlan.calorieCycling.map((c, i) => (
+            {(mealPlan.calorieCycling as any[]).map((c: any, i: number) => (
               <div
                 key={i}
                 style={{
@@ -2129,7 +2218,7 @@ export default function CoachDashboard() {
             >
               🚫 AVOID (These kill progress)
             </div>
-            {mealPlan.avoid.map((a, i) => (
+            {(mealPlan.avoid as any[]).map((a: any, i: number) => (
               <div
                 key={i}
                 style={{
@@ -2183,7 +2272,7 @@ export default function CoachDashboard() {
               .
             </div>
           </div>
-          {sleepProtocol.map((item, i) => (
+          {(sleepProtocol as any[]).map((item: any, i: number) => (
             <div
               key={i}
               style={{
@@ -2256,7 +2345,7 @@ export default function CoachDashboard() {
               "Shoe Dog — Phil Knight (engaging non-fiction, no stress before bed)",
               "A Man Called Ove — Fredrik Backman (light fiction, absorbing)",
               "The Psychology of Money — Morgan Housel (short chapters, perfect for before bed)",
-            ].map((b, i) => (
+            ].map((b: any, i: number) => (
               <div
                 key={i}
                 style={{
@@ -2305,7 +2394,7 @@ export default function CoachDashboard() {
               >
                 📍 Right Now
               </div>
-              {Object.entries(stats.current).map(([k, v]) => (
+              {Object.entries(stats.current).map(([k, v]: [string, any]) => (
                 <div key={k} style={{ marginBottom: 8 }}>
                   <div
                     style={{
@@ -2343,7 +2432,7 @@ export default function CoachDashboard() {
               >
                 🎯 Target
               </div>
-              {Object.entries(stats.targets).map(([k, v]) => (
+              {Object.entries(stats.targets).map(([k, v]: [string, any]) => (
                 <div key={k} style={{ marginBottom: 8 }}>
                   <div
                     style={{
@@ -2379,7 +2468,7 @@ export default function CoachDashboard() {
           >
             📊 Weekly Targets
           </div>
-          {stats.weeklyTargets.map((t, i) => (
+          {(stats.weeklyTargets as any[]).map((t: any, i: number) => (
             <div key={i} style={{ display: "flex", gap: 10, marginBottom: 8 }}>
               <div
                 style={{
@@ -2424,7 +2513,7 @@ export default function CoachDashboard() {
           >
             📅 Milestone Timeline
           </div>
-          {stats.milestones.map((m, i) => (
+          {(stats.milestones as any[]).map((m: any, i: number) => (
             <div key={i} style={{ display: "flex", gap: 12, marginBottom: 10 }}>
               <div
                 style={{
@@ -2478,7 +2567,7 @@ export default function CoachDashboard() {
             >
               📏 How to Actually Track Progress
             </div>
-            {stats.trackingTips.map((tip, i) => (
+            {(stats.trackingTips as any[]).map((tip: any, i: number) => (
               <div
                 key={i}
                 style={{
