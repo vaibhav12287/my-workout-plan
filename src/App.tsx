@@ -18,12 +18,12 @@ const COLORS = {
 
 const tabs = ["📅 Schedule", "🏋️ Workout", "🥗 Meals", "😴 Sleep", "📊 Goals"];
 
-const scheduleData = [
+const gymDaySchedule = [
   {
     time: "07:30",
     label: "WAKE UP — Zero Snooze",
     detail:
-      "One alarm. Stand up immediately. Snooze fragments sleep and makes grogginess worse (sleep inertia). Open curtains right away — morning sunlight resets your circadian clock.",
+      "One alarm. Stand up immediately. Snooze = sleep inertia = worse grogginess. Open curtains right away.",
     type: "sleep",
     icon: "🌅",
   },
@@ -31,7 +31,7 @@ const scheduleData = [
     time: "07:31",
     label: "☀️ Sunlight — 5 min",
     detail:
-      "Step to window or outside for 2–5 min. Morning sunlight on face/arms triggers cortisol rise (your body's natural wake signal), suppresses residual melatonin, and sets your sleep timer for exactly 16 hours later — meaning you'll feel sleepy right at 23:00. Even on cloudy days, do this.",
+      "Step outside or to window. Morning sunlight triggers cortisol rise and sets your sleep timer for 23:00 tonight. Do this even on cloudy days.",
     type: "health",
     icon: "☀️",
   },
@@ -39,7 +39,7 @@ const scheduleData = [
     time: "07:35",
     label: "💧 Water #1 — 400ml",
     detail:
-      "2 full glasses immediately on waking. You've had zero water for 7.5 hours — most dehydrated point of your day. Do this before phone, before anything else.",
+      "2 full glasses immediately. Zero water for 7.5 hours — most dehydrated point of your day. Before phone, before anything.",
     type: "water",
     icon: "💧",
   },
@@ -47,7 +47,7 @@ const scheduleData = [
     time: "07:40",
     label: "Pre-Workout Power Shake",
     detail:
-      "Blend: 2 bananas + 1.5 scoops whey + 3 tbsp oats + 300ml milk + 1 tbsp peanut butter + 1 tbsp ground alsi (flaxseeds) + 1 tsp creatine powder. ~560 kcal | 65g carbs | 46g protein. Drink fast — you leave in 15 min.",
+      "Blend: 2 bananas + 1.5 scoops whey + 3 tbsp oats + 300ml milk + 1 tbsp peanut butter + 1 tbsp ground alsi (grind DRY, never soak) + 1 tsp creatine. ~560 kcal | 65g carbs | 46g protein. Drink fast — leaving in 15 min.",
     type: "food",
     icon: "🥤",
   },
@@ -55,7 +55,7 @@ const scheduleData = [
     time: "07:55",
     label: "Leave for Gym",
     detail:
-      "Bag packed the night before. Carry: 1L water bottle, shaker with 1 dry scoop whey for post-workout, earphones.",
+      "Bag packed last night. Carry: 1L water bottle, shaker with 1 dry scoop whey for post-workout, earphones.",
     type: "work",
     icon: "🎧",
   },
@@ -63,7 +63,7 @@ const scheduleData = [
     time: "08:30",
     label: "GYM — Dynamic Warm-Up (5 min)",
     detail:
-      "Never skip: arm circles x10, hip circles x10, bodyweight squats x10, leg swings x10 each side, band pull-aparts if available. Cold muscles + heavy weights = injury. You woke up 1 hour ago.",
+      "Never skip: arm circles x10, hip circles x10, bodyweight squats x10, leg swings x10 each. Cold muscles + heavy weights = injury.",
     type: "gym",
     icon: "🔥",
   },
@@ -71,7 +71,7 @@ const scheduleData = [
     time: "08:35",
     label: "💧 Water #2 — 500–750ml during gym",
     detail:
-      "Sip every 2–3 sets throughout. Don't chug all at once — causes cramps mid-set. Finish the bottle by the time you're done. 1% dehydration = 10% drop in strength output.",
+      "Sip every 2–3 sets. Don't chug — causes cramps. 1% dehydration = 10% drop in strength.",
     type: "water",
     icon: "💧",
   },
@@ -79,7 +79,7 @@ const scheduleData = [
     time: "08:35",
     label: "GYM — Main Session (75 min)",
     detail:
-      "Per weekly split (see Workout tab). Compounds first, accessories after. LOG EVERY SET — weight used + reps done — in your Notes app. This is how you track progressive overload. No log = no progress.",
+      "Per weekly split (Workout tab). Compounds first, accessories after. LOG EVERY SET — weight + reps in Notes app. No log = no progressive overload = no progress.",
     type: "gym",
     icon: "🏋️",
   },
@@ -87,7 +87,7 @@ const scheduleData = [
     time: "09:50",
     label: "GYM — Cool Down (5 min)",
     detail:
-      "Static stretches: chest doorway stretch, lat stretch, quad stretch, hamstring stretch. 30 sec each. Reduces DOMS for the next day.",
+      "Static stretches: chest doorway, lat stretch, quad stretch, hamstring stretch. 30 sec each. Reduces DOMS tomorrow.",
     type: "health",
     icon: "🧘",
   },
@@ -95,7 +95,7 @@ const scheduleData = [
     time: "09:55",
     label: "Post-Workout Shake — AT GYM",
     detail:
-      "Mix 1 scoop whey in 300ml water from shaker. Drink BEFORE showering — within 20 min of last set. Muscle protein synthesis peaks now. Don't wait until office (11:00+ = too late).",
+      "1 scoop whey in 300ml water. Drink BEFORE showering — within 20 min of last set. Muscle protein synthesis peaks now. Waiting until office wastes this window.",
     type: "food",
     icon: "🥛",
   },
@@ -103,7 +103,7 @@ const scheduleData = [
     time: "10:00",
     label: "Shower at Gym",
     detail:
-      "End with 30–60 sec cold water on back and legs. Reduces muscle soreness, improves alertness. Gets you sharp before office.",
+      "End with 30–60 sec cold water on back and legs. Reduces soreness, improves alertness before office.",
     type: "health",
     icon: "🚿",
   },
@@ -111,7 +111,7 @@ const scheduleData = [
     time: "11:00",
     label: "Office — Deep Work Block",
     detail:
-      "Post-workout endorphins + focus window = your best cognitive time of day. Block meetings here if possible. No social media until 13:00.",
+      "Post-workout endorphins = best cognitive window of day. Block meetings here if possible. No social media until 13:00.",
     type: "work",
     icon: "💻",
   },
@@ -119,15 +119,15 @@ const scheduleData = [
     time: "11:00",
     label: "💧 Water #3 — 500ml (11:00–13:00)",
     detail:
-      "1 full bottle at desk over 2 hours. Sip constantly — don't wait until thirsty. Thirst = already 1–2% dehydrated. Urine check: should be pale yellow, not dark.",
+      "1 bottle at desk over 2 hours. Sip constantly. Urine = pale yellow is good, dark = drink more.",
     type: "water",
     icon: "💧",
   },
   {
     time: "13:30",
-    label: "Mid-Morning Snack (only if hungry)",
+    label: "Snack (only if hungry)",
     detail:
-      "10–12 almonds + 1 apple OR small bowl makhana. Skip entirely if not hungry — don't force calories.",
+      "Soaked almonds + apple OR makhana. Skip if not hungry — don't force calories.",
     type: "food",
     icon: "🍎",
   },
@@ -135,7 +135,7 @@ const scheduleData = [
     time: "14:00",
     label: "💧 Water #4 — 200ml with lunch",
     detail:
-      "Small glass with food only. Don't overdrink during meals — dilutes stomach acid and slows digestion. Small sips only.",
+      "Small glass only with food. Don't overdrink during meals — dilutes digestive enzymes.",
     type: "water",
     icon: "💧",
   },
@@ -143,7 +143,7 @@ const scheduleData = [
     time: "14:00",
     label: "LUNCH — Biggest Meal",
     detail:
-      "Dal (per rotation) + paneer/tofu + sabzi (per rotation) + dahi + salad + 2 rotis or rice. Eat away from desk — no screens. 20 min minimum. 5 walnuts on the side.",
+      "Dal (rotation) + paneer/tofu + sabzi (rotation) + dahi + salad + 2 rotis. Away from desk, 20 min minimum. 5 soaked walnuts on the side.",
     type: "food",
     icon: "🍱",
   },
@@ -151,7 +151,7 @@ const scheduleData = [
     time: "14:25",
     label: "Post-Lunch Walk",
     detail:
-      "5–10 min walk outside or around office block. Non-negotiable — regulates blood sugar and prevents the 3pm energy crash.",
+      "5–10 min walk outside. Regulates blood sugar, prevents 3pm crash. Non-negotiable.",
     type: "health",
     icon: "🚶",
   },
@@ -159,7 +159,7 @@ const scheduleData = [
     time: "14:30",
     label: "💧 Water #5 — 400ml (14:30–17:00)",
     detail:
-      "Another bottle at desk over the afternoon. This is the most neglected window. Afternoon dehydration shows up as 3pm brain fog — people blame the food, it's usually the water.",
+      "Bottle at desk. Most neglected window. Dehydration here = 3pm brain fog.",
     type: "water",
     icon: "💧",
   },
@@ -167,78 +167,46 @@ const scheduleData = [
     time: "16:00",
     label: "☕ Last Coffee Cut-Off",
     detail:
-      "No caffeine after 16:00. Caffeine half-life is 5–6 hours — coffee at 4pm = half of it still in your bloodstream at 10pm. Switch to water or herbal tea from here.",
+      "No caffeine after 16:00. Half-life 5–6 hrs — coffee at 4pm = half in blood at 10pm. Water or herbal tea only from here.",
     type: "health",
     icon: "☕",
   },
   {
-    time: "17:00",
-    label: "💧 Water #6 — 200ml before snack",
+    time: "18:30",
+    label: "Leave Office (Mon/Fri — No Badminton)",
     detail:
-      "Glass of water before eating your pre-badminton snack. Pre-hydrates you for court and helps with satiety.",
-    type: "water",
-    icon: "💧",
-  },
-  {
-    time: "17:00",
-    label: "Pre-Badminton Snack (Tue/Wed/Thu/Sun)",
-    detail:
-      "150g Greek yogurt / hung curd + 1 banana OR 1 cup roasted makhana. Eat at 17:00 sharp — exactly 90 min before court. On non-badminton days (Mon/Fri/Sat): skip or have 10 almonds only.",
-    type: "food",
-    icon: "⚡",
-  },
-  {
-    time: "18:50",
-    label: "Leave Office",
-    detail:
-      "Carry electrolyte bottle for badminton: 500ml water + pinch salt + lemon, pre-mixed. No coffee since 16:00.",
+      "Mon and Fri have no badminton. Head home. Full rest evening. Fri especially — legs need recovery after heavy lower day.",
     type: "work",
     icon: "🚗",
   },
   {
-    time: "19:30",
-    label: "💧 Water #7 — 500–600ml during badminton",
+    time: "19:00",
+    label: "Light Evening Walk (Mon/Fri)",
     detail:
-      "Sip between every 2–3 rallies, not just at breaks. Electrolyte mix replaces sodium lost in sweat. On non-badminton Mon/Fri/Sat evenings: still drink 300ml water around this time.",
-    type: "water",
-    icon: "💧",
-  },
-  {
-    time: "19:30",
-    label: "BADMINTON (60 min)",
-    detail:
-      "Your cardio for the day. Tue + Thu evenings, Sat + Sun mornings. Play hard — this is HIIT-level intensity. No gym on these days.",
-    type: "gym",
-    icon: "🏸",
-  },
-  {
-    time: "20:30",
-    label: "Post-Badminton Stretch",
-    detail:
-      "10 min non-negotiable: hip flexors (lunge stretch 30s each), calves (wall stretch), hamstrings (seated), rotator cuff (cross-arm stretch). Badminton is brutal on ankles and knees long-term.",
+      "Optional 15–20 min easy walk after getting home. Not cardio — just keeps metabolism active and aids digestion. No intensity at all.",
     type: "health",
-    icon: "🧘",
+    icon: "🚶",
   },
   {
-    time: "21:15",
-    label: "💧 Water #8 — 200ml with dinner",
-    detail: "Small glass with dinner. Last proper meal of the day.",
+    time: "21:00",
+    label: "💧 Water #6 — 200ml with dinner",
+    detail:
+      "Small glass with dinner. Mon/Fri eat slightly earlier since no badminton.",
     type: "water",
     icon: "💧",
   },
   {
-    time: "21:15",
-    label: "DINNER",
+    time: "21:00",
+    label: "DINNER (Mon/Fri — Earlier)",
     detail:
-      "Ragi roti (or 1–2 wheat rotis) + greens sabzi per rotation + lighter dal (moong/masoor/toor only) + 150g dahi. Finish eating by 21:45. After dinner: 30g pumpkin seeds + 10–12 almonds = magnesium stack.",
+      "Ragi roti + greens sabzi (rotation) + lighter dal (moong/masoor/toor only at night) + dahi. Finish by 21:30. After: 30g soaked pumpkin seeds + soaked almonds.",
     type: "food",
     icon: "🍽️",
   },
   {
-    time: "21:45",
-    label: "💧 Water #9 — LAST 200ml",
-    detail:
-      "Final water of the day. Hard stop here. Drinking after 22:00 = bathroom at 2–3am = broken sleep architecture. Your kidneys will thank you.",
+    time: "21:30",
+    label: "💧 Water #7 — LAST 200ml",
+    detail: "Final water. Hard cut-off. Nothing after this.",
     type: "water",
     icon: "💧",
   },
@@ -246,31 +214,30 @@ const scheduleData = [
     time: "22:00",
     label: "Wind-Down Begins",
     detail:
-      "Dim all overhead lights — use a bedside lamp only. Bright light suppresses melatonin. Reply to urgent messages is fine but no reels, Twitter, or news from here.",
+      "Dim all lights — bedside lamp only. No reels/Twitter/news. Urgent messages OK.",
     type: "sleep",
     icon: "🌙",
   },
   {
     time: "22:15",
-    label: "Pack Gym Bag + Soak Seeds/Nuts",
+    label: "🎒 Pack Gym Bag + Soak Seeds",
     detail:
-      "1. Lay out gym clothes, refill water bottle, put dry whey scoop in shaker, earphones charged. 2. SOAK FOR TOMORROW: small bowl — 30g pumpkin seeds + 10–12 almonds + 5 walnuts in water. Cover and leave on counter or fridge. Eat them tomorrow evening after dinner. Soaking removes phytic acid which blocks magnesium and mineral absorption — dry seeds give ~40% less benefit.",
+      "1. Gym clothes out, water bottle refilled, dry whey scoop in shaker, earphones charged. 2. SOAK: 30g pumpkin seeds + 10–12 almonds + 5 walnuts in bowl of water overnight. Soaking removes phytic acid — dry seeds give ~40% less magnesium absorption.",
     type: "health",
     icon: "🎒",
   },
   {
     time: "22:30",
-    label: "📵 PHONE DOWN — Non-Negotiable",
+    label: "📵 PHONE DOWN",
     detail:
-      "Phone on charger outside the bedroom or face-down across the room. Phone in bedroom = average 45 min less sleep per night (clinical data). Alarm is fine — just make yourself get up to turn it off.",
+      "Phone outside bedroom. 45 min more sleep on average without phone in room. Alarm fine — just across the room.",
     type: "sleep",
     icon: "📵",
   },
   {
     time: "22:30",
     label: "Read for 30 min",
-    detail:
-      "Physical book or Kindle on warm/night mode. Fiction works best — absorbing but not stimulating. No work content, no news. This shifts your brain from alert → sleep mode passively.",
+    detail: "Physical book or Kindle warm mode. Fiction best. No work or news.",
     type: "sleep",
     icon: "📚",
   },
@@ -278,7 +245,7 @@ const scheduleData = [
     time: "22:45",
     label: "Magnesium Glycinate — 300mg",
     detail:
-      "With a small sip of water only (you've hit cut-off). Reduces time to fall asleep and improves sleep depth. Not a sedative — removes nervous system friction. Take every night.",
+      "Small sip of water only. Reduces time to fall asleep, improves sleep depth. Every night.",
     type: "health",
     icon: "💊",
   },
@@ -286,12 +253,502 @@ const scheduleData = [
     time: "23:00",
     label: "Lights Out",
     detail:
-      "23:00 → 07:30 = 7.5 hrs = exactly 5 complete 90-min sleep cycles. Growth hormone, testosterone, muscle repair, and fat metabolism all peak during deep sleep. This is the most anabolic part of your day.",
+      "23:00 → 07:30 = 7.5 hrs = 5 full 90-min cycles. Growth hormone, testosterone, muscle repair, fat metabolism all peak during deep sleep.",
     type: "sleep",
     icon: "😴",
   },
 ];
 
+const badmintonEveningSchedule = [
+  {
+    time: "07:30",
+    label: "WAKE UP — Same Time Always",
+    detail:
+      "07:30 every day including Tue/Wed/Thu. Consistent wake time is the foundation. No exceptions.",
+    type: "sleep",
+    icon: "🌅",
+  },
+  {
+    time: "07:31",
+    label: "☀️ Sunlight — 5 min",
+    detail: "Window or outside. Every single day.",
+    type: "health",
+    icon: "☀️",
+  },
+  {
+    time: "07:35",
+    label: "💧 Water — 400ml",
+    detail: "2 glasses immediately on waking.",
+    type: "water",
+    icon: "💧",
+  },
+  {
+    time: "07:40",
+    label: "Full Power Shake",
+    detail:
+      "Blend: 2 bananas + 1.5 scoops whey + 3 tbsp oats + 300ml milk + PB + ground alsi (grind DRY) + 1 tsp creatine. ~560 kcal | 65g carbs | 46g protein. You have gym AND badminton today — need the full fuel.",
+    type: "food",
+    icon: "🥤",
+    showOn: [1],
+  },
+  {
+    time: "07:40",
+    label: "Light Breakfast — No Gym Today",
+    detail:
+      "Skip the big shake. Have: 1 banana + 1 scoop whey in water + soaked almonds + soaked walnuts. ~280 kcal. No oats, no PB — you're not lifting this morning. Still add creatine into the whey water.",
+    type: "food",
+    icon: "🥣",
+    showOn: [2],
+  },
+  {
+    time: "07:55",
+    label: "Leave for Gym",
+    detail:
+      "Bag packed last night. 1L water, shaker with dry post-workout scoop, earphones.",
+    type: "work",
+    icon: "🎧",
+    showOn: [1],
+  },
+  {
+    time: "08:00",
+    label: "Morning Walk or Stretch (15–20 min)",
+    detail:
+      "No gym today. 15 min morning walk outside is the best option — OR 10 min hip flexor + hamstring stretch at home. Especially good since you played Wed badminton last night. Active recovery, not training.",
+    type: "health",
+    icon: "🧘",
+    showOn: [2],
+  },
+  {
+    time: "08:30",
+    label: "GYM — Dynamic Warm-Up + 75 min Session",
+    detail:
+      "Warm-up 5 min (arm circles, hip circles, squats, leg swings). Then main session per weekly split. Log every set. Post-workout shake at gym before shower.",
+    type: "gym",
+    icon: "🏋️",
+    showOn: [1],
+  },
+  {
+    time: "08:30",
+    label: "Leave for Office",
+    detail:
+      "No gym today — head straight to office. Thu is a rest morning by design.",
+    type: "work",
+    icon: "🚗",
+    showOn: [2],
+  },
+  {
+    time: "10:00",
+    label: "Shower at Gym + Leave for Office",
+    detail: "Cold finish 30–60 sec. Reduces soreness, improves alertness.",
+    type: "health",
+    icon: "🚿",
+    showOn: [1],
+  },
+  {
+    time: "11:00",
+    label: "Office — Work Block",
+    detail:
+      "Tue/Wed: post-workout focus window. Thu: normal morning energy. Keep water on desk.",
+    type: "work",
+    icon: "💻",
+  },
+  {
+    time: "11:00",
+    label: "💧 Water — 500ml (11:00–13:00)",
+    detail: "1 bottle at desk over 2 hours. Sip constantly.",
+    type: "water",
+    icon: "💧",
+  },
+  {
+    time: "13:30",
+    label: "Snack (only if hungry)",
+    detail: "Soaked almonds + apple OR makhana. Skip if not hungry.",
+    type: "food",
+    icon: "🍎",
+  },
+  {
+    time: "14:00",
+    label: "💧 Water — 200ml with lunch",
+    detail: "Small glass only.",
+    type: "water",
+    icon: "💧",
+  },
+  {
+    time: "14:00",
+    label: "LUNCH — Biggest Meal",
+    detail:
+      "Dal + paneer/tofu + sabzi + dahi + salad + 2 rotis. Away from desk, 20 min. 5 soaked walnuts.",
+    type: "food",
+    icon: "🍱",
+  },
+  {
+    time: "14:25",
+    label: "Post-Lunch Walk",
+    detail: "5–10 min walk. Non-negotiable.",
+    type: "health",
+    icon: "🚶",
+  },
+  {
+    time: "14:30",
+    label: "💧 Water — 400ml (14:30–17:00)",
+    detail: "Bottle at desk. Don't forget.",
+    type: "water",
+    icon: "💧",
+  },
+  {
+    time: "16:00",
+    label: "☕ Last Coffee Cut-Off",
+    detail:
+      "No caffeine after 16:00. Badminton tonight — you must sleep by 23:00.",
+    type: "health",
+    icon: "☕",
+  },
+  {
+    time: "17:00",
+    label: "💧 Water — 200ml before snack",
+    detail: "Glass of water before eating.",
+    type: "water",
+    icon: "💧",
+  },
+  {
+    time: "17:00",
+    label: "⚡ Pre-Badminton Snack — EAT AT 17:00 SHARP",
+    detail:
+      "150g Milky Mist Skyr yogurt + 2 baby bananas OR 1 regular banana. ~250 kcal | 17g protein | 48g carbs. 90 min before court = optimal. Eating closer = heavy legs + cramps on court.",
+    type: "food",
+    icon: "⚡",
+  },
+  {
+    time: "18:50",
+    label: "Leave Office",
+    detail:
+      "Carry electrolyte bottle: 500ml water + pinch salt + lemon. Pre-mixed and ready.",
+    type: "work",
+    icon: "🚗",
+  },
+  {
+    time: "19:30",
+    label: "💧 Water — 500–600ml during badminton",
+    detail:
+      "Sip between every 2–3 rallies. Don't wait for breaks. Electrolyte mix replaces sodium lost in sweat.",
+    type: "water",
+    icon: "💧",
+  },
+  {
+    time: "19:30",
+    label: "BADMINTON (60 min)",
+    detail:
+      "Tue/Wed/Thu evenings. Play hard — HIIT level intensity. This is your cardio for the day.",
+    type: "gym",
+    icon: "🏸",
+  },
+  {
+    time: "20:30",
+    label: "Post-Badminton Stretch — 10 min",
+    detail:
+      "Hip flexors (lunge 30s each side), calves (wall stretch), hamstrings (seated), rotator cuff (cross-arm). Non-negotiable — this prevents long-term knee and ankle injury.",
+    type: "health",
+    icon: "🧘",
+  },
+  {
+    time: "21:15",
+    label: "💧 Water — 200ml with dinner",
+    detail: "Small glass with dinner.",
+    type: "water",
+    icon: "💧",
+  },
+  {
+    time: "21:15",
+    label: "DINNER",
+    detail:
+      "Ragi roti + greens sabzi (rotation) + lighter dal (moong/masoor/toor only — no rajma/chole at night) + dahi. Finish by 21:45. After: 30g soaked pumpkin seeds + soaked almonds.",
+    type: "food",
+    icon: "🍽️",
+  },
+  {
+    time: "21:45",
+    label: "💧 Water — LAST 200ml",
+    detail: "Hard cut-off. Nothing after this.",
+    type: "water",
+    icon: "💧",
+  },
+  {
+    time: "22:00",
+    label: "Wind-Down",
+    detail: "Dim lights. No reels/news. Urgent messages OK.",
+    type: "sleep",
+    icon: "🌙",
+  },
+  {
+    time: "22:15",
+    label: "🎒 Pack Bag + Soak Seeds",
+    detail:
+      "Gym bag for tomorrow if needed. Soak: pumpkin seeds + almonds + walnuts in bowl overnight.",
+    type: "health",
+    icon: "🎒",
+  },
+  {
+    time: "22:30",
+    label: "📵 PHONE DOWN",
+    detail: "Phone outside bedroom. 45 min more sleep without phone in room.",
+    type: "sleep",
+    icon: "📵",
+  },
+  {
+    time: "22:30",
+    label: "Read for 30 min",
+    detail: "Physical book or Kindle warm mode. Fiction. No work or news.",
+    type: "sleep",
+    icon: "📚",
+  },
+  {
+    time: "22:45",
+    label: "Magnesium Glycinate — 300mg",
+    detail: "Small sip of water. Every night.",
+    type: "health",
+    icon: "💊",
+  },
+  {
+    time: "23:00",
+    label: "Lights Out",
+    detail:
+      "7.5 hrs = 5 full cycles. This is where the transformation happens.",
+    type: "sleep",
+    icon: "😴",
+  },
+];
+
+const weekendSchedule = [
+  {
+    time: "07:30",
+    label: "WAKE UP — Same Time on Weekends Too",
+    detail:
+      "07:30 even on Sat/Sun. Sleeping in causes social jet lag — you'll feel worse on Monday. Weekends are not a cheat code for sleep debt.",
+    type: "sleep",
+    icon: "🌅",
+    showOn: [3, 4],
+  },
+  {
+    time: "07:31",
+    label: "☀️ Sunlight — 5 min",
+    detail: "Every day. Non-negotiable.",
+    type: "health",
+    icon: "☀️",
+    showOn: [3, 4],
+  },
+  {
+    time: "07:35",
+    label: "💧 Water — 400ml",
+    detail: "2 glasses immediately.",
+    type: "water",
+    icon: "💧",
+    showOn: [3, 4],
+  },
+  {
+    time: "07:40",
+    label: "Pre-Badminton Light Breakfast",
+    detail:
+      "Badminton at 9am = eat 90 min before = 07:30–07:45. 150g Skyr yogurt + 1 banana + soaked almonds. ~280 kcal. Light — enough fuel without heaviness on court. Add creatine into yogurt.",
+    type: "food",
+    icon: "🥣",
+    showOn: [4],
+  },
+  {
+    time: "07:40",
+    label: "Relaxed Breakfast — Full Rest Day",
+    detail:
+      "No shake, no rush. 2 rotis + dahi + 1 fruit OR poha + dahi. Sit down, enjoy it slowly. Rest is part of the plan. Add creatine in a small glass of water or milk.",
+    type: "food",
+    icon: "🍳",
+    showOn: [3],
+  },
+  {
+    time: "08:30",
+    label: "Leave for Badminton Court",
+    detail:
+      "Carry electrolyte water. Light 3 min jog warm-up before starting. Best session of the week — fresh legs after Saturday rest.",
+    type: "work",
+    icon: "🚗",
+    showOn: [4],
+  },
+  {
+    time: "08:30",
+    label: "Foam Roll + Leisure Walk",
+    detail:
+      "15 min foam rolling: calves, IT band, upper back, hip flexors. Then 20–30 min easy walk outside. No intensity — your body rebuilds on rest days not gym days.",
+    type: "health",
+    icon: "🧘",
+    showOn: [3],
+  },
+  {
+    time: "09:00",
+    label: "💧 Water — 500–600ml during badminton",
+    detail:
+      "Morning Gurgaon heat = more sweat than evening sessions. Electrolyte mix: water + pinch salt + lemon.",
+    type: "water",
+    icon: "💧",
+    showOn: [4],
+  },
+  {
+    time: "09:00",
+    label: "BADMINTON — Morning Session (9–11am)",
+    detail:
+      "Two hours. Best session of the week — fresh legs, cool morning air. Play hard and enjoy it.",
+    type: "gym",
+    icon: "🏸",
+    showOn: [4],
+  },
+  {
+    time: "11:00",
+    label: "Post-Badminton Stretch",
+    detail:
+      "10 min: hip flexors, calves, hamstrings, shoulders. Don't skip — 2 hours of badminton is serious load on knees and ankles.",
+    type: "health",
+    icon: "🧘",
+    showOn: [4],
+  },
+  {
+    time: "11:15",
+    label: "💧 Water — 300ml rehydrate",
+    detail: "Rehydrate before eating after the session.",
+    type: "water",
+    icon: "💧",
+    showOn: [4],
+  },
+  {
+    time: "12:00",
+    label: "Post-Badminton Meal",
+    detail:
+      "Dal + paneer/tofu + sabzi + rice or rotis + dahi. Eat soon after court — you've been active for 2 hours. 5 soaked walnuts.",
+    type: "food",
+    icon: "🍱",
+    showOn: [4],
+  },
+  {
+    time: "13:30",
+    label: "LUNCH",
+    detail:
+      "Dal + paneer/tofu + sabzi + rotis + dahi + salad. Normal lunch time. 5 soaked walnuts.",
+    type: "food",
+    icon: "🍱",
+    showOn: [3],
+  },
+  {
+    time: "14:00",
+    label: "💧 Water — 400ml (afternoon)",
+    detail:
+      "Easy to forget on weekends without office routine. Set a reminder if needed.",
+    type: "water",
+    icon: "💧",
+    showOn: [3, 4],
+  },
+  {
+    time: "15:00",
+    label: "Afternoon Rest",
+    detail:
+      "Nap max 20 min (longer = groggy + disrupts night sleep). Reading, family time, leisure. No intense activity. This is the most underrated part of the plan.",
+    type: "health",
+    icon: "😌",
+    showOn: [3, 4],
+  },
+  {
+    time: "17:00",
+    label: "Light Snack",
+    detail:
+      "Soaked almonds + 1 fruit OR makhana. No evening court on weekends.",
+    type: "food",
+    icon: "🍎",
+    showOn: [3, 4],
+  },
+  {
+    time: "20:30",
+    label: "💧 Water — 200ml with dinner",
+    detail: "Earlier dinner on weekends.",
+    type: "water",
+    icon: "💧",
+    showOn: [3, 4],
+  },
+  {
+    time: "20:30",
+    label: "DINNER — Earlier on Weekends",
+    detail:
+      "Eat by 21:00. Same rotation: ragi roti + sabzi + lighter dal + dahi. Pumpkin seeds + almonds after. Earlier dinner = better sleep quality.",
+    type: "food",
+    icon: "🍽️",
+    showOn: [3, 4],
+  },
+  {
+    time: "21:00",
+    label: "💧 Water — LAST 200ml",
+    detail: "Earlier cut-off on weekends = even better sleep.",
+    type: "water",
+    icon: "💧",
+    showOn: [3, 4],
+  },
+  {
+    time: "22:00",
+    label: "Wind-Down",
+    detail:
+      "Dim lights, no screens. Sun night especially — most people stay up late and destroy Monday. Keep 23:00 bedtime.",
+    type: "sleep",
+    icon: "🌙",
+    showOn: [3, 4],
+  },
+  {
+    time: "22:15",
+    label: "🎒 Soak Seeds",
+    detail:
+      "Soak pumpkin seeds + almonds + walnuts in bowl of water overnight.",
+    type: "health",
+    icon: "🎒",
+    showOn: [3],
+  },
+  {
+    time: "22:15",
+    label: "🎒 Soak Seeds + Prep for Monday",
+    detail:
+      "Soak pumpkin seeds + almonds + walnuts. Also prep Monday gym bag — clothes, water bottle, dry whey scoop in shaker. 5 min now = smooth Monday morning.",
+    type: "health",
+    icon: "🎒",
+    showOn: [4],
+  },
+  {
+    time: "22:30",
+    label: "📵 PHONE DOWN",
+    detail:
+      "Especially on weekends. Late night scrolling on Sat/Sun destroys Mon/Tue energy.",
+    type: "sleep",
+    icon: "📵",
+    showOn: [3, 4],
+  },
+  {
+    time: "22:30",
+    label: "Read for 30 min",
+    detail: "Fiction. Light. Relaxing. Same every night.",
+    type: "sleep",
+    icon: "📚",
+    showOn: [3, 4],
+  },
+  {
+    time: "22:45",
+    label: "Magnesium Glycinate — 300mg",
+    detail: "Every night without fail.",
+    type: "health",
+    icon: "💊",
+    showOn: [3, 4],
+  },
+  {
+    time: "23:00",
+    label: "Lights Out",
+    detail:
+      "Same time every night. This single habit determines everything else.",
+    type: "sleep",
+    icon: "😴",
+    showOn: [3, 4],
+  },
+];
+
+const scheduleData = gymDaySchedule;
 const workoutPlan = {
   split: "4-Day Upper/Lower Split — Mon, Tue, Wed, Fri",
   note: "4 gym days with badminton on Tue/Wed/Thu/Sun. Leg days are kept AWAY from Tue and Wed (you have badminton those evenings) — legs + evening badminton = injury risk. Upper body gym + badminton same day is totally fine. Saturday is full rest — the only complete recovery day in your week.",
@@ -873,77 +1330,122 @@ const mealPlan = {
   ],
   meals: [
     {
-      label: "Pre-Workout Shake (07:40)",
+      label: "Pre-Workout Power Shake",
       icon: "🥤",
       color: "#e8ff47",
+      showOn: [0, 1],
       items: [
         "2 ripe bananas",
         "1.5 scoops whey protein (37g protein) — mix into shake",
-        "3 tbsp rolled oats — blend in, gives sustained energy",
+        "3 tbsp rolled oats — blend in, sustained energy",
         "300ml low-fat milk",
-        "1 tsp peanut butter",
-        "1 tbsp ground flaxseeds (alsi) — grind DRY in mixer, do NOT soak. Add to shake after grinding. Soaking makes them slimy and unusable in shake.",
-        "5g creatine powder (1 level tsp) — tasteless, dissolves fully",
-        "→ BUY: AS-IT-IS or ON Micronised Creatine, unflavoured — Amazon India ~₹900/250g",
+        "1 tbsp peanut butter",
+        "1 tbsp ground flaxseeds (alsi) — grind DRY, never soak",
+        "1 tsp creatine powder (5g) — tasteless, dissolves fully",
         "~560 kcal | 65g carbs | 46g protein | 14g fat",
       ],
-      why: "Everything in one shake — whey, creatine, omega-3, oats. Zero extra tracking. Creatine is tasteless and odourless, you will not notice it. Takes 3–4 weeks to saturate muscles. Take every day including rest days — consistency beats timing.",
+      why: "Full fuel for gym + possible badminton. Oats give sustained energy so you don't crash mid-session. Creatine goes here — zero taste difference.",
     },
     {
-      label: "Post-Workout (09:55 — at gym)",
+      label: "Light Breakfast — No Gym Morning",
+      icon: "🥣",
+      color: "#ff9447",
+      showOn: [2],
+      items: [
+        "1 banana",
+        "1 scoop whey in 250ml water",
+        "10–12 soaked almonds + 5 soaked walnuts",
+        "1 tsp creatine — mix into the whey water",
+        "~280 kcal | 32g carbs | 28g protein | 8g fat",
+      ],
+      why: "Thu — no gym so no need for 560 kcal shake. Lighter breakfast keeps you in calorie deficit. Creatine daily even on non-gym days — consistency is what matters.",
+    },
+    {
+      label: "Relaxed Breakfast — Full Rest Day",
+      icon: "🍳",
+      color: "#ff9447",
+      showOn: [3],
+      items: [
+        "2 whole wheat rotis + dahi + 1 fruit",
+        "OR poha (1.5 cups cooked) + dahi",
+        "1 tsp creatine — mix into a small glass of water or milk",
+        "~350 kcal | 45g carbs | 18g protein | 8g fat",
+      ],
+      why: "Sat is full rest — no shake needed. Real cooked food on rest day aids recovery. Sit down and enjoy it slowly.",
+    },
+    {
+      label: "Pre-Badminton Light Breakfast",
+      icon: "🥣",
+      color: "#ff9447",
+      showOn: [4],
+      items: [
+        "150g Milky Mist Skyr yogurt",
+        "1 banana",
+        "10–12 soaked almonds",
+        "1 tsp creatine — mix into yogurt",
+        "Eat by 07:30–07:45 — exactly 90 min before 9am court",
+        "~280 kcal | 32g carbs | 20g protein | 5g fat",
+      ],
+      why: "Light enough to not feel heavy on court. Yogurt protein + banana carbs = perfect pre-badminton combo. Eating later = cramps and sluggishness during play.",
+    },
+    {
+      label: "Post-Workout Shake — AT GYM (09:55)",
       icon: "🥛",
       color: "#47ff8a",
+      showOn: [0, 1],
       items: [
         "1 scoop whey in 300ml water — carry dry powder in shaker",
         "1 small banana or 5 dates",
         "Drink BEFORE showering — within 20 min of last set",
         "~230 kcal | 28g protein | 25g carbs",
       ],
-      why: "Muscle protein synthesis peaks 20–30 min post-workout. Don't wait until office (11:00+). Mix, drink, then shower. Two minutes.",
+      why: "Muscle protein synthesis peaks 20–30 min post-workout. Don't wait until office (11:00+). Two minutes to mix, then shower.",
+    },
+    {
+      label: "⚡ Pre-Badminton Snack — 17:00 SHARP",
+      icon: "⚡",
+      color: "#ff9447",
+      showOn: [1, 2],
+      items: [
+        "150g Milky Mist Skyr yogurt",
+        "2 baby bananas OR 1 regular banana",
+        "Eat at exactly 17:00 — 90 min before 19:30 court",
+        "~250 kcal | 17g protein | 48g carbs | 3g fat",
+      ],
+      why: "90 min timing is deliberate — carbs are in bloodstream by court time. Eating closer = heavy legs and cramps. This snack is what makes the difference in your second game.",
     },
     {
       label: "Lunch (14:00) — BIGGEST MEAL",
       icon: "🍱",
       color: "#47b8ff",
+      showOn: [0, 1, 2, 3, 4],
       items: [
         "2 whole wheat rotis OR 1 cup brown rice / quinoa",
-        "1 cup dal — see Dal Rotation below ↓",
+        "1 cup dal — follow Dal Rotation below ↓",
         "100g paneer OR 150g tofu (sautéed, not fried)",
-        "1 cup sabzi — see Sabzi Rotation below ↓",
+        "1 cup sabzi — follow Sabzi Rotation below ↓",
         "150g dahi (room temp, not cold from fridge)",
         "Salad: cucumber + tomato + onion + lemon + chaat masala",
-        "With lunch: 5 soaked walnuts (soak overnight 6–8 hrs — removes tannins, improves omega-3 bioavailability)",
+        "5 soaked walnuts on the side",
         "~640 kcal | 50g protein | 70g carbs",
       ],
-      why: "Dal + paneer/tofu = complete amino acid profile. Walnuts with lunch = second omega-3 hit, habit-free. Dahi at room temp digests better and has more active probiotics than cold curd.",
-    },
-    {
-      label: "Pre-Badminton Snack (17:00) — Tue, Wed, Thu, Sun only",
-      icon: "⚡",
-      color: "#ff9447",
-      items: [
-        "150g Greek yogurt / hung curd + 1 tsp honey",
-        "1 banana OR 1 cup roasted makhana",
-        "~270 kcal | 18g protein | 38g carbs",
-        "Eat at 17:00 sharp — exactly 90 min before court",
-        "On non-badminton days (Mon/Wed/Fri): skip this, have 10 almonds if hungry",
-      ],
-      why: "90 min timing is deliberate — carbs are in bloodstream by court time without heaviness. Eating closer = cramps. Makhana is better than chips or biscuits — same crunch, 4x the protein.",
+      why: "Dal + paneer/tofu = complete amino acid profile. Rotating dals ensures different micronutrients weekly. Dahi at room temp digests better and has more active probiotics.",
     },
     {
       label: "Dinner (21:15) — LIGHTER",
       icon: "🍽️",
       color: "#c47aff",
+      showOn: [0, 1, 2, 3, 4],
       items: [
-        "1–2 ragi rotis (preferred) OR whole wheat rotis — ragi = highest magnesium flour",
+        "1–2 ragi rotis (preferred) OR whole wheat rotis",
         "1 cup greens sabzi — spinach/methi/lauki per rotation",
-        "1 bowl lighter dal — moong / masoor / toor (not rajma/chole at night — too heavy)",
+        "1 bowl lighter dal — moong/masoor/toor only (no rajma/chole at night)",
         "150g dahi",
-        "AFTER DINNER — Magnesium Stack: 30g soaked pumpkin seeds + 10–12 soaked almonds + 5 soaked walnuts",
-        "→ SOAK TONIGHT for tomorrow: pumpkin seeds (4–8 hrs) + almonds (8 hrs overnight) + walnuts (6–8 hrs). Soaking removes phytic acid which BLOCKS magnesium + mineral absorption. Dry seeds = ~40% less absorption. Keep in a small bowl of water in fridge.",
+        "AFTER DINNER: 30g soaked pumpkin seeds + 10–12 soaked almonds = magnesium stack",
+        "Sat/Sun: eat by 21:00 (earlier than weekdays)",
         "~530 kcal | 40g protein | 55g carbs",
       ],
-      why: "Pumpkin seeds + almonds after dinner = full magnesium replacement, no pill needed. Ragi roti is the single best swap in this plan — swap one wheat roti for ragi every day. Also: SUNLIGHT for Vit D — 15 min morning sun on arms before 9am, 5x/week. Sun-treat mushrooms gills-up for 45 min before cooking 3x/week.",
+      why: "Ragi roti = highest magnesium flour, aids sleep. Pumpkin seeds + almonds after dinner = full magnesium pill replacement. No rice at dinner — harder to digest late.",
     },
   ],
   calorieCycling: [
@@ -1221,8 +1723,54 @@ export default function CoachDashboard() {
   const [expandedDay, setExpandedDay] = useState<number | null>(null);
   const [expandedExercise, setExpandedExercise] = useState<string | null>(null);
 
+  const [scheduleType, setScheduleType] = useState(0);
+  const scheduleTypes = [
+    { label: "🏋️ Gym Day", sub: "Mon / Fri", data: gymDaySchedule },
+    {
+      label: "🏋️🏸 Gym + Badminton",
+      sub: "Tue / Wed",
+      data: badmintonEveningSchedule,
+    },
+    { label: "🏸 Badminton Only", sub: "Thu", data: badmintonEveningSchedule },
+    { label: "😴 Full Rest", sub: "Sat", data: weekendSchedule },
+    { label: "🏸 Morning Badminton", sub: "Sun", data: weekendSchedule },
+  ];
+
+  const [mealDayType, setMealDayType] = useState(0);
+  const mealDayTypes = [
+    {
+      label: "🏋️ Gym Day",
+      sub: "Mon / Fri",
+      cal: "~2,400 kcal",
+      note: "Full power shake + post-workout shake. Biggest calorie day.",
+    },
+    {
+      label: "🏋️🏸 Gym + Badminton",
+      sub: "Tue / Wed",
+      cal: "~2,400 kcal",
+      note: "Same as gym day — you need full fuel for both gym and court.",
+    },
+    {
+      label: "🏸 Badminton Only",
+      sub: "Thu",
+      cal: "~2,200 kcal",
+      note: "No big morning shake. Drop ~200 kcal from breakfast.",
+    },
+    {
+      label: "😴 Full Rest",
+      sub: "Sat",
+      cal: "~2,000 kcal",
+      note: "Lowest calorie day. Skip power shake. Relaxed meals.",
+    },
+    {
+      label: "🏸 Weekend Badminton",
+      sub: "Sun",
+      cal: "~2,200 kcal",
+      note: "Light pre-badminton breakfast instead of full shake.",
+    },
+  ];
+
   const tabStyle = (i: number) => ({
-    padding: "9px 13px",
     fontSize: 12,
     fontWeight: activeTab === i ? 700 : 500,
     color: activeTab === i ? COLORS.bg : COLORS.textDim,
@@ -1314,87 +1862,129 @@ export default function CoachDashboard() {
       {/* TAB: SCHEDULE */}
       {activeTab === 0 && (
         <div>
-          <div
-            style={{
-              fontSize: 11,
-              color: COLORS.muted,
-              marginBottom: 16,
-              letterSpacing: 1,
-              textTransform: "uppercase",
-            }}
-          >
-            Your optimised daily routine
-          </div>
-          {(scheduleData as any[]).map((item: any, i: number) => (
-            <div key={i} style={{ display: "flex", gap: 14, marginBottom: 12 }}>
-              <div style={{ minWidth: 52, textAlign: "right", paddingTop: 10 }}>
-                <div
-                  style={{
-                    fontSize: 12,
-                    fontWeight: 700,
-                    color: COLORS.accent,
-                    fontVariantNumeric: "tabular-nums",
-                  }}
-                >
-                  {item.time}
-                </div>
-              </div>
-              <div
-                style={{
-                  width: 2,
-                  background: COLORS.cardBorder,
-                  borderRadius: 1,
-                  flexShrink: 0,
-                  position: "relative",
-                }}
-              >
-                <div
-                  style={{
-                    width: 8,
-                    height: 8,
-                    borderRadius: "50%",
-                    background: COLORS.accent,
-                    position: "absolute",
-                    top: 12,
-                    left: -3,
-                  }}
-                />
-              </div>
-              <div
-                style={{
-                  flex: 1,
-                  background: COLORS.card,
-                  border: `1px solid ${COLORS.cardBorder}`,
-                  borderRadius: 10,
-                  padding: "10px 14px",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                    marginBottom: 4,
-                  }}
-                >
-                  <span style={{ fontSize: 15 }}>{item.icon}</span>
-                  <span style={{ fontSize: 13, fontWeight: 700 }}>
-                    {item.label}
-                  </span>
-                  <TagBadge type={item.type} />
-                </div>
-                <div
-                  style={{
-                    fontSize: 12,
-                    color: COLORS.textDim,
-                    lineHeight: 1.6,
-                  }}
-                >
-                  {item.detail}
-                </div>
-              </div>
+          {/* Day type selector */}
+          <div style={{ marginBottom: 16 }}>
+            <div
+              style={{
+                fontSize: 11,
+                color: COLORS.muted,
+                letterSpacing: 1,
+                textTransform: "uppercase",
+                marginBottom: 10,
+              }}
+            >
+              Select your day type
             </div>
-          ))}
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              {scheduleTypes.map((s: any, i: number) => (
+                <button
+                  key={i}
+                  onClick={() => setScheduleType(i)}
+                  style={{
+                    padding: "8px 12px",
+                    borderRadius: 8,
+                    border: `1px solid ${
+                      scheduleType === i ? COLORS.accent : COLORS.cardBorder
+                    }`,
+                    background: scheduleType === i ? "#1a1a00" : COLORS.card,
+                    color: scheduleType === i ? COLORS.accent : COLORS.textDim,
+                    cursor: "pointer",
+                    fontSize: 12,
+                    fontWeight: scheduleType === i ? 700 : 400,
+                    textAlign: "left" as const,
+                  }}
+                >
+                  <div>{s.label}</div>
+                  <div
+                    style={{ fontSize: 10, color: COLORS.muted, marginTop: 2 }}
+                  >
+                    {s.sub}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Schedule entries — filtered by showOn if present */}
+          {(scheduleTypes[scheduleType].data as any[])
+            .filter(
+              (item: any) => !item.showOn || item.showOn.includes(scheduleType)
+            )
+            .map((item: any, i: number) => (
+              <div
+                key={i}
+                style={{ display: "flex", gap: 14, marginBottom: 12 }}
+              >
+                <div
+                  style={{ minWidth: 52, textAlign: "right", paddingTop: 10 }}
+                >
+                  <div
+                    style={{
+                      fontSize: 12,
+                      fontWeight: 700,
+                      color: COLORS.accent,
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  >
+                    {item.time}
+                  </div>
+                </div>
+                <div
+                  style={{
+                    width: 2,
+                    background: COLORS.cardBorder,
+                    borderRadius: 1,
+                    flexShrink: 0,
+                    position: "relative",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 8,
+                      height: 8,
+                      borderRadius: "50%",
+                      background: COLORS.accent,
+                      position: "absolute",
+                      top: 12,
+                      left: -3,
+                    }}
+                  />
+                </div>
+                <div
+                  style={{
+                    flex: 1,
+                    background: COLORS.card,
+                    border: `1px solid ${COLORS.cardBorder}`,
+                    borderRadius: 10,
+                    padding: "10px 14px",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                      marginBottom: 4,
+                    }}
+                  >
+                    <span style={{ fontSize: 15 }}>{item.icon}</span>
+                    <span style={{ fontSize: 13, fontWeight: 700 }}>
+                      {item.label}
+                    </span>
+                    <TagBadge type={item.type} />
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 12,
+                      color: COLORS.textDim,
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    {item.detail}
+                  </div>
+                </div>
+              </div>
+            ))}
         </div>
       )}
 
@@ -1773,7 +2363,186 @@ export default function CoachDashboard() {
       {/* TAB: MEALS */}
       {activeTab === 2 && (
         <div>
-          {/* Calorie reality check */}
+          {/* Day type selector for meals */}
+          <div style={{ marginBottom: 16 }}>
+            <div
+              style={{
+                fontSize: 11,
+                color: COLORS.muted,
+                letterSpacing: 1,
+                textTransform: "uppercase",
+                marginBottom: 10,
+              }}
+            >
+              What day is it?
+            </div>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              {mealDayTypes.map((d: any, i: number) => (
+                <button
+                  key={i}
+                  onClick={() => setMealDayType(i)}
+                  style={{
+                    padding: "8px 12px",
+                    borderRadius: 8,
+                    border: `1px solid ${
+                      mealDayType === i ? COLORS.accent : COLORS.cardBorder
+                    }`,
+                    background: mealDayType === i ? "#1a1a00" : COLORS.card,
+                    color: mealDayType === i ? COLORS.accent : COLORS.textDim,
+                    cursor: "pointer",
+                    fontSize: 12,
+                    fontWeight: mealDayType === i ? 700 : 400,
+                    textAlign: "left" as const,
+                  }}
+                >
+                  <div>{d.label}</div>
+                  <div
+                    style={{ fontSize: 10, color: COLORS.muted, marginTop: 2 }}
+                  >
+                    {d.sub}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Day-specific calorie banner */}
+          <div
+            style={{
+              background: "#1a1a00",
+              border: `1px solid ${COLORS.accentDim}`,
+              borderRadius: 10,
+              padding: "10px 14px",
+              marginBottom: 16,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <div>
+              <div
+                style={{ fontSize: 11, color: COLORS.muted, marginBottom: 2 }}
+              >
+                Today's target
+              </div>
+              <div
+                style={{ fontSize: 18, fontWeight: 800, color: COLORS.accent }}
+              >
+                {mealDayTypes[mealDayType].cal}
+              </div>
+            </div>
+            <div
+              style={{
+                fontSize: 12,
+                color: COLORS.textDim,
+                maxWidth: "55%",
+                textAlign: "right" as const,
+                lineHeight: 1.5,
+              }}
+            >
+              {mealDayTypes[mealDayType].note}
+            </div>
+          </div>
+
+          {/* Day-specific breakfast swap */}
+          {mealDayType === 2 && (
+            <div
+              style={{
+                background: "#1a1000",
+                border: "1px solid #3a2000",
+                borderRadius: 10,
+                padding: "12px 14px",
+                marginBottom: 16,
+              }}
+            >
+              <div
+                style={{
+                  fontSize: 12,
+                  fontWeight: 700,
+                  color: COLORS.orange,
+                  marginBottom: 6,
+                }}
+              >
+                ⚠️ Thu Breakfast Change — Skip Big Shake
+              </div>
+              <div
+                style={{ fontSize: 12, color: COLORS.textDim, lineHeight: 1.7 }}
+              >
+                No gym this morning. Replace power shake with:{" "}
+                <span style={{ color: COLORS.accent }}>
+                  1 banana + 1 scoop whey in water + soaked almonds + soaked
+                  walnuts
+                </span>
+                . ~280 kcal. Still add creatine — mix into the whey water. Don't
+                skip it on rest days.
+              </div>
+            </div>
+          )}
+          {mealDayType === 3 && (
+            <div
+              style={{
+                background: "#1a1000",
+                border: "1px solid #3a2000",
+                borderRadius: 10,
+                padding: "12px 14px",
+                marginBottom: 16,
+              }}
+            >
+              <div
+                style={{
+                  fontSize: 12,
+                  fontWeight: 700,
+                  color: COLORS.orange,
+                  marginBottom: 6,
+                }}
+              >
+                😴 Sat — Full Rest Day Breakfast
+              </div>
+              <div
+                style={{ fontSize: 12, color: COLORS.textDim, lineHeight: 1.7 }}
+              >
+                No shake. Have:{" "}
+                <span style={{ color: COLORS.accent }}>
+                  2 rotis + dahi + 1 fruit OR poha + dahi
+                </span>
+                . ~350 kcal. Sit down, enjoy it slowly. Still take creatine —
+                mix into a glass of water or milk.
+              </div>
+            </div>
+          )}
+          {mealDayType === 4 && (
+            <div
+              style={{
+                background: "#1a1000",
+                border: "1px solid #3a2000",
+                borderRadius: 10,
+                padding: "12px 14px",
+                marginBottom: 16,
+              }}
+            >
+              <div
+                style={{
+                  fontSize: 12,
+                  fontWeight: 700,
+                  color: COLORS.orange,
+                  marginBottom: 6,
+                }}
+              >
+                🏸 Sun — Pre-Badminton Light Breakfast (eat by 07:45)
+              </div>
+              <div
+                style={{ fontSize: 12, color: COLORS.textDim, lineHeight: 1.7 }}
+              >
+                Badminton at 9am = eat 90 min before = 07:30–07:45. Have:{" "}
+                <span style={{ color: COLORS.accent }}>
+                  150g Skyr yogurt + 1 banana + soaked almonds
+                </span>
+                . ~280 kcal. Light enough to not feel heavy on court. Creatine
+                in the yogurt or a small glass of water.
+              </div>
+            </div>
+          )}
+
           <div
             style={{
               background: "#1a0a00",
@@ -1891,51 +2660,55 @@ export default function CoachDashboard() {
           </div>
 
           {/* Meals */}
-          {(mealPlan.meals as any[]).map((meal: any, i: number) => (
-            <div
-              key={i}
-              style={{
-                background: COLORS.card,
-                border: `1px solid ${COLORS.cardBorder}`,
-                borderLeft: `4px solid ${meal.color}`,
-                borderRadius: 10,
-                padding: "14px 16px",
-                marginBottom: 14,
-              }}
-            >
-              <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 8 }}>
-                {meal.icon} {meal.label}
-              </div>
-              <ul style={{ margin: 0, paddingLeft: 16 }}>
-                {meal.items.map((item: any, j: number) => (
-                  <li
-                    key={j}
-                    style={{
-                      fontSize: 12,
-                      color: COLORS.textDim,
-                      marginBottom: 4,
-                      lineHeight: 1.6,
-                    }}
-                  >
-                    {item}
-                  </li>
-                ))}
-              </ul>
+          {(mealPlan.meals as any[])
+            .filter(
+              (meal: any) => !meal.showOn || meal.showOn.includes(mealDayType)
+            )
+            .map((meal: any, i: number) => (
               <div
+                key={i}
                 style={{
-                  marginTop: 10,
-                  fontSize: 11,
-                  color: meal.color,
-                  background: `${meal.color}15`,
-                  padding: "6px 10px",
-                  borderRadius: 6,
-                  lineHeight: 1.6,
+                  background: COLORS.card,
+                  border: `1px solid ${COLORS.cardBorder}`,
+                  borderLeft: `4px solid ${meal.color}`,
+                  borderRadius: 10,
+                  padding: "14px 16px",
+                  marginBottom: 14,
                 }}
               >
-                🧠 {meal.why}
+                <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 8 }}>
+                  {meal.icon} {meal.label}
+                </div>
+                <ul style={{ margin: 0, paddingLeft: 16 }}>
+                  {meal.items.map((item: any, j: number) => (
+                    <li
+                      key={j}
+                      style={{
+                        fontSize: 12,
+                        color: COLORS.textDim,
+                        marginBottom: 4,
+                        lineHeight: 1.6,
+                      }}
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <div
+                  style={{
+                    marginTop: 10,
+                    fontSize: 11,
+                    color: meal.color,
+                    background: `${meal.color}15`,
+                    padding: "6px 10px",
+                    borderRadius: 6,
+                    lineHeight: 1.6,
+                  }}
+                >
+                  🧠 {meal.why}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
 
           {/* Dal Rotation */}
           <div style={{ marginTop: 20, marginBottom: 20 }}>
