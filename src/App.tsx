@@ -626,11 +626,11 @@ const weekendSchedule = [
   },
   {
     time: "13:30",
-    label: "LUNCH",
+    label: "🍕 Cheat Meal OR Clean Lunch — Your Choice (Any time Sat)",
     detail:
-      "Dal + paneer/tofu + sabzi + rotis + dahi + salad. Normal lunch time. 5 soaked walnuts.",
+      "Cheat meal can be BREAKFAST, LUNCH or DINNER — your call. Rules: (1) One meal only, other two stay clean. (2) Still have dal/dahi/paneer somewhere today. (3) Still take creatine. (4) +500ml water. Tip: lunch or dinner timing is better than breakfast — avoids blood sugar spike that triggers more cravings all day.",
     type: "food",
-    icon: "🍱",
+    icon: "🍽️",
     showOn: [3],
   },
   {
@@ -1418,7 +1418,7 @@ const mealPlan = {
       label: "Lunch (14:00) — BIGGEST MEAL",
       icon: "🍱",
       color: "#47b8ff",
-      showOn: [0, 1, 2, 3, 4],
+      showOn: [0, 1, 2, 4],
       items: [
         "2 whole wheat rotis OR 1 cup brown rice / quinoa",
         "1 cup dal — follow Dal Rotation below ↓",
@@ -1430,6 +1430,22 @@ const mealPlan = {
         "~640 kcal | 50g protein | 70g carbs",
       ],
       why: "Dal + paneer/tofu = complete amino acid profile. Rotating dals ensures different micronutrients weekly. Dahi at room temp digests better and has more active probiotics.",
+    },
+    {
+      label:
+        "🍕 Cheat Meal — Any One Meal on Saturday (Breakfast / Lunch / Dinner)",
+      icon: "🍽️",
+      color: "#e87aff",
+      showOn: [3],
+      items: [
+        "Pick ANY ONE MEAL to cheat — breakfast, lunch, or dinner. Other two meals stay clean.",
+        "OPTION B — Cheat Meal: Chole bhature / Veg biryani / Pizza (2–3 slices) / Burger / Paneer tikka / Chaat / Pasta",
+        "Cheat rules: still have dal or dahi or paneer somewhere today",
+        "Still take creatine — 5g in water, 10 seconds",
+        "Drink +500ml extra water on cheat day",
+        "One cheat MEAL not a full cheat day",
+      ],
+      why: "One cheat meal per week resets leptin levels, keeps you sane long-term, and doesn't derail progress at all. The people who try to be 100% perfect every day are the ones who quit. Enjoy it guilt-free.",
     },
     {
       label: "Dinner (21:15) — LIGHTER",
@@ -2507,6 +2523,233 @@ export default function CoachDashboard() {
                 </span>
                 . ~350 kcal. Sit down, enjoy it slowly. Still take creatine —
                 mix into a glass of water or milk.
+              </div>
+            </div>
+          )}
+
+          {/* Cheat Meal Card — Sat only */}
+          {mealDayType === 3 && (
+            <div
+              style={{
+                background: "#1a0a1a",
+                border: "1px solid #7a1a7a",
+                borderRadius: 10,
+                padding: "14px 16px",
+                marginBottom: 16,
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  marginBottom: 10,
+                }}
+              >
+                <span style={{ fontSize: 20 }}>🍕</span>
+                <div>
+                  <div
+                    style={{ fontSize: 14, fontWeight: 700, color: "#e87aff" }}
+                  >
+                    Cheat Meal — Any One Meal, Any Time (Sat Only)
+                  </div>
+                  <div style={{ fontSize: 11, color: COLORS.muted }}>
+                    Breakfast, lunch or dinner — your call. Other two meals stay
+                    clean.
+                  </div>
+                </div>
+              </div>
+
+              <div
+                style={{
+                  fontSize: 11,
+                  color: COLORS.muted,
+                  letterSpacing: 1,
+                  textTransform: "uppercase",
+                  marginBottom: 8,
+                }}
+              >
+                ✅ Green Light — Eat Freely
+              </div>
+              {[
+                { item: "Chole Bhature", note: "Classic. Go for it." },
+                {
+                  item: "Veg Biryani",
+                  note: "Rice + spices + veggies = comfort perfection.",
+                },
+                {
+                  item: "Pizza (2–3 slices)",
+                  note: "Fine. 6 slices is a problem. 2–3 is a treat.",
+                },
+                {
+                  item: "Burger / Veg Zinger",
+                  note: "Fine. Skip the triple extra fries.",
+                },
+                {
+                  item: "Samosa / Kachori (2–3)",
+                  note: "With chai. Don't go overboard.",
+                },
+                {
+                  item: "Paneer Tikka / Tandoori",
+                  note: "Actually high protein — barely a cheat.",
+                },
+                {
+                  item: "Pasta / Mac & Cheese",
+                  note: "Carb heavy but fine once a week.",
+                },
+                {
+                  item: "Pani Puri / Papdi Chaat",
+                  note: "Light, fun, won't wreck anything.",
+                },
+                {
+                  item: "Gulab Jamun / Rasgulla (2 pcs)",
+                  note: "Dessert is allowed. 2 pieces, not the full bowl.",
+                },
+              ].map((c: any, i: number) => (
+                <div
+                  key={i}
+                  style={{
+                    display: "flex",
+                    gap: 10,
+                    marginBottom: 6,
+                    alignItems: "flex-start",
+                  }}
+                >
+                  <span
+                    style={{ color: COLORS.green, flexShrink: 0, fontSize: 12 }}
+                  >
+                    ✓
+                  </span>
+                  <div>
+                    <span
+                      style={{
+                        fontSize: 12,
+                        fontWeight: 600,
+                        color: COLORS.text,
+                      }}
+                    >
+                      {c.item}{" "}
+                    </span>
+                    <span style={{ fontSize: 11, color: COLORS.muted }}>
+                      {c.note}
+                    </span>
+                  </div>
+                </div>
+              ))}
+
+              <div
+                style={{
+                  fontSize: 11,
+                  color: COLORS.muted,
+                  letterSpacing: 1,
+                  textTransform: "uppercase",
+                  marginBottom: 8,
+                  marginTop: 14,
+                }}
+              >
+                ⚠️ Yellow Flag — Be Careful
+              </div>
+              {[
+                {
+                  item: "Alcohol",
+                  note: "Max 2 drinks. Ruins sleep quality + muscle recovery more than any food cheat. Extra 500ml water if you drink.",
+                },
+                {
+                  item: "Eating junk all day",
+                  note: "One cheat MEAL not a cheat DAY. Breakfast + lunch + dinner all junk = a real problem.",
+                },
+                {
+                  item: "Cold drinks / packaged juices",
+                  note: "Pure empty sugar. Have the real food instead.",
+                },
+              ].map((c: any, i: number) => (
+                <div
+                  key={i}
+                  style={{
+                    display: "flex",
+                    gap: 10,
+                    marginBottom: 6,
+                    alignItems: "flex-start",
+                  }}
+                >
+                  <span
+                    style={{
+                      color: COLORS.orange,
+                      flexShrink: 0,
+                      fontSize: 12,
+                    }}
+                  >
+                    ⚠
+                  </span>
+                  <div>
+                    <span
+                      style={{
+                        fontSize: 12,
+                        fontWeight: 600,
+                        color: COLORS.text,
+                      }}
+                    >
+                      {c.item}{" "}
+                    </span>
+                    <span style={{ fontSize: 11, color: COLORS.muted }}>
+                      {c.note}
+                    </span>
+                  </div>
+                </div>
+              ))}
+
+              <div
+                style={{
+                  fontSize: 11,
+                  color: COLORS.muted,
+                  letterSpacing: 1,
+                  textTransform: "uppercase",
+                  marginBottom: 8,
+                  marginTop: 14,
+                }}
+              >
+                ❌ Still Don't Do These
+              </div>
+              {[
+                "Skip creatine — still 5g in water, takes 10 seconds",
+                "Skip protein entirely — have dal / dahi / paneer somewhere in the day",
+                "Alcohol + skip sleep — wrecks Sunday morning badminton completely",
+              ].map((c: any, i: number) => (
+                <div
+                  key={i}
+                  style={{
+                    display: "flex",
+                    gap: 10,
+                    marginBottom: 6,
+                    alignItems: "flex-start",
+                  }}
+                >
+                  <span
+                    style={{ color: COLORS.red, flexShrink: 0, fontSize: 12 }}
+                  >
+                    ✗
+                  </span>
+                  <span style={{ fontSize: 12, color: COLORS.textDim }}>
+                    {c}
+                  </span>
+                </div>
+              ))}
+
+              <div
+                style={{
+                  marginTop: 12,
+                  background: "#0f0a0f",
+                  borderRadius: 8,
+                  padding: "10px 12px",
+                  fontSize: 12,
+                  color: "#e87aff",
+                  lineHeight: 1.7,
+                }}
+              >
+                💜 One cheat meal per week will NOT derail your progress. It
+                resets leptin levels and keeps you sane long-term. People who
+                try to be 100% perfect every day are the ones who quit after 3
+                weeks. Enjoy Saturday.
               </div>
             </div>
           )}
