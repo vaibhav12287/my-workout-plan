@@ -1401,19 +1401,7 @@ const mealPlan = {
       ],
       why: "Muscle protein synthesis peaks 20–30 min post-workout. Don't wait until office (11:00+). Two minutes to mix, then shower.",
     },
-    {
-      label: "⚡ Pre-Badminton Snack — 17:00 SHARP",
-      icon: "⚡",
-      color: "#ff9447",
-      showOn: [1, 2],
-      items: [
-        "150g Milky Mist Skyr yogurt",
-        "2 baby bananas OR 1 regular banana",
-        "Eat at exactly 17:00 — 90 min before 19:30 court",
-        "~250 kcal | 17g protein | 48g carbs | 3g fat",
-      ],
-      why: "90 min timing is deliberate — carbs are in bloodstream by court time. Eating closer = heavy legs and cramps. This snack is what makes the difference in your second game.",
-    },
+
     {
       label: "Lunch (14:00) — BIGGEST MEAL",
       icon: "🍱",
@@ -1446,6 +1434,33 @@ const mealPlan = {
         "One cheat MEAL not a full cheat day",
       ],
       why: "One cheat meal per week resets leptin levels, keeps you sane long-term, and doesn't derail progress at all. The people who try to be 100% perfect every day are the ones who quit. Enjoy it guilt-free.",
+    },
+    {
+      label: "⚡ Pre-Badminton Snack — 17:00 SHARP",
+      icon: "⚡",
+      color: "#ff9447",
+      showOn: [1, 2],
+      items: [
+        "150g Milky Mist Skyr yogurt",
+        "2 baby bananas OR 1 regular banana",
+        "Eat at exactly 17:00 — 90 min before 19:30 court",
+        "~250 kcal | 17g protein | 48g carbs | 3g fat",
+      ],
+      why: "90 min timing is deliberate — carbs are in bloodstream by court time without heaviness. Eating right before = cramps and heavy legs. This snack is what makes the difference in your second game.",
+    },
+    {
+      label: "⚡ Pre-Badminton Snack — 07:30–07:45",
+      icon: "⚡",
+      color: "#ff9447",
+      showOn: [4],
+      items: [
+        "150g Milky Mist Skyr yogurt",
+        "2 baby bananas OR 1 regular banana",
+        "Court is at 9am — eat at 07:30–07:45, not 17:00",
+        "Same 90 min window, just earlier because morning court",
+        "~250 kcal | 17g protein | 48g carbs | 3g fat",
+      ],
+      why: "Same principle as evening badminton — 90 min before court. Morning session means eating right after waking up. Keep it light so you're not heavy on court.",
     },
     {
       label: "Dinner (21:15) — LIGHTER",
