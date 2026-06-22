@@ -242,14 +242,6 @@ const gymDaySchedule = [
     icon: "📚",
   },
   {
-    time: "22:45",
-    label: "Magnesium Glycinate — 300mg",
-    detail:
-      "Small sip of water only. Reduces time to fall asleep, improves sleep depth. Every night.",
-    type: "health",
-    icon: "💊",
-  },
-  {
     time: "23:00",
     label: "Lights Out",
     detail:
@@ -502,13 +494,6 @@ const badmintonEveningSchedule = [
     icon: "📚",
   },
   {
-    time: "22:45",
-    label: "Magnesium Glycinate — 300mg",
-    detail: "Small sip of water. Every night.",
-    type: "health",
-    icon: "💊",
-  },
-  {
     time: "23:00",
     label: "Lights Out",
     detail:
@@ -548,7 +533,7 @@ const weekendSchedule = [
     time: "07:40",
     label: "Pre-Badminton Light Breakfast",
     detail:
-      "Badminton at 9am = eat 90 min before = 07:30–07:45. 150g Skyr yogurt + 1 banana + soaked almonds. ~280 kcal. Light — enough fuel without heaviness on court. Add creatine into yogurt.",
+      "Badminton at 9am = eat 90 min before = 07:30–07:45. 150g Skyr yogurt + 1 banana (or 2 baby bananas). ~230 kcal. NO almonds or nuts — fat digests too slowly, makes legs heavy on court. Add creatine into yogurt.",
     type: "food",
     icon: "🥣",
     showOn: [4],
@@ -727,14 +712,6 @@ const weekendSchedule = [
     detail: "Fiction. Light. Relaxing. Same every night.",
     type: "sleep",
     icon: "📚",
-    showOn: [3, 4],
-  },
-  {
-    time: "22:45",
-    label: "Magnesium Glycinate — 300mg",
-    detail: "Every night without fail.",
-    type: "health",
-    icon: "💊",
     showOn: [3, 4],
   },
   {
@@ -1190,10 +1167,10 @@ const workoutPlan = {
 
 const mealPlan = {
   tdee: "~2,600–2,700 kcal",
-  target: "~2,350–2,400 kcal/day",
-  deficit: "~250–300 kcal below maintenance",
-  macros: { protein: "155–165g", carbs: "260–280g", fat: "60–70g" },
-  note: "Gentle 250–300 kcal deficit from your TDEE of ~2,650. This gives 0.25–0.4 kg fat loss per week — slow and sustainable. Crash dieting kills metabolism and muscle mass. Your carbs are kept HIGHER than most plans because you're lifting 4x/week + badminton 4x/week. You need fuel.",
+  target: "1,830–2,440 kcal (varies by day)",
+  deficit: "~200–500 kcal below TDEE depending on day",
+  macros: { protein: "121–189g", carbs: "191–258g", fat: "57–65g" },
+  note: "Calories vary by day type — highest on Gym+Badminton days (2,440 kcal), lowest on Sunday morning badminton (1,830 kcal). Protein ranges from 121g on rest days to 189g on gym+badminton days. Crash dieting kills metabolism — this is why each day is calibrated to its activity level.",
   dalRotation: [
     {
       day: "Monday",
@@ -1458,7 +1435,8 @@ const mealPlan = {
         "2 baby bananas OR 1 regular banana",
         "Court is at 9am — eat at 07:30–07:45, not 17:00",
         "Same 90 min window, just earlier because morning court",
-        "~250 kcal | 17g protein | 48g carbs | 3g fat",
+        "NO almonds/nuts before court — fat sits heavy in stomach during play",
+        "~230 kcal | 16g protein | 32g carbs | 3g fat",
       ],
       why: "Same principle as evening badminton — 90 min before court. Morning session means eating right after waking up. Keep it light so you're not heavy on court.",
     },
@@ -1481,19 +1459,29 @@ const mealPlan = {
   ],
   calorieCycling: [
     {
-      day: "Gym Day (Mon/Tue/Thu/Fri)",
-      cal: "~2,400 kcal",
-      note: "Near maintenance — fuel the workout and recovery",
+      day: "🏋️ Gym Day (Mon / Fri)",
+      cal: "2,190 kcal",
+      note: "Full shake + post-workout shake. High protein day.",
     },
     {
-      day: "Badminton Only (Wed/Sat/Sun)",
-      cal: "~2,200 kcal",
-      note: "Slightly lower — active but no resistance training",
+      day: "🏋️🏸 Gym + Badminton (Tue / Wed)",
+      cal: "2,440 kcal",
+      note: "Highest calorie day — gym AND court. You need all of it.",
     },
     {
-      day: "Full Rest Day",
-      cal: "~2,000 kcal",
-      note: "Rare — just drop the pre-workout shake",
+      day: "🏸 Badminton Only (Thu)",
+      cal: "1,940 kcal",
+      note: "Light breakfast, no post-workout shake.",
+    },
+    {
+      day: "😴 Full Rest (Sat)",
+      cal: "1,910 kcal",
+      note: "Relaxed meals. Cheat meal optional.",
+    },
+    {
+      day: "🏸 Morning Badminton (Sun)",
+      cal: "1,830 kcal",
+      note: "Light pre-court breakfast. Bigger post-badminton lunch.",
     },
   ],
   supplements: [
@@ -1590,12 +1578,6 @@ const sleepProtocol = [
     icon: "📖",
   },
   {
-    time: "22:45",
-    action: "Magnesium Glycinate 300mg",
-    why: "Clinically shown to reduce time to fall asleep and improve sleep depth. Not habit-forming. Take with a small sip of water.",
-    icon: "💊",
-  },
-  {
     time: "23:00",
     action: "Lights out. Non-negotiable.",
     why: "23:00 → 07:30 = 7.5 hrs = exactly 5 complete 90-min sleep cycles. This is where recovery, muscle building, fat loss, and hormones happen. Sleep is the most anabolic thing you can do.",
@@ -1638,8 +1620,8 @@ const stats = {
     },
     {
       metric: "Protein daily",
-      target: "155–165g",
-      why: "~1.8g/kg bodyweight — the recomposition sweet spot",
+      target: "121–189g (by day)",
+      why: "~1.8g/kg bodyweight — higher on gym days, lower on rest days",
     },
     {
       metric: "Gym sessions",
@@ -1648,8 +1630,8 @@ const stats = {
     },
     {
       metric: "Badminton",
-      target: "3–4x/week",
-      why: "Cardio + athleticism + enjoyment = sustainable",
+      target: "4x/week (Tue/Wed/Thu/Sun)",
+      why: "Your built-in cardio — no treadmill needed",
     },
     {
       metric: "Sleep",
@@ -1658,8 +1640,8 @@ const stats = {
     },
     {
       metric: "Water",
-      target: "3–3.5L/day",
-      why: "Gym + badminton + Gurgaon summer = you need more than you think",
+      target: "3.5–4L active days / 3L rest",
+      why: "Gym + badminton + Gurgaon summer heat = higher than average need",
     },
   ],
   milestones: [
@@ -1772,32 +1754,52 @@ export default function CoachDashboard() {
     {
       label: "🏋️ Gym Day",
       sub: "Mon / Fri",
-      cal: "~2,400 kcal",
-      note: "Full power shake + post-workout shake. Biggest calorie day.",
+      cal: "2,190 kcal",
+      protein: "172g",
+      carbs: "223g",
+      fat: "62g",
+      fiber: "35g",
+      note: "Full power shake + post-workout shake. Highest protein day.",
     },
     {
       label: "🏋️🏸 Gym + Badminton",
       sub: "Tue / Wed",
-      cal: "~2,400 kcal",
-      note: "Same as gym day — you need full fuel for both gym and court.",
+      cal: "2,440 kcal",
+      protein: "189g",
+      carbs: "258g",
+      fat: "65g",
+      fiber: "38g",
+      note: "Highest calorie day — gym AND court. You need every bit of this fuel.",
     },
     {
       label: "🏸 Badminton Only",
       sub: "Thu",
-      cal: "~2,200 kcal",
-      note: "No big morning shake. Drop ~200 kcal from breakfast.",
+      cal: "1,940 kcal",
+      protein: "143g",
+      carbs: "198g",
+      fat: "59g",
+      fiber: "31g",
+      note: "No big morning shake. Pre-badminton snack at 17:00.",
     },
     {
       label: "😴 Full Rest",
       sub: "Sat",
-      cal: "~2,000 kcal",
-      note: "Lowest calorie day. Skip power shake. Relaxed meals.",
+      cal: "1,910 kcal",
+      protein: "121g",
+      carbs: "201g",
+      fat: "62g",
+      fiber: "33g",
+      note: "Lowest calorie day. Relaxed meals. Cheat meal optional.",
     },
     {
-      label: "🏸 Weekend Badminton",
+      label: "🏸 Morning Badminton",
       sub: "Sun",
-      cal: "~2,200 kcal",
-      note: "Light pre-badminton breakfast instead of full shake.",
+      cal: "1,830 kcal",
+      protein: "121g",
+      carbs: "191g",
+      fat: "57g",
+      fiber: "31g",
+      note: "Light pre-court breakfast early. Bigger post-badminton lunch.",
     },
   ];
 
@@ -2437,41 +2439,99 @@ export default function CoachDashboard() {
             </div>
           </div>
 
-          {/* Day-specific calorie banner */}
+          {/* Day-specific macro banner */}
           <div
             style={{
               background: "#1a1a00",
               border: `1px solid ${COLORS.accentDim}`,
               borderRadius: 10,
-              padding: "10px 14px",
+              padding: "12px 14px",
               marginBottom: 16,
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
             }}
           >
-            <div>
-              <div
-                style={{ fontSize: 11, color: COLORS.muted, marginBottom: 2 }}
-              >
-                Today's target
-              </div>
-              <div
-                style={{ fontSize: 18, fontWeight: 800, color: COLORS.accent }}
-              >
-                {mealDayTypes[mealDayType].cal}
-              </div>
-            </div>
             <div
               style={{
-                fontSize: 12,
-                color: COLORS.textDim,
-                maxWidth: "55%",
-                textAlign: "right" as const,
-                lineHeight: 1.5,
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: 10,
               }}
             >
-              {mealDayTypes[mealDayType].note}
+              <div>
+                <div
+                  style={{ fontSize: 11, color: COLORS.muted, marginBottom: 2 }}
+                >
+                  Today's target
+                </div>
+                <div
+                  style={{
+                    fontSize: 20,
+                    fontWeight: 800,
+                    color: COLORS.accent,
+                  }}
+                >
+                  {mealDayTypes[mealDayType].cal}
+                </div>
+              </div>
+              <div
+                style={{
+                  fontSize: 11,
+                  color: COLORS.textDim,
+                  maxWidth: "50%",
+                  textAlign: "right" as const,
+                  lineHeight: 1.5,
+                }}
+              >
+                {mealDayTypes[mealDayType].note}
+              </div>
+            </div>
+            <div style={{ display: "flex", gap: 8 }}>
+              {[
+                {
+                  label: "Protein",
+                  val: mealDayTypes[mealDayType].protein,
+                  col: COLORS.green,
+                },
+                {
+                  label: "Carbs",
+                  val: mealDayTypes[mealDayType].carbs,
+                  col: COLORS.blue,
+                },
+                {
+                  label: "Fat",
+                  val: mealDayTypes[mealDayType].fat,
+                  col: COLORS.orange,
+                },
+                {
+                  label: "Fiber",
+                  val: mealDayTypes[mealDayType].fiber,
+                  col: "#c47aff",
+                },
+              ].map((m: any, i: number) => (
+                <div
+                  key={i}
+                  style={{
+                    background: COLORS.card,
+                    borderRadius: 6,
+                    padding: "6px 8px",
+                    flex: 1,
+                    textAlign: "center" as const,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: 10,
+                      color: COLORS.muted,
+                      marginBottom: 2,
+                    }}
+                  >
+                    {m.label}
+                  </div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: m.col }}>
+                    {m.val}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -2793,129 +2853,13 @@ export default function CoachDashboard() {
               >
                 Badminton at 9am = eat 90 min before = 07:30–07:45. Have:{" "}
                 <span style={{ color: COLORS.accent }}>
-                  150g Skyr yogurt + 1 banana + soaked almonds
+                  150g Skyr yogurt + 1 banana (or 2 baby bananas)
                 </span>
-                . ~280 kcal. Light enough to not feel heavy on court. Creatine
-                in the yogurt or a small glass of water.
+                . ~230 kcal. NO nuts before court — fat digests too slowly,
+                makes legs heavy. Creatine mixed into yogurt.
               </div>
             </div>
           )}
-
-          <div
-            style={{
-              background: "#1a0a00",
-              border: "1px solid #3a1500",
-              borderRadius: 10,
-              padding: 14,
-              marginBottom: 16,
-            }}
-          >
-            <div
-              style={{
-                fontSize: 12,
-                fontWeight: 700,
-                color: COLORS.orange,
-                marginBottom: 8,
-              }}
-            >
-              ⚠️ Calorie Reality Check — Why This Plan Isn't Low Cal
-            </div>
-            <div
-              style={{
-                display: "flex",
-                gap: 10,
-                flexWrap: "wrap",
-                marginBottom: 8,
-              }}
-            >
-              {[
-                { label: "Your TDEE", val: mealPlan.tdee, col: COLORS.textDim },
-                {
-                  label: "Target intake",
-                  val: mealPlan.target,
-                  col: COLORS.accent,
-                },
-                {
-                  label: "Daily deficit",
-                  val: mealPlan.deficit,
-                  col: COLORS.green,
-                },
-              ].map((m: any, i: number) => (
-                <div
-                  key={i}
-                  style={{
-                    background: COLORS.card,
-                    borderRadius: 8,
-                    padding: "8px 12px",
-                    flex: "1 1 28%",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: 10,
-                      color: COLORS.muted,
-                      marginBottom: 2,
-                    }}
-                  >
-                    {m.label}
-                  </div>
-                  <div style={{ fontSize: 13, fontWeight: 800, color: m.col }}>
-                    {m.val}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div
-              style={{ fontSize: 12, color: COLORS.textDim, lineHeight: 1.7 }}
-            >
-              {mealPlan.note}
-            </div>
-          </div>
-
-          {/* Macros */}
-          <div
-            style={{
-              display: "flex",
-              gap: 10,
-              marginBottom: 16,
-              flexWrap: "wrap",
-            }}
-          >
-            {[
-              {
-                label: "Protein",
-                val: mealPlan.macros.protein,
-                col: COLORS.green,
-              },
-              { label: "Carbs", val: mealPlan.macros.carbs, col: COLORS.blue },
-              { label: "Fat", val: mealPlan.macros.fat, col: COLORS.orange },
-            ].map((m: any, i: number) => (
-              <div
-                key={i}
-                style={{
-                  background: COLORS.card,
-                  border: `1px solid ${COLORS.cardBorder}`,
-                  borderRadius: 10,
-                  padding: "10px 14px",
-                  flex: "1 1 28%",
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: 10,
-                    color: COLORS.muted,
-                    letterSpacing: 1,
-                    marginBottom: 2,
-                  }}
-                >
-                  {m.label}
-                </div>
-                <div style={{ fontSize: 16, fontWeight: 800, color: m.col }}>
-                  {m.val}
-                </div>
-              </div>
-            ))}
-          </div>
 
           {/* Meals */}
           {(mealPlan.meals as any[])
@@ -3488,16 +3432,161 @@ export default function CoachDashboard() {
             </div>
           </div>
 
-          <div
-            style={{
-              fontSize: 11,
-              color: COLORS.muted,
-              letterSpacing: 1,
-              textTransform: "uppercase",
-              marginBottom: 12,
-            }}
-          >
-            📊 Weekly Targets
+          <div style={{ marginBottom: 20 }}>
+            <div
+              style={{
+                fontSize: 11,
+                color: COLORS.muted,
+                letterSpacing: 1,
+                textTransform: "uppercase",
+                marginBottom: 12,
+              }}
+            >
+              📊 Daily Macros by Day Type
+            </div>
+            <div
+              style={{
+                fontSize: 11,
+                color: COLORS.muted,
+                marginBottom: 12,
+                lineHeight: 1.6,
+              }}
+            >
+              Each day is different based on activity. Gym + Badminton days are
+              your highest calorie days — you need the fuel. Full rest and
+              Sunday are lowest.
+            </div>
+            {[
+              {
+                day: "🏋️ Gym Day",
+                sub: "Mon / Fri",
+                kcal: 2190,
+                protein: 172,
+                carbs: 223,
+                fat: 62,
+                fiber: 35,
+                color: COLORS.red,
+              },
+              {
+                day: "🏋️🏸 Gym + Badminton",
+                sub: "Tue / Wed",
+                kcal: 2440,
+                protein: 189,
+                carbs: 258,
+                fat: 65,
+                fiber: 38,
+                color: COLORS.orange,
+              },
+              {
+                day: "🏸 Badminton Only",
+                sub: "Thu",
+                kcal: 1940,
+                protein: 143,
+                carbs: 198,
+                fat: 59,
+                fiber: 31,
+                color: COLORS.blue,
+              },
+              {
+                day: "😴 Full Rest",
+                sub: "Sat",
+                kcal: 1910,
+                protein: 121,
+                carbs: 201,
+                fat: 62,
+                fiber: 33,
+                color: COLORS.muted,
+              },
+              {
+                day: "🏸 Morning Badminton",
+                sub: "Sun",
+                kcal: 1830,
+                protein: 121,
+                carbs: 191,
+                fat: 57,
+                fiber: 31,
+                color: COLORS.green,
+              },
+            ].map((d: any, i: number) => (
+              <div
+                key={i}
+                style={{
+                  background: COLORS.card,
+                  border: `1px solid ${COLORS.cardBorder}`,
+                  borderLeft: `4px solid ${d.color}`,
+                  borderRadius: 10,
+                  padding: "12px 14px",
+                  marginBottom: 10,
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: 10,
+                  }}
+                >
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 700 }}>{d.day}</div>
+                    <div style={{ fontSize: 11, color: COLORS.muted }}>
+                      {d.sub}
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      background: "#1a1a00",
+                      color: COLORS.accent,
+                      fontSize: 14,
+                      fontWeight: 800,
+                      padding: "4px 12px",
+                      borderRadius: 6,
+                    }}
+                  >
+                    {d.kcal} kcal
+                  </div>
+                </div>
+                <div
+                  style={{ display: "flex", gap: 8, flexWrap: "wrap" as const }}
+                >
+                  {[
+                    {
+                      label: "Protein",
+                      val: `${d.protein}g`,
+                      col: COLORS.green,
+                    },
+                    { label: "Carbs", val: `${d.carbs}g`, col: COLORS.blue },
+                    { label: "Fat", val: `${d.fat}g`, col: COLORS.orange },
+                    { label: "Fiber", val: `${d.fiber}g`, col: "#c47aff" },
+                  ].map((m: any, j: number) => (
+                    <div
+                      key={j}
+                      style={{
+                        background: COLORS.bg,
+                        borderRadius: 6,
+                        padding: "5px 10px",
+                        flex: "1 1 20%",
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontSize: 10,
+                          color: COLORS.muted,
+                          marginBottom: 2,
+                        }}
+                      >
+                        {m.label}
+                      </div>
+                      <div
+                        style={{ fontSize: 13, fontWeight: 700, color: m.col }}
+                      >
+                        {m.val}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
           {(stats.weeklyTargets as any[]).map((t: any, i: number) => (
             <div key={i} style={{ display: "flex", gap: 10, marginBottom: 8 }}>
