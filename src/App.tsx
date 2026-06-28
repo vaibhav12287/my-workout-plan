@@ -284,9 +284,9 @@ const MON_SCHEDULE = [
   ...OFFICE,
   {
     time: "14:00",
-    label: "LUNCH — Dal + Paneer + Sabzi",
+    label: "LUNCH — Mediterranean Paneer Bowl",
     detail:
-      "Dal (Mon = Moong) + paneer + sabzi (Mon = Palak Paneer or summer: Tinda+Paneer) + dahi + salad + 2 rotis. 5 soaked walnuts. 20 min, away from desk.",
+      "Quinoa + grilled paneer + chickpeas + cucumber + capsicum + olive oil lemon dressing + dahi. 15 min at home or Greenr Cafe. Alternate weeks: regular dal + paneer + sabzi is also fine.",
     type: "food",
   },
   ...POST_LUNCH,
@@ -399,7 +399,7 @@ const THU_SCHEDULE = [
     time: "21:15",
     label: "DINNER",
     detail:
-      "Ragi roti + greens sabzi + lighter dal (moong/masoor/toor) + dahi. Finish by 21:45. After: soaked pumpkin seeds + soaked almonds.",
+      "Ragi roti + Masoor Dal (fastest digest) + Gobhi sabzi + dahi. Finish by 21:45. After: soaked pumpkin seeds + soaked almonds.",
     type: "food",
   },
   ...WIND_DOWN,
@@ -584,7 +584,7 @@ const SUN_SCHEDULE = [
     time: "20:30",
     label: "DINNER",
     detail:
-      "Ragi roti + greens sabzi + lighter dal + dahi. Eat by 21:00. After: soaked pumpkin seeds + soaked almonds. Prep Monday gym bag tonight.",
+      "Ragi roti + Moong Dal (lightest — best for sleep) + Shimla Mirch Bhurji + dahi. Eat by 21:00. After: soaked pumpkin seeds + soaked almonds. Prep Monday gym bag tonight.",
     type: "food",
   },
   {
@@ -1120,32 +1120,33 @@ const MEALS_BY_DAY = {
       why: "Muscle protein synthesis peaks now. Don't wait until office.",
     },
     {
-      label: "LUNCH — Dal + Paneer + Sabzi",
+      label: "LUNCH — Mediterranean Paneer Bowl (Mon)",
       color: C.blue,
       items: [
-        "2 whole wheat rotis OR 1 cup brown rice",
-        "1 cup Moong Dal (Mon rotation)",
-        "100g paneer OR 150g tofu (not fried)",
-        "1 cup Palak Paneer sabzi (Mon) — summer: Tinda+Paneer",
-        "150g dahi (room temp)",
-        "Salad: cucumber + tomato + onion + lemon",
+        "1 cup cooked quinoa OR brown rice",
+        "100g paneer — grilled on dry pan with olive oil + oregano",
+        "1/2 cup chickpeas — boiled",
+        "Cucumber + capsicum + cherry tomatoes + red onion",
+        "Dressing: 1 tbsp olive oil + lemon + salt + dried oregano",
+        "150g dahi on side",
         "5 soaked walnuts",
-        "~640 kcal | 50g protein | 70g carbs",
+        "~580 kcal | 36g protein | 55g carbs",
+        "Alternate week: regular dal + paneer + sabzi is also fine",
       ],
-      why: "Dal + paneer = complete amino acids. Dahi room temp = more active probiotics.",
+      why: "Monday variety — feels restaurant quality, very clean macros. Quinoa + paneer + chickpeas = complete protein. Takes 15 min. Greenr Cafe (Golf Course Road) also has a version if ordering out.",
     },
     {
       label: "DINNER",
       color: C.purple,
       items: [
-        "1-2 ragi rotis OR whole wheat rotis",
-        "1 cup greens sabzi",
-        "1 bowl Moong/Masoor/Toor dal only",
+        "1-2 ragi rotis",
+        "1 cup Moong Dal — lightest dal, best post-gym recovery",
+        "1 cup Palak Paneer sabzi (Mon) — summer: Tinda+Paneer",
         "150g dahi",
-        "AFTER: 30g soaked pumpkin seeds + 10-12 soaked almonds",
+        "AFTER: soaked pumpkin seeds + soaked almonds",
         "~530 kcal | 40g protein | 55g carbs",
       ],
-      why: "Ragi roti = highest magnesium flour. Pumpkin seeds + almonds = magnesium stack. No rajma/chole at night.",
+      why: "Moong dal digests in 2 hrs — perfect for sleep quality after gym day. Ragi roti + pumpkin seeds = full magnesium coverage without any pill.",
     },
   ],
   1: [
@@ -1205,13 +1206,13 @@ const MEALS_BY_DAY = {
       color: C.purple,
       items: [
         "1-2 ragi rotis",
-        "1 cup greens sabzi",
-        "1 bowl Moong/Masoor/Toor dal",
+        "1 cup Toor Dal — light, classic comfort",
+        "1 cup Bhindi sabzi (Tue) — winter: Gobhi+Matar",
         "150g dahi",
         "AFTER: soaked pumpkin seeds + soaked almonds",
         "~530 kcal | 40g protein | 55g carbs",
       ],
-      why: "Light dinner after high-output day. Protein is covered earlier.",
+      why: "Toor dal is light enough for night after gym + badminton double session. Bhindi is low calorie (35 kcal/100g) — perfect light dinner sabzi.",
     },
   ],
   2: [
@@ -1321,13 +1322,13 @@ const MEALS_BY_DAY = {
       color: C.purple,
       items: [
         "1-2 ragi rotis",
-        "1 cup Chana Dal (Thu rotation — lowest GI)",
-        "1 cup greens sabzi",
+        "1 cup Masoor Dal — fastest digest, no soaking needed",
+        "1 cup greens sabzi (Gobhi+Matar — winter / Arbi — summer)",
         "150g dahi",
         "AFTER: soaked pumpkin seeds + soaked almonds",
         "~530 kcal | 40g protein | 55g carbs",
       ],
-      why: "Chana dal on Thu = lowest glycemic index, stable energy. Light dinner after badminton.",
+      why: "Masoor at night is lighter than Chana Dal — digests faster after evening badminton. Chana Dal reserved for Thu lunch rotation.",
     },
   ],
   4: [
@@ -1461,14 +1462,14 @@ const MEALS_BY_DAY = {
       color: C.purple,
       items: [
         "1-2 ragi rotis",
-        "1 cup Chole (Sun rotation — highest fibre)",
-        "1 cup greens sabzi",
+        "1 cup Moong Dal — lightest, best for sleep",
+        "1 cup greens sabzi (Shimla Mirch Bhurji — year round)",
         "150g dahi",
         "AFTER: soaked pumpkin seeds + soaked almonds",
         "Eat by 21:00",
         "~530 kcal | 40g protein | 55g carbs",
       ],
-      why: "Chole on Sunday = highest fibre meal of week. Great for gut health and active recovery.",
+      why: "Moong dal at night = lightest dal, digests in 2 hrs. Chole moved to Sunday lunch where it belongs. Ragi roti = magnesium for deep sleep.",
     },
   ],
 };
@@ -1502,6 +1503,17 @@ const CHEAT_FOODS = [
 ];
 
 const VARIETY_ROTATION = [
+  {
+    day: "Monday",
+    meal: "LUNCH",
+    dish: "Mediterranean Paneer Bowl",
+    restaurant: "Home cooked (15 min) OR Greenr Cafe (Golf Course Road)",
+    zomato:
+      "Greenr Cafe on Zomato: Grilled Paneer Bowl. OR Salad Days BYOS: quinoa + paneer + chickpeas + olive oil lemon dressing.",
+    order:
+      "Quinoa + grilled paneer + chickpeas + cucumber + capsicum + cherry tomatoes + olive oil lemon dressing. Dahi on side.",
+    macros: "580 kcal | 36g protein | 55g carbs",
+  },
   {
     day: "Tuesday",
     meal: "LUNCH",
@@ -1859,6 +1871,45 @@ const TRACKING = [
 
 // ─── INGREDIENTS DATA ──────────────────────────────────────────────
 const INGREDIENTS = [
+  {
+    day: "Monday",
+    meal: "Lunch",
+    dish: "Mediterranean Paneer Bowl",
+    note: "15 min at home. Grill paneer on a dry pan — makes a huge difference vs plain paneer. Alternate weeks use regular dal/sabzi if you prefer.",
+    sections: [
+      {
+        title: "Ingredients",
+        items: [
+          "1 cup quinoa OR brown rice — cooked",
+          "100g paneer — grilled with olive oil + oregano + salt",
+          "1/2 cup chickpeas — boiled or canned",
+          "1 cucumber — diced",
+          "1 capsicum (any colour) — diced",
+          "10 cherry tomatoes — halved",
+          "1 small red onion — sliced",
+          "5 soaked walnuts — on the side",
+          "150g Skyr dahi — on the side",
+        ],
+      },
+      {
+        title: "Dressing (mix together)",
+        items: [
+          "1 tbsp olive oil",
+          "Juice of half lemon",
+          "Pinch of dried oregano",
+          "Salt and pepper to taste",
+        ],
+      },
+      {
+        title: "If ordering out",
+        items: [
+          "Greenr Cafe (Golf Course Road) — Grilled Paneer Bowl",
+          "Salad Days BYOS: quinoa + paneer + chickpeas + cucumber + capsicum + olive oil lemon dressing (NOT creamy dressing)",
+          "Skip: croutons, cheese, ranch",
+        ],
+      },
+    ],
+  },
   {
     day: "Tuesday",
     meal: "Lunch",
