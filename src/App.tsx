@@ -1,11 +1,11 @@
 import { useState } from "react";
 
-const COLORS = {
+const C = {
   bg: "#0f0f0f",
   card: "#1a1a1a",
-  cardBorder: "#2a2a2a",
+  border: "#2a2a2a",
   accent: "#e8ff47",
-  accentDim: "#b8cc2a",
+  dim: "#b8cc2a",
   red: "#ff4747",
   green: "#47ff8a",
   blue: "#47b8ff",
@@ -16,703 +16,608 @@ const COLORS = {
   textDim: "#aaaaaa",
 };
 
-const tabs = ["📅 Schedule", "🏋️ Workout", "🥗 Meals", "😴 Sleep", "📊 Goals"];
+const TABS = ["Schedule", "Workout", "Meals", "Sleep", "Goals", "Ingredients"];
 
-const gymDaySchedule = [
+const BADGE_MAP = {
+  sleep: { bg: "#1a1a3a", color: "#6a6aff", label: "SLEEP" },
+  health: { bg: "#1a3a1a", color: "#47ff8a", label: "HEALTH" },
+  food: { bg: "#3a1a00", color: "#ff9447", label: "FOOD" },
+  work: { bg: "#1a2a3a", color: "#47b8ff", label: "WORK" },
+  gym: { bg: "#3a1a1a", color: "#ff4747", label: "GYM" },
+  water: { bg: "#001a2a", color: "#00ccff", label: "WATER" },
+};
+
+function Badge({ type }: { type: string }) {
+  const b = (BADGE_MAP as any)[type] || BADGE_MAP.health;
+  return (
+    <span
+      style={{
+        background: b.bg,
+        color: b.color,
+        fontSize: 9,
+        fontWeight: 700,
+        padding: "2px 6px",
+        borderRadius: 4,
+        letterSpacing: 1,
+      }}
+    >
+      {b.label}
+    </span>
+  );
+}
+
+// ─── SHARED BLOCKS ────────────────────────────────────────────────
+const WAKE = [
   {
     time: "07:30",
-    label: "WAKE UP — Zero Snooze",
-    detail:
-      "One alarm. Stand up immediately. Snooze = sleep inertia = worse grogginess. Open curtains right away.",
+    label: "Wake Up — Zero Snooze",
+    detail: "One alarm. Stand up immediately. Open curtains.",
     type: "sleep",
-    icon: "🌅",
   },
   {
     time: "07:31",
-    label: "☀️ Sunlight — 5 min",
+    label: "Sunlight 5 min",
     detail:
-      "Step outside or to window. Morning sunlight triggers cortisol rise and sets your sleep timer for 23:00 tonight. Do this even on cloudy days.",
+      "Window or outside. Triggers cortisol rise, sets your sleep timer for 23:00 tonight.",
     type: "health",
-    icon: "☀️",
   },
   {
     time: "07:35",
-    label: "💧 Water #1 — 400ml",
+    label: "Water — 400ml",
     detail:
-      "2 full glasses immediately. Zero water for 7.5 hours — most dehydrated point of your day. Before phone, before anything.",
+      "2 full glasses. Most dehydrated point of the day. Before phone, before anything.",
     type: "water",
-    icon: "💧",
   },
-  {
-    time: "07:40",
-    label: "Pre-Workout Power Shake",
-    detail:
-      "Blend: 2 bananas + 1.5 scoops whey + 3 tbsp oats + 300ml milk + 1 tbsp peanut butter + 1 tbsp ground alsi (grind DRY, never soak) + 1 tsp creatine. ~560 kcal | 65g carbs | 46g protein. Drink fast — leaving in 15 min.",
-    type: "food",
-    icon: "🥤",
-  },
-  {
-    time: "07:55",
-    label: "Leave for Gym",
-    detail:
-      "Bag packed last night. Carry: 1L water bottle, shaker with 1 dry scoop whey for post-workout, earphones.",
-    type: "work",
-    icon: "🎧",
-  },
-  {
-    time: "08:30",
-    label: "GYM — Dynamic Warm-Up (5 min)",
-    detail:
-      "Never skip: arm circles x10, hip circles x10, bodyweight squats x10, leg swings x10 each. Cold muscles + heavy weights = injury.",
-    type: "gym",
-    icon: "🔥",
-  },
-  {
-    time: "08:35",
-    label: "💧 Water #2 — 500–750ml during gym",
-    detail:
-      "Sip every 2–3 sets. Don't chug — causes cramps. 1% dehydration = 10% drop in strength.",
-    type: "water",
-    icon: "💧",
-  },
-  {
-    time: "08:35",
-    label: "GYM — Main Session (75 min)",
-    detail:
-      "Per weekly split (Workout tab). Compounds first, accessories after. LOG EVERY SET — weight + reps in Notes app. No log = no progressive overload = no progress.",
-    type: "gym",
-    icon: "🏋️",
-  },
-  {
-    time: "09:50",
-    label: "GYM — Cool Down (5 min)",
-    detail:
-      "Static stretches: chest doorway, lat stretch, quad stretch, hamstring stretch. 30 sec each. Reduces DOMS tomorrow.",
-    type: "health",
-    icon: "🧘",
-  },
-  {
-    time: "09:55",
-    label: "Post-Workout Shake — AT GYM",
-    detail:
-      "1 scoop whey in 300ml water. Drink BEFORE showering — within 20 min of last set. Muscle protein synthesis peaks now. Waiting until office wastes this window.",
-    type: "food",
-    icon: "🥛",
-  },
-  {
-    time: "10:00",
-    label: "Shower at Gym",
-    detail:
-      "End with 30–60 sec cold water on back and legs. Reduces soreness, improves alertness before office.",
-    type: "health",
-    icon: "🚿",
-  },
+];
+const OFFICE = [
   {
     time: "11:00",
     label: "Office — Deep Work Block",
     detail:
-      "Post-workout endorphins = best cognitive window of day. Block meetings here if possible. No social media until 13:00.",
+      "Post-workout endorphins = best cognitive window. Block meetings here.",
     type: "work",
-    icon: "💻",
   },
   {
     time: "11:00",
-    label: "💧 Water #3 — 500ml (11:00–13:00)",
-    detail:
-      "1 bottle at desk over 2 hours. Sip constantly. Urine = pale yellow is good, dark = drink more.",
+    label: "Water — 500ml (11-13)",
+    detail: "1 bottle at desk over 2 hours. Sip constantly.",
     type: "water",
-    icon: "💧",
   },
   {
     time: "13:30",
-    label: "Snack (only if hungry)",
-    detail:
-      "Soaked almonds + apple OR makhana. Skip if not hungry — don't force calories.",
+    label: "Snack if hungry",
+    detail: "Soaked almonds + apple OR makhana. Skip if not hungry.",
     type: "food",
-    icon: "🍎",
   },
   {
     time: "14:00",
-    label: "💧 Water #4 — 200ml with lunch",
-    detail:
-      "Small glass only with food. Don't overdrink during meals — dilutes digestive enzymes.",
+    label: "Water — 200ml with lunch",
+    detail: "Small glass only. Don't overdrink during meals.",
     type: "water",
-    icon: "💧",
   },
-  {
-    time: "14:00",
-    label: "LUNCH — Biggest Meal",
-    detail:
-      "Dal (rotation) + paneer/tofu + sabzi (rotation) + dahi + salad + 2 rotis. Away from desk, 20 min minimum. 5 soaked walnuts on the side.",
-    type: "food",
-    icon: "🍱",
-  },
+];
+const POST_LUNCH = [
   {
     time: "14:25",
     label: "Post-Lunch Walk",
-    detail:
-      "5–10 min walk outside. Regulates blood sugar, prevents 3pm crash. Non-negotiable.",
+    detail: "5-10 min walk outside. Regulates blood sugar, prevents 3pm crash.",
     type: "health",
-    icon: "🚶",
   },
   {
     time: "14:30",
-    label: "💧 Water #5 — 400ml (14:30–17:00)",
-    detail:
-      "Bottle at desk. Most neglected window. Dehydration here = 3pm brain fog.",
+    label: "Water — 400ml (14:30-17)",
+    detail: "Bottle at desk. Most neglected window.",
     type: "water",
-    icon: "💧",
   },
   {
     time: "16:00",
-    label: "☕ Last Coffee Cut-Off",
+    label: "Last Coffee Cut-Off",
     detail:
-      "No caffeine after 16:00. Half-life 5–6 hrs — coffee at 4pm = half in blood at 10pm. Water or herbal tea only from here.",
+      "No caffeine after 16:00. Half-life 5-6 hrs — coffee at 4pm = half in blood at 10pm.",
     type: "health",
-    icon: "☕",
   },
-  {
-    time: "18:30",
-    label: "Leave Office (Mon/Fri — No Badminton)",
-    detail:
-      "Mon and Fri have no badminton. Head home. Full rest evening. Fri especially — legs need recovery after heavy lower day.",
-    type: "work",
-    icon: "🚗",
-  },
-  {
-    time: "19:00",
-    label: "Light Evening Walk (Mon/Fri)",
-    detail:
-      "Optional 15–20 min easy walk after getting home. Not cardio — just keeps metabolism active and aids digestion. No intensity at all.",
-    type: "health",
-    icon: "🚶",
-  },
-  {
-    time: "21:00",
-    label: "💧 Water #6 — 200ml with dinner",
-    detail:
-      "Small glass with dinner. Mon/Fri eat slightly earlier since no badminton.",
-    type: "water",
-    icon: "💧",
-  },
-  {
-    time: "21:00",
-    label: "DINNER (Mon/Fri — Earlier)",
-    detail:
-      "Ragi roti + greens sabzi (rotation) + lighter dal (moong/masoor/toor only at night) + dahi. Finish by 21:30. After: 30g soaked pumpkin seeds + soaked almonds.",
-    type: "food",
-    icon: "🍽️",
-  },
-  {
-    time: "21:30",
-    label: "💧 Water #7 — LAST 200ml",
-    detail: "Final water. Hard cut-off. Nothing after this.",
-    type: "water",
-    icon: "💧",
-  },
+];
+const WIND_DOWN = [
   {
     time: "22:00",
     label: "Wind-Down Begins",
-    detail:
-      "Dim all lights — bedside lamp only. No reels/Twitter/news. Urgent messages OK.",
+    detail: "Dim lights — bedside lamp only. No reels or news.",
     type: "sleep",
-    icon: "🌙",
   },
   {
     time: "22:15",
-    label: "🎒 Pack Gym Bag + Soak Seeds",
+    label: "Pack Bag + Soak Seeds",
     detail:
-      "1. Gym clothes out, water bottle refilled, dry whey scoop in shaker, earphones charged. 2. SOAK: 30g pumpkin seeds + 10–12 almonds + 5 walnuts in bowl of water overnight. Soaking removes phytic acid — dry seeds give ~40% less magnesium absorption.",
+      "Gym bag prepped. Soak: 30g pumpkin seeds + almonds + walnuts in bowl of water overnight. Soaking removes phytic acid — dry seeds give 40% less magnesium absorption.",
     type: "health",
-    icon: "🎒",
   },
   {
     time: "22:30",
-    label: "📵 PHONE DOWN",
-    detail:
-      "Phone outside bedroom. 45 min more sleep on average without phone in room. Alarm fine — just across the room.",
+    label: "Phone Down",
+    detail: "Phone outside bedroom. 45 min more sleep without phone in room.",
     type: "sleep",
-    icon: "📵",
   },
   {
     time: "22:30",
-    label: "Read for 30 min",
-    detail: "Physical book or Kindle warm mode. Fiction best. No work or news.",
+    label: "Read 30 min",
+    detail: "Physical book or Kindle warm mode. Fiction. No work or news.",
     type: "sleep",
-    icon: "📚",
   },
   {
     time: "23:00",
     label: "Lights Out",
     detail:
-      "23:00 → 07:30 = 7.5 hrs = 5 full 90-min cycles. Growth hormone, testosterone, muscle repair, fat metabolism all peak during deep sleep.",
+      "23:00 to 07:30 = 7.5 hrs = 5 full 90-min cycles. Growth hormone, muscle repair, fat metabolism all peak here.",
     type: "sleep",
-    icon: "😴",
   },
 ];
-
-const badmintonEveningSchedule = [
-  {
-    time: "07:30",
-    label: "WAKE UP — Same Time Always",
-    detail:
-      "07:30 every day including Tue/Wed/Thu. Consistent wake time is the foundation. No exceptions.",
-    type: "sleep",
-    icon: "🌅",
-  },
-  {
-    time: "07:31",
-    label: "☀️ Sunlight — 5 min",
-    detail: "Window or outside. Every single day.",
-    type: "health",
-    icon: "☀️",
-  },
-  {
-    time: "07:35",
-    label: "💧 Water — 400ml",
-    detail: "2 glasses immediately on waking.",
-    type: "water",
-    icon: "💧",
-  },
+const GYM_BLOCK = [
   {
     time: "07:40",
-    label: "Full Power Shake",
+    label: "Power Shake",
     detail:
-      "Blend: 2 bananas + 1.5 scoops whey + 3 tbsp oats + 300ml milk + PB + ground alsi (grind DRY) + 1 tsp creatine. ~560 kcal | 65g carbs | 46g protein. You have gym AND badminton today — need the full fuel.",
+      "Blend: 2 bananas + 1.5 scoops whey + 3 tbsp oats + 300ml Calci+ milk + 1 tbsp peanut butter + 1 tbsp ground alsi + 1 tsp creatine. ~560 kcal. Drink fast.",
     type: "food",
-    icon: "🥤",
-    showOn: [1],
-  },
-  {
-    time: "07:40",
-    label: "Light Breakfast — No Gym Today",
-    detail:
-      "Skip the big shake. Have: 1 banana + 1 scoop whey in water + soaked almonds + soaked walnuts. ~280 kcal. No oats, no PB — you're not lifting this morning. Still add creatine into the whey water.",
-    type: "food",
-    icon: "🥣",
-    showOn: [2],
   },
   {
     time: "07:55",
     label: "Leave for Gym",
     detail:
-      "Bag packed last night. 1L water, shaker with dry post-workout scoop, earphones.",
+      "Bag packed last night. 1L water, shaker with 1 dry scoop whey, earphones.",
     type: "work",
-    icon: "🎧",
-    showOn: [1],
-  },
-  {
-    time: "08:00",
-    label: "Morning Walk or Stretch (15–20 min)",
-    detail:
-      "No gym today. 15 min morning walk outside is the best option — OR 10 min hip flexor + hamstring stretch at home. Especially good since you played Wed badminton last night. Active recovery, not training.",
-    type: "health",
-    icon: "🧘",
-    showOn: [2],
   },
   {
     time: "08:30",
-    label: "GYM — Dynamic Warm-Up + 75 min Session",
+    label: "Gym — Warm-Up 5 min",
     detail:
-      "Warm-up 5 min (arm circles, hip circles, squats, leg swings). Then main session per weekly split. Log every set. Post-workout shake at gym before shower.",
+      "Arm circles, hip circles, squats x10, leg swings x10. Cold muscles + heavy weights = injury.",
     type: "gym",
-    icon: "🏋️",
-    showOn: [1],
   },
   {
-    time: "08:30",
-    label: "Leave for Office",
+    time: "08:35",
+    label: "Water — 500-750ml during gym",
+    detail: "Sip every 2-3 sets. 1% dehydration = 10% drop in strength.",
+    type: "water",
+  },
+  {
+    time: "08:35",
+    label: "Gym — Main Session 75 min",
     detail:
-      "No gym today — head straight to office. Thu is a rest morning by design.",
-    type: "work",
-    icon: "🚗",
-    showOn: [2],
+      "Per weekly split (Workout tab). Compounds first. LOG EVERY SET — weight + reps in Notes app.",
+    type: "gym",
+  },
+  {
+    time: "09:50",
+    label: "Cool Down 5 min",
+    detail: "Chest, lat, quad, hamstring stretches. 30 sec each.",
+    type: "health",
+  },
+  {
+    time: "09:55",
+    label: "Post-Workout Shake at Gym",
+    detail:
+      "1 scoop whey in 300ml water. Drink BEFORE showering — within 20 min of last set.",
+    type: "food",
   },
   {
     time: "10:00",
-    label: "Shower at Gym + Leave for Office",
-    detail: "Cold finish 30–60 sec. Reduces soreness, improves alertness.",
-    type: "health",
-    icon: "🚿",
-    showOn: [1],
-  },
-  {
-    time: "11:00",
-    label: "Office — Work Block",
+    label: "Shower",
     detail:
-      "Tue/Wed: post-workout focus window. Thu: normal morning energy. Keep water on desk.",
-    type: "work",
-    icon: "💻",
-  },
-  {
-    time: "11:00",
-    label: "💧 Water — 500ml (11:00–13:00)",
-    detail: "1 bottle at desk over 2 hours. Sip constantly.",
-    type: "water",
-    icon: "💧",
-  },
-  {
-    time: "13:30",
-    label: "Snack (only if hungry)",
-    detail: "Soaked almonds + apple OR makhana. Skip if not hungry.",
-    type: "food",
-    icon: "🍎",
-  },
-  {
-    time: "14:00",
-    label: "💧 Water — 200ml with lunch",
-    detail: "Small glass only.",
-    type: "water",
-    icon: "💧",
-  },
-  {
-    time: "14:00",
-    label: "LUNCH — Biggest Meal",
-    detail:
-      "Dal + paneer/tofu + sabzi + dahi + salad + 2 rotis. Away from desk, 20 min. 5 soaked walnuts.",
-    type: "food",
-    icon: "🍱",
-  },
-  {
-    time: "14:25",
-    label: "Post-Lunch Walk",
-    detail: "5–10 min walk. Non-negotiable.",
+      "Cold water 30-60 sec at end. Reduces soreness, improves alertness.",
     type: "health",
-    icon: "🚶",
   },
+];
+const BADMINTON_BLOCK = [
   {
-    time: "14:30",
-    label: "💧 Water — 400ml (14:30–17:00)",
-    detail: "Bottle at desk. Don't forget.",
+    time: "17:00",
+    label: "Water — 200ml before snack",
+    detail: "Pre-hydrate before eating.",
     type: "water",
-    icon: "💧",
-  },
-  {
-    time: "16:00",
-    label: "☕ Last Coffee Cut-Off",
-    detail:
-      "No caffeine after 16:00. Badminton tonight — you must sleep by 23:00.",
-    type: "health",
-    icon: "☕",
   },
   {
     time: "17:00",
-    label: "💧 Water — 200ml before snack",
-    detail: "Glass of water before eating.",
-    type: "water",
-    icon: "💧",
-  },
-  {
-    time: "17:00",
-    label: "⚡ Pre-Badminton Snack — EAT AT 17:00 SHARP",
+    label: "Pre-Badminton Snack — 17:00 SHARP",
     detail:
-      "150g Milky Mist Skyr yogurt + 2 baby bananas OR 1 regular banana. ~250 kcal | 17g protein | 48g carbs. 90 min before court = optimal. Eating closer = heavy legs + cramps on court.",
+      "150g Milky Mist Skyr yogurt + 2 baby bananas or 1 banana. ~250 kcal. Eat at exactly 17:00 — 90 min before 19:30 court. Eating closer = cramps.",
     type: "food",
-    icon: "⚡",
   },
   {
     time: "18:50",
     label: "Leave Office",
-    detail:
-      "Carry electrolyte bottle: 500ml water + pinch salt + lemon. Pre-mixed and ready.",
+    detail: "Carry electrolyte bottle: 500ml water + pinch salt + half lemon.",
     type: "work",
-    icon: "🚗",
   },
   {
     time: "19:30",
-    label: "💧 Water — 500–600ml during badminton",
+    label: "Water — 500-600ml during badminton",
     detail:
-      "Sip between every 2–3 rallies. Don't wait for breaks. Electrolyte mix replaces sodium lost in sweat.",
+      "Sip between rallies. Electrolyte mix replaces sodium lost in sweat.",
     type: "water",
-    icon: "💧",
   },
   {
     time: "19:30",
-    label: "BADMINTON (60 min)",
-    detail:
-      "Tue/Wed/Thu evenings. Play hard — HIIT level intensity. This is your cardio for the day.",
+    label: "BADMINTON — 60 min",
+    detail: "Play hard. HIIT level intensity. This is your cardio for the day.",
     type: "gym",
-    icon: "🏸",
   },
   {
     time: "20:30",
     label: "Post-Badminton Stretch — 10 min",
     detail:
-      "Hip flexors (lunge 30s each side), calves (wall stretch), hamstrings (seated), rotator cuff (cross-arm). Non-negotiable — this prevents long-term knee and ankle injury.",
+      "Hip flexors 30s each, calves, hamstrings, rotator cuff. Non-negotiable — prevents long-term knee and ankle injury.",
     type: "health",
-    icon: "🧘",
   },
+];
+const LATE_DINNER = [
   {
     time: "21:15",
-    label: "💧 Water — 200ml with dinner",
+    label: "Water — 200ml with dinner",
     detail: "Small glass with dinner.",
     type: "water",
-    icon: "💧",
   },
+  {
+    time: "21:45",
+    label: "Last Water — 200ml",
+    detail: "Hard cut-off. Nothing after this.",
+    type: "water",
+  },
+];
+const EARLY_DINNER = [
+  {
+    time: "21:00",
+    label: "Water — 200ml with dinner",
+    detail: "Small glass with dinner.",
+    type: "water",
+  },
+  {
+    time: "21:30",
+    label: "Last Water — 200ml",
+    detail: "Hard cut-off. Nothing after this.",
+    type: "water",
+  },
+];
+
+// ─── PER-DAY SCHEDULES ────────────────────────────────────────────
+const MON_SCHEDULE = [
+  ...WAKE,
+  ...GYM_BLOCK,
+  ...OFFICE,
+  {
+    time: "14:00",
+    label: "LUNCH — Dal + Paneer + Sabzi",
+    detail:
+      "Dal (Mon = Moong) + paneer + sabzi (Mon = Palak Paneer or summer: Tinda+Paneer) + dahi + salad + 2 rotis. 5 soaked walnuts. 20 min, away from desk.",
+    type: "food",
+  },
+  ...POST_LUNCH,
+  {
+    time: "18:30",
+    label: "Leave Office",
+    detail: "No badminton tonight. Head home. Full rest evening.",
+    type: "work",
+  },
+  {
+    time: "19:00",
+    label: "Light Evening Walk",
+    detail:
+      "Optional 15-20 min easy walk. Not cardio — just keeps metabolism active.",
+    type: "health",
+  },
+  ...EARLY_DINNER,
+  {
+    time: "21:00",
+    label: "DINNER",
+    detail:
+      "Ragi roti + greens sabzi + lighter dal (moong/masoor/toor only) + dahi. Finish by 21:30. After: soaked pumpkin seeds + soaked almonds.",
+    type: "food",
+  },
+  ...WIND_DOWN,
+];
+
+const TUE_SCHEDULE = [
+  ...WAKE,
+  ...GYM_BLOCK,
+  ...OFFICE,
+  {
+    time: "14:00",
+    label: "LUNCH — Rajma Rice Bowl",
+    detail:
+      "Rajma over brown rice + raw onion rings + lemon + coriander + dahi on side. Variety day — same macros, different experience. Order from dhaba or home cooked.",
+    type: "food",
+  },
+  ...POST_LUNCH,
+  ...BADMINTON_BLOCK,
+  ...LATE_DINNER,
+  {
+    time: "21:15",
+    label: "DINNER — Dal + Sabzi",
+    detail:
+      "Ragi roti + greens sabzi + lighter dal + dahi. Finish by 21:45. After: soaked pumpkin seeds + soaked almonds.",
+    type: "food",
+  },
+  ...WIND_DOWN,
+];
+
+const WED_SCHEDULE = [
+  ...WAKE,
+  ...GYM_BLOCK,
+  ...OFFICE,
+  {
+    time: "14:00",
+    label: "LUNCH — Dal + Paneer + Sabzi",
+    detail:
+      "Dal (Wed = Masoor) + paneer + sabzi (Wed = Methi or summer: Tori) + dahi + salad + 2 rotis. 5 soaked walnuts. 20 min, away from desk.",
+    type: "food",
+  },
+  ...POST_LUNCH,
+  ...BADMINTON_BLOCK,
+  ...LATE_DINNER,
+  {
+    time: "21:15",
+    label: "DINNER — Mexican Paneer Bowl",
+    detail:
+      "Mexican Paneer Bowl tonight — variety day. Burrp or Burrito Project on Zomato, or home in 20 min. Paneer + brown rice + rajma + capsicum + corn + fresh salsa + hung curd. See Ingredients tab.",
+    type: "food",
+  },
+  ...WIND_DOWN,
+];
+
+const THU_SCHEDULE = [
+  ...WAKE,
+  {
+    time: "07:40",
+    label: "Light Breakfast — No Gym Today",
+    detail:
+      "1 banana + 1 scoop whey in water + soaked almonds + soaked walnuts. ~280 kcal. Not lifting this morning — save energy for court tonight.",
+    type: "food",
+  },
+  {
+    time: "08:00",
+    label: "Morning Walk or Stretch",
+    detail:
+      "15 min walk outside OR 10 min hip flexor + hamstring stretch. Active recovery from Wed badminton. Enjoy the slow morning.",
+    type: "health",
+  },
+  {
+    time: "08:30",
+    label: "Leave for Office",
+    detail: "No gym today — straight to office.",
+    type: "work",
+  },
+  ...OFFICE,
+  {
+    time: "14:00",
+    label: "LUNCH — High Protein Salad Bowl",
+    detail:
+      "Variety day — order Salad Days (Udyog Vihar) or Green Bunz (Sector 31) on Zomato. BYOS: quinoa + paneer + chickpeas + cucumber + capsicum + olive oil lemon dressing. Add Skyr dahi at home. See Ingredients tab.",
+    type: "food",
+  },
+  ...POST_LUNCH,
+  ...BADMINTON_BLOCK,
+  ...LATE_DINNER,
   {
     time: "21:15",
     label: "DINNER",
     detail:
-      "Ragi roti + greens sabzi (rotation) + lighter dal (moong/masoor/toor only — no rajma/chole at night) + dahi. Finish by 21:45. After: 30g soaked pumpkin seeds + soaked almonds.",
+      "Ragi roti + greens sabzi + lighter dal (moong/masoor/toor) + dahi. Finish by 21:45. After: soaked pumpkin seeds + soaked almonds.",
     type: "food",
-    icon: "🍽️",
   },
-  {
-    time: "21:45",
-    label: "💧 Water — LAST 200ml",
-    detail: "Hard cut-off. Nothing after this.",
-    type: "water",
-    icon: "💧",
-  },
-  {
-    time: "22:00",
-    label: "Wind-Down",
-    detail: "Dim lights. No reels/news. Urgent messages OK.",
-    type: "sleep",
-    icon: "🌙",
-  },
-  {
-    time: "22:15",
-    label: "🎒 Pack Bag + Soak Seeds",
-    detail:
-      "Gym bag for tomorrow if needed. Soak: pumpkin seeds + almonds + walnuts in bowl overnight.",
-    type: "health",
-    icon: "🎒",
-  },
-  {
-    time: "22:30",
-    label: "📵 PHONE DOWN",
-    detail: "Phone outside bedroom. 45 min more sleep without phone in room.",
-    type: "sleep",
-    icon: "📵",
-  },
-  {
-    time: "22:30",
-    label: "Read for 30 min",
-    detail: "Physical book or Kindle warm mode. Fiction. No work or news.",
-    type: "sleep",
-    icon: "📚",
-  },
-  {
-    time: "23:00",
-    label: "Lights Out",
-    detail:
-      "7.5 hrs = 5 full cycles. This is where the transformation happens.",
-    type: "sleep",
-    icon: "😴",
-  },
+  ...WIND_DOWN,
 ];
 
-const weekendSchedule = [
+const FRI_SCHEDULE = [
+  ...WAKE,
+  ...GYM_BLOCK,
+  ...OFFICE,
   {
-    time: "07:30",
-    label: "WAKE UP — Same Time on Weekends Too",
+    time: "14:00",
+    label: "LUNCH — Dal + Paneer + Sabzi",
     detail:
-      "07:30 even on Sat/Sun. Sleeping in causes social jet lag — you'll feel worse on Monday. Weekends are not a cheat code for sleep debt.",
-    type: "sleep",
-    icon: "🌅",
-    showOn: [3, 4],
-  },
-  {
-    time: "07:31",
-    label: "☀️ Sunlight — 5 min",
-    detail: "Every day. Non-negotiable.",
-    type: "health",
-    icon: "☀️",
-    showOn: [3, 4],
-  },
-  {
-    time: "07:35",
-    label: "💧 Water — 400ml",
-    detail: "2 glasses immediately.",
-    type: "water",
-    icon: "💧",
-    showOn: [3, 4],
-  },
-  {
-    time: "07:40",
-    label: "Pre-Badminton Light Breakfast",
-    detail:
-      "Badminton at 9am = eat 90 min before = 07:30–07:45. 150g Skyr yogurt + 1 banana (or 2 baby bananas). ~230 kcal. NO almonds or nuts — fat digests too slowly, makes legs heavy on court. Add creatine into yogurt.",
+      "Dal (Fri = Mix Dal) + paneer + sabzi (Fri = Baingan Bharta — year round) + dahi + salad + 2 rotis. 5 soaked walnuts. 20 min, away from desk.",
     type: "food",
-    icon: "🥣",
-    showOn: [4],
   },
+  ...POST_LUNCH,
   {
-    time: "07:40",
-    label: "Relaxed Breakfast — Full Rest Day",
+    time: "18:30",
+    label: "Leave Office",
     detail:
-      "No shake, no rush. 2 rotis + dahi + 1 fruit OR poha + dahi. Sit down, enjoy it slowly. Rest is part of the plan. Add creatine in a small glass of water or milk.",
-    type: "food",
-    icon: "🍳",
-    showOn: [3],
-  },
-  {
-    time: "08:30",
-    label: "Leave for Badminton Court",
-    detail:
-      "Carry electrolyte water. Light 3 min jog warm-up before starting. Best session of the week — fresh legs after Saturday rest.",
+      "No badminton tonight. Head home. Heavy leg day — full rest evening.",
     type: "work",
-    icon: "🚗",
-    showOn: [4],
+  },
+  {
+    time: "19:00",
+    label: "Light Evening Walk",
+    detail:
+      "Optional 15-20 min easy walk only. No running — legs need recovery after squats and deadlifts.",
+    type: "health",
+  },
+  ...EARLY_DINNER,
+  {
+    time: "21:00",
+    label: "DINNER — Thai Peanut Noodles with Paneer",
+    detail:
+      "Variety day — make at home in 15 min or Burma Burma Cyber Hub (book ahead). 50g noodles + 100g paneer + capsicum + carrot + peanut sauce (PB + soy + honey + lemon + chilli). See Ingredients tab.",
+    type: "food",
+  },
+  ...WIND_DOWN,
+];
+
+const SAT_SCHEDULE = [
+  ...WAKE,
+  {
+    time: "07:40",
+    label: "Relaxed Breakfast",
+    detail:
+      "2 rotis + dahi + 1 fruit OR Paneer Poha (poha + crumbled paneer + onion + mustard seeds + haldi + lemon). Sit down and enjoy slowly. 1 tsp creatine in water or milk.",
+    type: "food",
   },
   {
     time: "08:30",
-    label: "Foam Roll + Leisure Walk",
+    label: "Foam Roll + Walk",
     detail:
-      "15 min foam rolling: calves, IT band, upper back, hip flexors. Then 20–30 min easy walk outside. No intensity — your body rebuilds on rest days not gym days.",
+      "15 min foam rolling: calves, IT band, upper back, hip flexors. Then 20-30 min easy walk. No intensity — body rebuilds on rest days.",
     type: "health",
-    icon: "🧘",
-    showOn: [3],
-  },
-  {
-    time: "09:00",
-    label: "💧 Water — 500–600ml during badminton",
-    detail:
-      "Morning Gurgaon heat = more sweat than evening sessions. Electrolyte mix: water + pinch salt + lemon.",
-    type: "water",
-    icon: "💧",
-    showOn: [4],
-  },
-  {
-    time: "09:00",
-    label: "BADMINTON — Morning Session (9–11am)",
-    detail:
-      "Two hours. Best session of the week — fresh legs, cool morning air. Play hard and enjoy it.",
-    type: "gym",
-    icon: "🏸",
-    showOn: [4],
-  },
-  {
-    time: "11:00",
-    label: "Post-Badminton Stretch",
-    detail:
-      "10 min: hip flexors, calves, hamstrings, shoulders. Don't skip — 2 hours of badminton is serious load on knees and ankles.",
-    type: "health",
-    icon: "🧘",
-    showOn: [4],
-  },
-  {
-    time: "11:15",
-    label: "💧 Water — 300ml rehydrate",
-    detail: "Rehydrate before eating after the session.",
-    type: "water",
-    icon: "💧",
-    showOn: [4],
-  },
-  {
-    time: "12:00",
-    label: "Post-Badminton Meal",
-    detail:
-      "Dal + paneer/tofu + sabzi + rice or rotis + dahi. Eat soon after court — you've been active for 2 hours. 5 soaked walnuts.",
-    type: "food",
-    icon: "🍱",
-    showOn: [4],
-  },
-  {
-    time: "13:30",
-    label: "🍕 Cheat Meal OR Clean Lunch — Your Choice (Any time Sat)",
-    detail:
-      "Cheat meal can be BREAKFAST, LUNCH or DINNER — your call. Rules: (1) One meal only, other two stay clean. (2) Still have dal/dahi/paneer somewhere today. (3) Still take creatine. (4) +500ml water. Tip: lunch or dinner timing is better than breakfast — avoids blood sugar spike that triggers more cravings all day.",
-    type: "food",
-    icon: "🍽️",
-    showOn: [3],
   },
   {
     time: "14:00",
-    label: "💧 Water — 400ml (afternoon)",
-    detail:
-      "Easy to forget on weekends without office routine. Set a reminder if needed.",
+    label: "Water — 200ml",
+    detail: "Stay hydrated even on rest days.",
     type: "water",
-    icon: "💧",
-    showOn: [3, 4],
+  },
+  {
+    time: "13:30",
+    label: "LUNCH or CHEAT MEAL — Your Choice",
+    detail:
+      "OPTION A Clean: Dal (Sat = Toor) + paneer + sabzi (Sat = Lauki+Chana) + dahi + rotis. OPTION B Cheat: Chole bhature / biryani / pizza / burger / paneer tikka — anything. Greenr Cafe (Golf Course Road): Garden Veg Pizza + Pesto Spaghetti. Roots Cafe (Sector 29): wood-fired pizza. Can be breakfast, lunch or dinner — one meal only.",
+    type: "food",
   },
   {
     time: "15:00",
     label: "Afternoon Rest",
     detail:
-      "Nap max 20 min (longer = groggy + disrupts night sleep). Reading, family time, leisure. No intense activity. This is the most underrated part of the plan.",
+      "Nap max 20 min. Reading, family time, leisure. No intense activity.",
     type: "health",
-    icon: "😌",
-    showOn: [3, 4],
   },
   {
     time: "17:00",
     label: "Light Snack",
-    detail:
-      "Soaked almonds + 1 fruit OR makhana. No evening court on weekends.",
+    detail: "Soaked almonds + 1 fruit OR makhana. No badminton today.",
     type: "food",
-    icon: "🍎",
-    showOn: [3, 4],
   },
   {
     time: "20:30",
-    label: "💧 Water — 200ml with dinner",
+    label: "Water — 200ml with dinner",
     detail: "Earlier dinner on weekends.",
     type: "water",
-    icon: "💧",
-    showOn: [3, 4],
   },
   {
     time: "20:30",
-    label: "DINNER — Earlier on Weekends",
+    label: "DINNER",
     detail:
-      "Eat by 21:00. Same rotation: ragi roti + sabzi + lighter dal + dahi. Pumpkin seeds + almonds after. Earlier dinner = better sleep quality.",
+      "Ragi roti + greens sabzi + lighter dal + dahi. Eat by 21:00. After: soaked pumpkin seeds + soaked almonds.",
     type: "food",
-    icon: "🍽️",
-    showOn: [3, 4],
   },
   {
     time: "21:00",
-    label: "💧 Water — LAST 200ml",
-    detail: "Earlier cut-off on weekends = even better sleep.",
+    label: "Last Water — 200ml",
+    detail: "Earlier cut-off on weekends.",
     type: "water",
-    icon: "💧",
-    showOn: [3, 4],
+  },
+  ...WIND_DOWN,
+];
+
+const SUN_SCHEDULE = [
+  ...WAKE,
+  {
+    time: "07:40",
+    label: "Pre-Badminton Breakfast — Eat by 07:45",
+    detail:
+      "150g Milky Mist Skyr yogurt + 1 banana (or 2 baby bananas). ~230 kcal. No nuts — fat too slow to digest, heavy on court. 1 tsp creatine mixed into yogurt.",
+    type: "food",
+  },
+  {
+    time: "08:30",
+    label: "Leave for Court",
+    detail:
+      "Carry electrolyte water: 500ml + pinch salt + half lemon. Light 3 min jog warm-up before starting.",
+    type: "work",
+  },
+  {
+    time: "09:00",
+    label: "Water — 500-600ml during badminton",
+    detail:
+      "Morning Gurgaon heat = more sweat than evening sessions. Electrolyte mix essential.",
+    type: "water",
+  },
+  {
+    time: "09:00",
+    label: "BADMINTON — Morning 9-11am",
+    detail:
+      "Two hours. Best session of the week — fresh legs after Saturday rest. Play your best game.",
+    type: "gym",
+  },
+  {
+    time: "11:00",
+    label: "Post-Badminton Stretch — 10 min",
+    detail:
+      "Hip flexors, calves, hamstrings, shoulders. 2 hours of badminton is serious load.",
+    type: "health",
+  },
+  {
+    time: "11:15",
+    label: "Water — 300ml rehydrate",
+    detail: "Rehydrate before eating after session.",
+    type: "water",
+  },
+  {
+    time: "12:00",
+    label: "LUNCH — Japanese Poke Bowl",
+    detail:
+      "Variety day. Best option: EatFit High Protein Paneer Bowl on Zomato — order immediately after court (30 min delivery = perfect timing). OR home Poke Bowl: marinated paneer + quinoa + edamame + cucumber + carrot + soy sesame sauce. See Ingredients tab.",
+    type: "food",
+  },
+  {
+    time: "14:00",
+    label: "Water — 400ml afternoon",
+    detail: "Easy to forget on weekends. Set a reminder.",
+    type: "water",
+  },
+  {
+    time: "15:00",
+    label: "Afternoon Rest",
+    detail: "Nap max 20 min. Reading, leisure. No intense activity.",
+    type: "health",
+  },
+  {
+    time: "17:00",
+    label: "Light Snack",
+    detail: "Soaked almonds + 1 fruit. No evening court today.",
+    type: "food",
+  },
+  {
+    time: "20:30",
+    label: "Water — 200ml with dinner",
+    detail: "Earlier dinner on weekends.",
+    type: "water",
+  },
+  {
+    time: "20:30",
+    label: "DINNER",
+    detail:
+      "Ragi roti + greens sabzi + lighter dal + dahi. Eat by 21:00. After: soaked pumpkin seeds + soaked almonds. Prep Monday gym bag tonight.",
+    type: "food",
+  },
+  {
+    time: "21:00",
+    label: "Last Water — 200ml",
+    detail: "Earlier cut-off.",
+    type: "water",
   },
   {
     time: "22:00",
-    label: "Wind-Down",
+    label: "Wind-Down — Protect Monday",
     detail:
-      "Dim lights, no screens. Sun night especially — most people stay up late and destroy Monday. Keep 23:00 bedtime.",
+      "Dim lights. Sun night especially — staying up destroys Monday energy.",
     type: "sleep",
-    icon: "🌙",
-    showOn: [3, 4],
   },
   {
     time: "22:15",
-    label: "🎒 Soak Seeds",
+    label: "Prep Monday Gym Bag + Soak Seeds",
     detail:
-      "Soak pumpkin seeds + almonds + walnuts in bowl of water overnight.",
+      "Gym clothes out, bottle refilled, dry whey scoop in shaker, earphones charged. Soak: pumpkin seeds + almonds + walnuts overnight.",
     type: "health",
-    icon: "🎒",
-    showOn: [3],
-  },
-  {
-    time: "22:15",
-    label: "🎒 Soak Seeds + Prep for Monday",
-    detail:
-      "Soak pumpkin seeds + almonds + walnuts. Also prep Monday gym bag — clothes, water bottle, dry whey scoop in shaker. 5 min now = smooth Monday morning.",
-    type: "health",
-    icon: "🎒",
-    showOn: [4],
   },
   {
     time: "22:30",
-    label: "📵 PHONE DOWN",
-    detail:
-      "Especially on weekends. Late night scrolling on Sat/Sun destroys Mon/Tue energy.",
+    label: "Phone Down",
+    detail: "Especially on weekends. Late scrolling destroys Monday energy.",
     type: "sleep",
-    icon: "📵",
-    showOn: [3, 4],
   },
   {
     time: "22:30",
-    label: "Read for 30 min",
-    detail: "Fiction. Light. Relaxing. Same every night.",
+    label: "Read 30 min",
+    detail: "Fiction. Light. Same every night.",
     type: "sleep",
-    icon: "📚",
-    showOn: [3, 4],
   },
   {
     time: "23:00",
@@ -720,1158 +625,1576 @@ const weekendSchedule = [
     detail:
       "Same time every night. This single habit determines everything else.",
     type: "sleep",
-    icon: "😴",
-    showOn: [3, 4],
   },
 ];
 
-const scheduleData = gymDaySchedule;
-const workoutPlan = {
-  split: "4-Day Upper/Lower Split — Mon, Tue, Wed, Fri",
-  note: "4 gym days with badminton on Tue/Wed/Thu/Sun. Leg days are kept AWAY from Tue and Wed (you have badminton those evenings) — legs + evening badminton = injury risk. Upper body gym + badminton same day is totally fine. Saturday is full rest — the only complete recovery day in your week.",
-  weekTemplate: [
-    {
-      day: "MON",
-      gym: "Upper — Push",
-      badminton: "❌ Rest evening",
-      gymColor: COLORS.red,
-      note: "Chest, shoulders, triceps. Hard push day. Full evening rest — no court. Best focus day of the week.",
-    },
-    {
-      day: "TUE",
-      gym: "Upper — Pull",
-      badminton: "🏸 Badminton evening 19:30",
-      gymColor: COLORS.orange,
-      note: "Upper Pull gym in morning — back, biceps. Upper body gym + evening badminton is safe, legs are fresh for court. Pre-snack at 17:00 sharp.",
-    },
-    {
-      day: "WED",
-      gym: "Upper — Push OR Arms",
-      badminton: "🏸 Badminton evening 19:30",
-      gymColor: COLORS.red,
-      note: "Lighter upper session — chest variation or arms/weak point. Keep it under 60 min. Evening badminton is your cardio. No leg work today.",
-    },
-    {
-      day: "THU",
-      gym: "❌ Rest",
-      badminton: "🏸 Badminton evening 19:30",
-      gymColor: COLORS.muted,
-      note: "No gym. Third consecutive active day — body needs the morning off. Fresh legs = best court performance. Pre-snack at 17:00.",
-    },
-    {
-      day: "FRI",
-      gym: "Lower — Full (Squats + Deadlift)",
-      badminton: "❌ Rest evening",
-      gymColor: COLORS.purple,
-      note: "The big leg day. Squats + deadlift + accessories. Friday evening is full rest — no court, no running. Legs need 48 hrs before Sunday badminton.",
-    },
-    {
-      day: "SAT",
-      gym: "❌ Full Rest",
-      badminton: "❌ Full Rest",
-      gymColor: COLORS.muted,
-      note: "Complete recovery day. No gym, no court. Foam roll 15 min, go for a leisure walk, eat well. Your body rebuilds on rest days, not gym days.",
-    },
-    {
-      day: "SUN",
-      gym: "❌ Rest",
-      badminton: "🏸 Morning 9–11",
-      gymColor: COLORS.muted,
-      note: "Morning badminton only. No gym after — legs had Friday's heavy session. Foam roll after court. Full recovery before Monday push day.",
-    },
-  ],
-  mesocycleNote:
-    "Every 4 weeks: keep ALL compound lifts the same (bench, squat, deadlift, rows, OHP) — these need consistency to progress. Swap 2–3 accessory exercises only. This is periodization done right — not random 'muscle confusion' which the science does not support.",
-  days: [
-    {
-      day: "Monday",
-      type: "UPPER — Push",
-      color: COLORS.red,
-      compounds: "Bench Press + OHP — keep these for 8–12 weeks",
-      exercises: [
-        {
-          name: "Barbell Bench Press",
-          tag: "COMPOUND — keep always",
-          sets: "4",
-          reps: "8–10",
-          rest: "90s",
-          note: "Control eccentric (3s down). Don't bounce off chest.",
-          variations: [
-            "Wk 1–4: Flat Barbell",
-            "Wk 5–8: Flat Dumbbell (more range of motion)",
-            "Wk 9–12: Back to Barbell, heavier",
-          ],
-        },
-        {
-          name: "Incline Press",
-          tag: "COMPOUND",
-          sets: "3",
-          reps: "10–12",
-          rest: "75s",
-          note: "Upper chest. 30–45° incline only — too steep = shoulder press.",
-          variations: [
-            "Wk 1–4: Incline Dumbbell",
-            "Wk 5–8: Incline Barbell",
-            "Wk 9–12: Incline Cable Fly",
-          ],
-        },
-        {
-          name: "Overhead Press (OHP)",
-          tag: "COMPOUND — keep always",
-          sets: "3",
-          reps: "8–10",
-          rest: "75s",
-          note: "Seated or standing. Brace core hard. No lower back arch.",
-          variations: [
-            "Wk 1–4: Seated DB Press",
-            "Wk 5–8: Standing Barbell OHP",
-            "Wk 9–12: Arnold Press",
-          ],
-        },
-        {
-          name: "Lateral Raises",
-          tag: "ACCESSORY",
-          sets: "3",
-          reps: "15–20",
-          rest: "45s",
-          note: "Light weight only. Squeeze at top. No swinging.",
-          variations: [
-            "Wk 1–4: Dumbbell",
-            "Wk 5–8: Cable (constant tension)",
-            "Wk 9–12: Machine",
-          ],
-        },
-        {
-          name: "Tricep Isolation",
-          tag: "ACCESSORY",
-          sets: "3",
-          reps: "12–15",
-          rest: "45s",
-          note: "Full lockout at bottom.",
-          variations: [
-            "Wk 1–4: Cable Rope Pushdown",
-            "Wk 5–8: Overhead DB Extension",
-            "Wk 9–12: Close-Grip Bench Press",
-          ],
-        },
-        {
-          name: "Plank / Core",
-          tag: "ACCESSORY",
-          sets: "3",
-          reps: "45–60s",
-          rest: "30s",
-          note: "Glutes squeezed. Don't let hips sag.",
-          variations: [
-            "Wk 1–4: Plank hold",
-            "Wk 5–8: RKC Plank (harder)",
-            "Wk 9–12: Plank + shoulder taps",
-          ],
-        },
-      ],
-    },
-    {
-      day: "Wednesday",
-      type: "UPPER — Push Variation / Arms (Lighter)",
-      color: COLORS.red,
-      compounds: "Keep session under 60 min — badminton tonight",
-      exercises: [
-        {
-          name: "Incline Dumbbell Press",
-          tag: "COMPOUND",
-          sets: "3",
-          reps: "10–12",
-          rest: "75s",
-          note: "Upper chest. Different angle from Monday flat bench — hits upper pec. Keep weight moderate — badminton tonight.",
-          variations: [
-            "Wk 1–4: Incline DB Press",
-            "Wk 5–8: Incline Cable Fly",
-            "Wk 9–12: Incline Barbell Press",
-          ],
-        },
-        {
-          name: "Lateral Raises",
-          tag: "ACCESSORY",
-          sets: "3",
-          reps: "15–20",
-          rest: "45s",
-          note: "Light weight, squeeze at top. Shoulder width comes from here.",
-          variations: [
-            "Wk 1–4: Dumbbell",
-            "Wk 5–8: Cable (constant tension)",
-            "Wk 9–12: Machine",
-          ],
-        },
-        {
-          name: "Barbell Bicep Curl",
-          tag: "ACCESSORY",
-          sets: "3",
-          reps: "10–12",
-          rest: "45s",
-          note: "Full range. No swinging. Supinate at top.",
-          variations: [
-            "Wk 1–4: Barbell Curl",
-            "Wk 5–8: Incline DB Curl (stretched position)",
-            "Wk 9–12: Cable Curl",
-          ],
-        },
-        {
-          name: "Hammer Curls",
-          tag: "ACCESSORY",
-          sets: "2",
-          reps: "12",
-          rest: "45s",
-          note: "Neutral grip. Brachialis + forearm thickness.",
-          variations: [
-            "Wk 1–4: Alternating DB",
-            "Wk 5–8: Cross-body",
-            "Wk 9–12: Rope Hammer",
-          ],
-        },
-        {
-          name: "Tricep Pushdown",
-          tag: "ACCESSORY",
-          sets: "3",
-          reps: "12–15",
-          rest: "45s",
-          note: "Full lockout. Arms only — no body swing.",
-          variations: [
-            "Wk 1–4: Cable Rope",
-            "Wk 5–8: Overhead DB Extension",
-            "Wk 9–12: Close-Grip Bench",
-          ],
-        },
-        {
-          name: "Face Pulls",
-          tag: "ACCESSORY — shoulder health",
-          sets: "3",
-          reps: "15–20",
-          rest: "45s",
-          note: "Always do this on any upper day. Rotator cuff health = injury prevention for badminton.",
-          variations: [
-            "Wk 1–4: Cable Face Pull",
-            "Wk 5–8: Band Face Pull",
-            "Wk 9–12: Rear Delt Fly",
-          ],
-        },
-      ],
-    },
-    {
-      day: "Tuesday",
-      type: "UPPER — Pull (Back, Biceps)",
-      color: COLORS.orange,
-      compounds: "Pull-Ups + Rows — keep these for 8–12 weeks",
-      exercises: [
-        {
-          name: "Pull-Ups / Lat Pulldown",
-          tag: "COMPOUND — keep always",
-          sets: "4",
-          reps: "6–10",
-          rest: "90s",
-          note: "Can't do 6 pull-ups yet? Use lat pulldown. Work toward bodyweight over months.",
-          variations: [
-            "Wk 1–4: Lat Pulldown (wide grip)",
-            "Wk 5–8: Pull-Ups if ready / Close-grip",
-            "Wk 9–12: Pull-Ups + weight if able",
-          ],
-        },
-        {
-          name: "Bent-Over Row",
-          tag: "COMPOUND — keep always",
-          sets: "3",
-          reps: "8–10",
-          rest: "90s",
-          note: "Hinge at hips. Pull to belly button, not chest.",
-          variations: [
-            "Wk 1–4: Barbell Bent-Over Row",
-            "Wk 5–8: Dumbbell Row (each side)",
-            "Wk 9–12: Cable Row (seated)",
-          ],
-        },
-        {
-          name: "Face Pulls",
-          tag: "ACCESSORY — shoulder health",
-          sets: "3",
-          reps: "15–20",
-          rest: "45s",
-          note: "Non-negotiable for rotator cuff health and posture. Cable rope at face height.",
-          variations: [
-            "Wk 1–4: Cable Face Pulls",
-            "Wk 5–8: Band Face Pulls",
-            "Wk 9–12: Rear Delt Fly",
-          ],
-        },
-        {
-          name: "Chest-Supported Row",
-          tag: "ACCESSORY",
-          sets: "3",
-          reps: "12",
-          rest: "60s",
-          note: "Chest on incline bench removes lower back from equation.",
-          variations: [
-            "Wk 1–4: Chest-Supported DB Row",
-            "Wk 5–8: Machine Row",
-            "Wk 9–12: TRX / Cable Row",
-          ],
-        },
-        {
-          name: "Bicep Curl",
-          tag: "ACCESSORY",
-          sets: "3",
-          reps: "10–12",
-          rest: "45s",
-          note: "Full range. No swinging. Supinate at top.",
-          variations: [
-            "Wk 1–4: Barbell Curl",
-            "Wk 5–8: Incline Dumbbell Curl (stretched position)",
-            "Wk 9–12: Cable Curl (constant tension)",
-          ],
-        },
-        {
-          name: "Hammer Curls",
-          tag: "ACCESSORY",
-          sets: "2",
-          reps: "12",
-          rest: "45s",
-          note: "Neutral grip. Builds brachialis and forearm thickness.",
-          variations: [
-            "Wk 1–4: Alternating DB Hammer",
-            "Wk 5–8: Cross-body Hammer Curl",
-            "Wk 9–12: Rope Hammer Curl",
-          ],
-        },
-      ],
-    },
-    {
-      day: "Friday",
-      type: "LOWER — Full (Quads + Posterior Chain)",
-      color: COLORS.purple,
-      compounds: "Squat + Deadlift — both in one session, keep for 8–12 weeks",
-      exercises: [
-        {
-          name: "Conventional Deadlift",
-          tag: "COMPOUND — keep always",
-          sets: "4",
-          reps: "5–8",
-          rest: "2 min",
-          note: "Start light. Form is everything on this lift. No rounding the back.",
-          variations: [
-            "Wk 1–4: Conventional Deadlift",
-            "Wk 5–8: Sumo Deadlift (hip variation)",
-            "Wk 9–12: Trap Bar Deadlift if available / back to Conventional heavier",
-          ],
-        },
-        {
-          name: "Bulgarian Split Squat",
-          tag: "COMPOUND",
-          sets: "3",
-          reps: "10 each leg",
-          rest: "90s",
-          note: "Hardest exercise in this program. Single-leg strength transfers directly to badminton movement.",
-          variations: [
-            "Wk 1–4: Bodyweight or light DB",
-            "Wk 5–8: Heavier DB",
-            "Wk 9–12: Barbell BSS",
-          ],
-        },
-        {
-          name: "Hip Thrust",
-          tag: "COMPOUND",
-          sets: "3",
-          reps: "12–15",
-          rest: "60s",
-          note: "Full extension at top. Pause 1 second. Best glute builder.",
-          variations: [
-            "Wk 1–4: Barbell Hip Thrust",
-            "Wk 5–8: Banded Hip Thrust",
-            "Wk 9–12: Single-Leg Hip Thrust",
-          ],
-        },
-        {
-          name: "Leg Extension",
-          tag: "ACCESSORY",
-          sets: "3",
-          reps: "15",
-          rest: "45s",
-          note: "VMO (teardrop quad) activation. Good knee health exercise.",
-          variations: [
-            "Wk 1–4: Machine Leg Extension",
-            "Wk 5–8: Heel-Elevated Goblet Squat instead",
-            "Wk 9–12: Machine again, slower tempo",
-          ],
-        },
-        {
-          name: "Seated Calf Raises",
-          tag: "ACCESSORY",
-          sets: "3",
-          reps: "20",
-          rest: "30s",
-          note: "Soleus (deeper calf muscle). Different from standing calf raises.",
-          variations: [
-            "Wk 1–4: Seated Machine",
-            "Wk 5–8: DB on knee",
-            "Wk 9–12: Standing single-leg",
-          ],
-        },
-        {
-          name: "Reverse Hyper / Lower Back",
-          tag: "ACCESSORY",
-          sets: "3",
-          reps: "12–15",
-          rest: "45s",
-          note: "Protects lower back from deadlift stress. Important.",
-          variations: [
-            "Wk 1–4: Back Extensions (hyperextension bench)",
-            "Wk 5–8: Good Mornings (light)",
-            "Wk 9–12: Bird-Dog x 10 each side",
-          ],
-        },
-      ],
-    },
-    {
-      day: "Tue / Wed / Thu / Sun",
-      type: "BADMINTON — Your Cardio Days",
-      color: COLORS.green,
-      compounds: "",
-      exercises: [
-        {
-          name: "Badminton",
-          tag: "",
-          sets: "—",
-          reps: "60–90 min",
-          rest: "—",
-          note: "This IS your cardio. No additional cardio needed on these days — you're already doing HIIT.",
-          variations: [],
-        },
-        {
-          name: "Post-session stretch",
-          tag: "",
-          sets: "1",
-          reps: "10 min",
-          rest: "—",
-          note: "Hip flexors, hamstrings, calves, rotator cuff. Non-negotiable on weekend sessions.",
-          variations: [],
-        },
-        {
-          name: "Foam rolling (weekends)",
-          tag: "",
-          sets: "1",
-          reps: "10–15 min",
-          rest: "—",
-          note: "Sunday especially. Full body foam roll reduces DOMS and preps you for Monday gym.",
-          variations: [],
-        },
-      ],
-    },
-  ],
-};
+const SCHEDULE_TYPES = [
+  { label: "Monday", sub: "Gym — Upper Push", data: MON_SCHEDULE },
+  { label: "Tuesday", sub: "Gym + Badminton", data: TUE_SCHEDULE },
+  { label: "Wednesday", sub: "Gym + Badminton", data: WED_SCHEDULE },
+  { label: "Thursday", sub: "Badminton Only", data: THU_SCHEDULE },
+  { label: "Friday", sub: "Gym — Lower Body", data: FRI_SCHEDULE },
+  { label: "Saturday", sub: "Full Rest", data: SAT_SCHEDULE },
+  { label: "Sunday", sub: "Morning Badminton", data: SUN_SCHEDULE },
+];
 
-const mealPlan = {
-  tdee: "~2,600–2,700 kcal",
-  target: "1,830–2,440 kcal (varies by day)",
-  deficit: "~200–500 kcal below TDEE depending on day",
-  macros: { protein: "121–189g", carbs: "191–258g", fat: "57–65g" },
-  note: "Calories vary by day type — highest on Gym+Badminton days (2,440 kcal), lowest on Sunday morning badminton (1,830 kcal). Protein ranges from 121g on rest days to 189g on gym+badminton days. Crash dieting kills metabolism — this is why each day is calibrated to its activity level.",
-  dalRotation: [
-    {
-      day: "Monday",
-      dal: "Moong Dal (yellow, split)",
-      protein: "~24g/cup",
-      why: "Lightest and easiest to digest. Best post-gym when gut is tired from training. High in zinc.",
-      cook: "Pressure cook 2 whistles. Tadka: ghee + jeera + hing + haldi + tomato + ginger. Finish with coriander.",
-    },
-    {
-      day: "Tuesday",
-      dal: "Rajma (kidney beans)",
-      protein: "~29g/cup",
-      why: "Highest protein of all dals. Also supports natural creatine synthesis via arginine. Classic Tue/Fri staple.",
-      cook: "Soak overnight mandatory. Pressure cook 4–5 whistles. Thick gravy: onion + tomato + chole masala + garam masala.",
-    },
-    {
-      day: "Wednesday",
-      dal: "Masoor Dal (red lentils)",
-      protein: "~26g/cup",
-      why: "Cooks fastest — 15 min, no soaking needed. High iron + folate. Good on badminton day when time is short.",
-      cook: "No soaking. 2 whistles. Tadka: mustard seeds + curry leaves + dried red chilli + tomato. Simple and quick.",
-    },
-    {
-      day: "Thursday",
-      dal: "Chana Dal (split chickpea)",
-      protein: "~27g/cup",
-      why: "Lowest glycemic index of all dals — blood sugar stays stable all afternoon. Good for sustained focus.",
-      cook: "Soak 1 hour. 3 whistles. Works as dal or dry fry. Amchur at end adds flavour without extra calories.",
-    },
-    {
-      day: "Friday",
-      dal: "Mix Dal (moong + masoor + toor, equal parts)",
-      protein: "~25g/cup",
-      why: "Combining dals = complete amino acid profile. All essential amino acids covered in one bowl.",
-      cook: "Equal parts. 2 whistles. Simple tadka: ghee + jeera + haldi + tomato + green chilli. Most nutritious option.",
-    },
-    {
-      day: "Saturday",
-      dal: "Toor Dal (arhar)",
-      protein: "~22g/cup",
-      why: "Classic comfort dal. Rich in B vitamins + phosphorus. Great for weekend recovery.",
-      cook: "3 whistles. Tadka: ghee + jeera + hing + tomato + amchur for tanginess. Can make it thinner on rest days.",
-    },
-    {
-      day: "Sunday",
-      dal: "Chole (whole chickpeas)",
-      protein: "~20g/cup",
-      why: "Highest fibre of all — excellent gut health. Long satiety. Good for active recovery Sunday.",
-      cook: "Soak overnight mandatory. 5–6 whistles. Bhature is optional — stick to kulcha or rotis on recomp.",
-    },
-  ],
-  sabziRotation: [
-    {
-      day: "Monday",
-      sabzi: "Palak Paneer (or Palak Tofu)",
-      why: "Spinach = highest magnesium (~78mg/cup) + iron + Vit K. Paneer = 18g protein/100g. Most nutritionally dense sabzi.",
-      cook: "Blanch spinach 2 min, blend smooth. Cook with paneer cubes 5 min. Use dahi instead of cream — same texture, less fat.",
-      seasons: {
-        available: "Winter (Oct–Mar) — peak season, use freely",
-        summer:
-          "🌞 Summer/Monsoon (Apr–Sep): Palak unavailable or wilted. Replace with → Tinda + Paneer (tinda sabzi with paneer cubes) OR Kaddu + Paneer (pumpkin) OR Paneer Bhurji with any available veg. Keep paneer in all cases — that's the protein.",
+// ─── WORKOUT DATA ─────────────────────────────────────────────────
+const WEEKLY_TEMPLATE = [
+  {
+    day: "MON",
+    gym: "Upper Push",
+    badminton: "No badminton",
+    gymColor: C.red,
+    note: "Chest, shoulders, triceps. Full rest evening.",
+  },
+  {
+    day: "TUE",
+    gym: "Upper Pull",
+    badminton: "Badminton 19:30",
+    gymColor: C.orange,
+    note: "Upper body gym + evening badminton is safe. Legs fresh for court.",
+  },
+  {
+    day: "WED",
+    gym: "Light Upper / Arms",
+    badminton: "Badminton 19:30",
+    gymColor: C.red,
+    note: "Shorter session under 60 min. Badminton is main training today.",
+  },
+  {
+    day: "THU",
+    gym: "No gym",
+    badminton: "Badminton 19:30",
+    gymColor: C.muted,
+    note: "Rest morning. Three consecutive active days — body needs recovery.",
+  },
+  {
+    day: "FRI",
+    gym: "Lower Full (Squat+Deadlift)",
+    badminton: "No badminton",
+    gymColor: C.purple,
+    note: "Big leg day. Full rest evening. 48 hrs before Sunday badminton.",
+  },
+  {
+    day: "SAT",
+    gym: "Full Rest",
+    badminton: "Full Rest",
+    gymColor: C.muted,
+    note: "Only complete rest day. Body rebuilds on rest not gym days.",
+  },
+  {
+    day: "SUN",
+    gym: "No gym",
+    badminton: "Badminton 9-11am",
+    gymColor: C.muted,
+    note: "Morning court. Foam roll after. Full recovery before Monday.",
+  },
+];
+
+const EXERCISES = [
+  {
+    day: "Monday",
+    type: "UPPER Push",
+    color: C.red,
+    compounds: "Bench Press + OHP — keep 8-12 weeks",
+    exercises: [
+      {
+        name: "Barbell Bench Press",
+        tag: "COMPOUND",
+        sets: "4",
+        reps: "8-10",
+        rest: "90s",
+        note: "3s down. No bouncing.",
+        vars: [
+          "Wk 1-4: Flat Barbell",
+          "Wk 5-8: Flat Dumbbell",
+          "Wk 9-12: Barbell heavier",
+        ],
       },
-    },
-    {
-      day: "Tuesday",
-      sabzi: "Bhindi (Okra) Masala — dry",
-      why: "Very low calorie (35 kcal/100g) but high zinc + magnesium. Good on upper pull day. High fibre.",
-      cook: "Dry preparation only — no gravy. Mustard seeds + onion + tomato + amchur. Don't cover while cooking — keeps crispy.",
-      seasons: {
-        available:
-          "Summer + Monsoon (Apr–Sep) — peak season, best availability",
-        winter:
-          "❄️ Winter (Oct–Mar): Bhindi out of season, expensive and limp. Replace with → Gobhi + Matar (cauliflower + peas, 5g protein from peas) OR Gajar Matar (carrots + peas) OR Beans Sabzi (French beans, high fibre).",
+      {
+        name: "Incline Press",
+        tag: "COMPOUND",
+        sets: "3",
+        reps: "10-12",
+        rest: "75s",
+        note: "30-45 degrees. Upper chest.",
+        vars: [
+          "Wk 1-4: Incline DB",
+          "Wk 5-8: Incline Barbell",
+          "Wk 9-12: Incline Cable Fly",
+        ],
       },
-    },
-    {
-      day: "Wednesday",
-      sabzi: "Methi Sabzi (fresh fenugreek leaves)",
-      why: "Methi = extremely high magnesium + iron + reduces inflammation. Great on badminton day.",
-      cook: "Fresh methi leaves, roughly chopped. Light tadka: jeera + onion + garlic + tomato. 8 min max — don't overcook.",
-      seasons: {
-        available: "Winter (Oct–Mar) — peak season",
-        summer:
-          "🌞 Summer/Monsoon (Apr–Sep): Fresh methi unavailable. Replace with → Tori (ridge gourd) sabzi — similar anti-inflammatory properties, very light, 94% water. OR Karela (bitter gourd) — high chromium, controls blood sugar well on active badminton days. OR Raw Papaya sabzi.",
+      {
+        name: "OHP",
+        tag: "COMPOUND",
+        sets: "3",
+        reps: "8-10",
+        rest: "75s",
+        note: "Brace core. No lower back arch.",
+        vars: [
+          "Wk 1-4: Seated DB",
+          "Wk 5-8: Standing Barbell",
+          "Wk 9-12: Arnold Press",
+        ],
       },
-    },
-    {
-      day: "Thursday",
-      sabzi: "Gobhi + Matar (cauliflower + peas)",
-      why: "Cauliflower: Vit C + B6 + folate. Peas: 5g protein per half cup + iron. Good carb source.",
-      cook: "Dry sabzi. Jeera + onion + ginger-garlic + tomato + standard masalas. Finish with coriander.",
-      seasons: {
-        available: "Winter (Oct–Mar) — peak season",
-        summer:
-          "🌞 Summer/Monsoon (Apr–Sep): Gobhi and fresh matar both unavailable. Replace with → Arbi (colocasia/taro) sabzi — earthy, filling, good complex carbs. OR Kathal (raw jackfruit) dry sabzi — meaty texture, decent fibre. OR Tinda + Matar (frozen peas are fine year-round).",
+      {
+        name: "Lateral Raises",
+        tag: "ACCESSORY",
+        sets: "3",
+        reps: "15-20",
+        rest: "45s",
+        note: "Light weight. Squeeze at top.",
+        vars: ["Wk 1-4: Dumbbell", "Wk 5-8: Cable", "Wk 9-12: Machine"],
       },
-    },
-    {
-      day: "Friday",
-      sabzi: "Baingan Bharta (roasted brinjal)",
-      why: "Brinjal = 25 kcal/100g — filling but very low calorie. High in nasunin (antioxidant).",
-      cook: "Roast whole baingan directly on gas flame until charred. Peel, mash. Tadka: mustard seeds + onion + tomato + green chilli.",
-      seasons: {
-        available:
-          "Year-round ✅ — baingan is available all 12 months in Gurgaon. No swap needed.",
-        winter:
-          "❄️ Winter bonus: Add a handful of fresh matar into the bharta for extra protein.",
+      {
+        name: "Tricep Isolation",
+        tag: "ACCESSORY",
+        sets: "3",
+        reps: "12-15",
+        rest: "45s",
+        note: "Full lockout.",
+        vars: [
+          "Wk 1-4: Cable Rope Pushdown",
+          "Wk 5-8: Overhead DB",
+          "Wk 9-12: Close-Grip Bench",
+        ],
       },
-    },
-    {
-      day: "Saturday",
-      sabzi: "Lauki (bottle gourd) + Chana",
-      why: "Lauki = 96% water — perfect hydration recovery. Full rest day so light digestion is ideal.",
-      cook: "Cubed lauki + soaked chana together in pressure cooker. Light jeera + tomato tadka. Add dahi at end.",
-      seasons: {
-        available:
-          "Summer + Monsoon (Apr–Sep) — peak season, cheapest and freshest",
-        winter:
-          "❄️ Winter (Oct–Mar): Lauki gets expensive and dry. Replace with → Sarson ka Saag (mustard greens) — winter superfood, extremely high iron + calcium. OR Gajar Halwa (small portion, rest day treat). OR Palak + Chana — spinach replaces lauki, keeps the chana protein.",
+      {
+        name: "Plank",
+        tag: "ACCESSORY",
+        sets: "3",
+        reps: "45-60s",
+        rest: "30s",
+        note: "Glutes squeezed. No hip sag.",
+        vars: [
+          "Wk 1-4: Plank hold",
+          "Wk 5-8: RKC Plank",
+          "Wk 9-12: Shoulder taps",
+        ],
       },
-    },
-    {
-      day: "Sunday",
-      sabzi: "Shimla Mirch + Paneer Bhurji",
-      why: "Capsicum = highest Vit C of any Indian sabzi. Paneer bhurji = 22g protein, 10 min prep.",
-      cook: "Crumble paneer. Cook with onion + capsicum + tomato + haldi + red chilli. One pan, 10 min.",
-      seasons: {
-        available:
-          "Year-round ✅ — capsicum available all 12 months. Paneer always available. No swap needed.",
-        winter:
-          "❄️ Winter bonus: Add chopped spinach or methi into the bhurji for extra micronutrients.",
+    ],
+  },
+  {
+    day: "Tuesday",
+    type: "UPPER Pull",
+    color: C.orange,
+    compounds: "Pull-Ups + Rows — keep 8-12 weeks",
+    exercises: [
+      {
+        name: "Pull-Ups / Lat Pulldown",
+        tag: "COMPOUND",
+        sets: "4",
+        reps: "6-10",
+        rest: "90s",
+        note: "Can't do 6? Use lat pulldown. Work toward bodyweight.",
+        vars: [
+          "Wk 1-4: Lat Pulldown wide",
+          "Wk 5-8: Pull-Ups",
+          "Wk 9-12: Pull-Ups + weight",
+        ],
       },
-    },
-  ],
-  meals: [
+      {
+        name: "Bent-Over Row",
+        tag: "COMPOUND",
+        sets: "3",
+        reps: "8-10",
+        rest: "90s",
+        note: "Hinge at hips. Pull to belly button.",
+        vars: [
+          "Wk 1-4: Barbell Row",
+          "Wk 5-8: Dumbbell Row",
+          "Wk 9-12: Cable Row",
+        ],
+      },
+      {
+        name: "Face Pulls",
+        tag: "ACCESSORY",
+        sets: "3",
+        reps: "15-20",
+        rest: "45s",
+        note: "Crucial for posture and rotator cuff. Never skip.",
+        vars: ["Wk 1-4: Cable", "Wk 5-8: Band", "Wk 9-12: Rear Delt Fly"],
+      },
+      {
+        name: "Chest-Supported Row",
+        tag: "ACCESSORY",
+        sets: "3",
+        reps: "12",
+        rest: "60s",
+        note: "Removes lower back from equation.",
+        vars: ["Wk 1-4: DB on bench", "Wk 5-8: Machine", "Wk 9-12: TRX"],
+      },
+      {
+        name: "Bicep Curl",
+        tag: "ACCESSORY",
+        sets: "3",
+        reps: "10-12",
+        rest: "45s",
+        note: "Full range. No swinging.",
+        vars: ["Wk 1-4: Barbell", "Wk 5-8: Incline DB", "Wk 9-12: Cable"],
+      },
+      {
+        name: "Hammer Curls",
+        tag: "ACCESSORY",
+        sets: "2",
+        reps: "12",
+        rest: "45s",
+        note: "Brachialis + forearm thickness.",
+        vars: ["Wk 1-4: Alternating DB", "Wk 5-8: Cross-body", "Wk 9-12: Rope"],
+      },
+    ],
+  },
+  {
+    day: "Wednesday",
+    type: "Light Upper / Arms",
+    color: C.red,
+    compounds: "Keep under 60 min — badminton tonight",
+    exercises: [
+      {
+        name: "Incline DB Press",
+        tag: "COMPOUND",
+        sets: "3",
+        reps: "10-12",
+        rest: "75s",
+        note: "Moderate weight. Badminton tonight.",
+        vars: [
+          "Wk 1-4: Incline DB",
+          "Wk 5-8: Cable Fly",
+          "Wk 9-12: Incline Barbell",
+        ],
+      },
+      {
+        name: "Lateral Raises",
+        tag: "ACCESSORY",
+        sets: "3",
+        reps: "15-20",
+        rest: "45s",
+        note: "Shoulder width.",
+        vars: ["Wk 1-4: Dumbbell", "Wk 5-8: Cable", "Wk 9-12: Machine"],
+      },
+      {
+        name: "Bicep Curl",
+        tag: "ACCESSORY",
+        sets: "3",
+        reps: "10-12",
+        rest: "45s",
+        note: "Full range.",
+        vars: ["Wk 1-4: Barbell", "Wk 5-8: Incline DB", "Wk 9-12: Cable"],
+      },
+      {
+        name: "Hammer Curls",
+        tag: "ACCESSORY",
+        sets: "2",
+        reps: "12",
+        rest: "45s",
+        note: "Neutral grip.",
+        vars: ["Wk 1-4: Alternating DB", "Wk 5-8: Cross-body", "Wk 9-12: Rope"],
+      },
+      {
+        name: "Tricep Pushdown",
+        tag: "ACCESSORY",
+        sets: "3",
+        reps: "12-15",
+        rest: "45s",
+        note: "Full lockout. Arms only.",
+        vars: [
+          "Wk 1-4: Cable Rope",
+          "Wk 5-8: Overhead DB",
+          "Wk 9-12: Close-Grip Bench",
+        ],
+      },
+      {
+        name: "Face Pulls",
+        tag: "ACCESSORY",
+        sets: "3",
+        reps: "15-20",
+        rest: "45s",
+        note: "Shoulder health. Always do on upper days.",
+        vars: ["Wk 1-4: Cable", "Wk 5-8: Band", "Wk 9-12: Rear Delt Fly"],
+      },
+    ],
+  },
+  {
+    day: "Friday",
+    type: "LOWER Full (Squat + Deadlift)",
+    color: C.purple,
+    compounds: "Squat + Deadlift both — keep 8-12 weeks",
+    exercises: [
+      {
+        name: "Barbell Back Squat",
+        tag: "COMPOUND",
+        sets: "4",
+        reps: "8-10",
+        rest: "2 min",
+        note: "Depth matters. Chest up.",
+        vars: [
+          "Wk 1-4: Back Squat",
+          "Wk 5-8: Front Squat",
+          "Wk 9-12: Back Squat heavier",
+        ],
+      },
+      {
+        name: "Conventional Deadlift",
+        tag: "COMPOUND",
+        sets: "4",
+        reps: "5-8",
+        rest: "2 min",
+        note: "Form first. No rounding the back.",
+        vars: ["Wk 1-4: Conventional", "Wk 5-8: Sumo", "Wk 9-12: Trap Bar"],
+      },
+      {
+        name: "Romanian Deadlift",
+        tag: "COMPOUND",
+        sets: "3",
+        reps: "10-12",
+        rest: "90s",
+        note: "Hip hinge. Feel hamstring stretch.",
+        vars: [
+          "Wk 1-4: Barbell RDL",
+          "Wk 5-8: DB RDL",
+          "Wk 9-12: Single-Leg RDL",
+        ],
+      },
+      {
+        name: "Bulgarian Split Squat",
+        tag: "COMPOUND",
+        sets: "3",
+        reps: "10 each",
+        rest: "90s",
+        note: "Hardest exercise. Single-leg strength for badminton.",
+        vars: [
+          "Wk 1-4: Bodyweight/light DB",
+          "Wk 5-8: Heavier DB",
+          "Wk 9-12: Barbell BSS",
+        ],
+      },
+      {
+        name: "Leg Curl",
+        tag: "ACCESSORY",
+        sets: "3",
+        reps: "12-15",
+        rest: "45s",
+        note: "Slow 3s eccentric.",
+        vars: ["Wk 1-4: Seated", "Wk 5-8: Lying", "Wk 9-12: Nordic Curls"],
+      },
+      {
+        name: "Calf Raises",
+        tag: "ACCESSORY",
+        sets: "4",
+        reps: "20",
+        rest: "30s",
+        note: "Full stretch at bottom.",
+        vars: ["Wk 1-4: Standing", "Wk 5-8: Seated", "Wk 9-12: Single-Leg"],
+      },
+    ],
+  },
+  {
+    day: "Tue/Wed/Thu/Sun",
+    type: "BADMINTON — Your Cardio",
+    color: C.green,
+    compounds: "",
+    exercises: [
+      {
+        name: "Badminton",
+        tag: "",
+        sets: "—",
+        reps: "60-90 min",
+        rest: "—",
+        note: "This IS your cardio. No additional cardio needed.",
+        vars: [],
+      },
+      {
+        name: "Post-session stretch",
+        tag: "",
+        sets: "1",
+        reps: "10 min",
+        rest: "—",
+        note: "Hip flexors, hamstrings, calves, rotator cuff.",
+        vars: [],
+      },
+    ],
+  },
+];
+
+// ─── MEAL DATA ─────────────────────────────────────────────────────
+const MEAL_DAYS = [
+  {
+    label: "Monday",
+    sub: "Gym Day",
+    cal: "2,190 kcal",
+    protein: "172g",
+    carbs: "223g",
+    fat: "62g",
+    fiber: "35g",
+    note: "Full power shake + post-workout shake.",
+  },
+  {
+    label: "Tuesday",
+    sub: "Gym + Badminton",
+    cal: "2,440 kcal",
+    protein: "189g",
+    carbs: "258g",
+    fat: "65g",
+    fiber: "38g",
+    note: "Highest calorie day. Rajma Rice Bowl for lunch.",
+  },
+  {
+    label: "Wednesday",
+    sub: "Gym + Badminton",
+    cal: "2,440 kcal",
+    protein: "189g",
+    carbs: "258g",
+    fat: "65g",
+    fiber: "38g",
+    note: "Highest calorie day. Mexican Paneer Bowl for dinner.",
+  },
+  {
+    label: "Thursday",
+    sub: "Badminton Only",
+    cal: "1,940 kcal",
+    protein: "143g",
+    carbs: "198g",
+    fat: "59g",
+    fiber: "31g",
+    note: "Light breakfast. Salad Bowl for lunch.",
+  },
+  {
+    label: "Friday",
+    sub: "Gym Day",
+    cal: "2,190 kcal",
+    protein: "172g",
+    carbs: "223g",
+    fat: "62g",
+    fiber: "35g",
+    note: "Full power shake + post-workout. Thai Noodles for dinner.",
+  },
+  {
+    label: "Saturday",
+    sub: "Full Rest",
+    cal: "1,910 kcal",
+    protein: "121g",
+    carbs: "201g",
+    fat: "62g",
+    fiber: "33g",
+    note: "Relaxed meals. Cheat meal optional.",
+  },
+  {
+    label: "Sunday",
+    sub: "Morning Badminton",
+    cal: "1,830 kcal",
+    protein: "121g",
+    carbs: "191g",
+    fat: "57g",
+    fiber: "31g",
+    note: "Light pre-court breakfast. Poke Bowl post-badminton.",
+  },
+];
+
+const MEALS_BY_DAY = {
+  0: [
+    // Monday
     {
-      label: "Pre-Workout Power Shake",
-      icon: "🥤",
-      color: "#e8ff47",
-      showOn: [0, 1],
+      label: "Power Shake",
+      color: C.accent,
       items: [
-        "2 ripe bananas",
-        "1.5 scoops whey protein (37g protein) — mix into shake",
-        "3 tbsp rolled oats — blend in, sustained energy",
-        "300ml low-fat milk",
+        "2 bananas",
+        "1.5 scoops whey (37g protein)",
+        "3 tbsp rolled oats",
+        "300ml Calci+ milk",
         "1 tbsp peanut butter",
-        "1 tbsp ground flaxseeds (alsi) — grind DRY, never soak",
-        "1 tsp creatine powder (5g) — tasteless, dissolves fully",
-        "~560 kcal | 65g carbs | 46g protein | 14g fat",
+        "1 tbsp ground alsi (grind DRY)",
+        "1 tsp creatine (5g) — tasteless",
+        "~560 kcal | 65g carbs | 46g protein",
       ],
-      why: "Full fuel for gym + possible badminton. Oats give sustained energy so you don't crash mid-session. Creatine goes here — zero taste difference.",
+      why: "Creatine is tasteless here. Oats give sustained energy so you don't crash mid-session.",
     },
     {
-      label: "Light Breakfast — No Gym Morning",
-      icon: "🥣",
-      color: "#ff9447",
-      showOn: [2],
+      label: "Post-Workout Shake (at gym)",
+      color: C.green,
       items: [
-        "1 banana",
-        "1 scoop whey in 250ml water",
-        "10–12 soaked almonds + 5 soaked walnuts",
-        "1 tsp creatine — mix into the whey water",
-        "~280 kcal | 32g carbs | 28g protein | 8g fat",
-      ],
-      why: "Thu — no gym so no need for 560 kcal shake. Lighter breakfast keeps you in calorie deficit. Creatine daily even on non-gym days — consistency is what matters.",
-    },
-    {
-      label: "Relaxed Breakfast — Full Rest Day",
-      icon: "🍳",
-      color: "#ff9447",
-      showOn: [3],
-      items: [
-        "2 whole wheat rotis + dahi + 1 fruit",
-        "OR poha (1.5 cups cooked) + dahi",
-        "1 tsp creatine — mix into a small glass of water or milk",
-        "~350 kcal | 45g carbs | 18g protein | 8g fat",
-      ],
-      why: "Sat is full rest — no shake needed. Real cooked food on rest day aids recovery. Sit down and enjoy it slowly.",
-    },
-    {
-      label: "Pre-Badminton Light Breakfast",
-      icon: "🥣",
-      color: "#ff9447",
-      showOn: [4],
-      items: [
-        "150g Milky Mist Skyr yogurt",
-        "1 banana",
-        "10–12 soaked almonds",
-        "1 tsp creatine — mix into yogurt",
-        "Eat by 07:30–07:45 — exactly 90 min before 9am court",
-        "~280 kcal | 32g carbs | 20g protein | 5g fat",
-      ],
-      why: "Light enough to not feel heavy on court. Yogurt protein + banana carbs = perfect pre-badminton combo. Eating later = cramps and sluggishness during play.",
-    },
-    {
-      label: "Post-Workout Shake — AT GYM (09:55)",
-      icon: "🥛",
-      color: "#47ff8a",
-      showOn: [0, 1],
-      items: [
-        "1 scoop whey in 300ml water — carry dry powder in shaker",
+        "1 scoop whey in 300ml water — carry dry powder",
         "1 small banana or 5 dates",
         "Drink BEFORE showering — within 20 min of last set",
         "~230 kcal | 28g protein | 25g carbs",
       ],
-      why: "Muscle protein synthesis peaks 20–30 min post-workout. Don't wait until office (11:00+). Two minutes to mix, then shower.",
+      why: "Muscle protein synthesis peaks now. Don't wait until office.",
     },
-
     {
-      label: "Lunch (14:00) — BIGGEST MEAL",
-      icon: "🍱",
-      color: "#47b8ff",
-      showOn: [0, 1, 2, 4],
+      label: "LUNCH — Dal + Paneer + Sabzi",
+      color: C.blue,
       items: [
-        "2 whole wheat rotis OR 1 cup brown rice / quinoa",
-        "1 cup dal — follow Dal Rotation below ↓",
-        "100g paneer OR 150g tofu (sautéed, not fried)",
-        "1 cup sabzi — follow Sabzi Rotation below ↓",
-        "150g dahi (room temp, not cold from fridge)",
-        "Salad: cucumber + tomato + onion + lemon + chaat masala",
-        "5 soaked walnuts on the side",
+        "2 whole wheat rotis OR 1 cup brown rice",
+        "1 cup Moong Dal (Mon rotation)",
+        "100g paneer OR 150g tofu (not fried)",
+        "1 cup Palak Paneer sabzi (Mon) — summer: Tinda+Paneer",
+        "150g dahi (room temp)",
+        "Salad: cucumber + tomato + onion + lemon",
+        "5 soaked walnuts",
         "~640 kcal | 50g protein | 70g carbs",
       ],
-      why: "Dal + paneer/tofu = complete amino acid profile. Rotating dals ensures different micronutrients weekly. Dahi at room temp digests better and has more active probiotics.",
+      why: "Dal + paneer = complete amino acids. Dahi room temp = more active probiotics.",
     },
     {
-      label:
-        "🍕 Cheat Meal — Any One Meal on Saturday (Breakfast / Lunch / Dinner)",
-      icon: "🍽️",
-      color: "#e87aff",
-      showOn: [3],
+      label: "DINNER",
+      color: C.purple,
       items: [
-        "Pick ANY ONE MEAL to cheat — breakfast, lunch, or dinner. Other two meals stay clean.",
-        "OPTION B — Cheat Meal: Chole bhature / Veg biryani / Pizza (2–3 slices) / Burger / Paneer tikka / Chaat / Pasta",
-        "Cheat rules: still have dal or dahi or paneer somewhere today",
-        "Still take creatine — 5g in water, 10 seconds",
-        "Drink +500ml extra water on cheat day",
-        "One cheat MEAL not a full cheat day",
+        "1-2 ragi rotis OR whole wheat rotis",
+        "1 cup greens sabzi",
+        "1 bowl Moong/Masoor/Toor dal only",
+        "150g dahi",
+        "AFTER: 30g soaked pumpkin seeds + 10-12 soaked almonds",
+        "~530 kcal | 40g protein | 55g carbs",
       ],
-      why: "One cheat meal per week resets leptin levels, keeps you sane long-term, and doesn't derail progress at all. The people who try to be 100% perfect every day are the ones who quit. Enjoy it guilt-free.",
+      why: "Ragi roti = highest magnesium flour. Pumpkin seeds + almonds = magnesium stack. No rajma/chole at night.",
+    },
+  ],
+  1: [
+    // Tuesday
+    {
+      label: "Power Shake",
+      color: C.accent,
+      items: [
+        "2 bananas",
+        "1.5 scoops whey",
+        "3 tbsp oats",
+        "300ml Calci+ milk",
+        "1 tbsp peanut butter",
+        "1 tbsp ground alsi",
+        "1 tsp creatine",
+        "~560 kcal | 65g carbs | 46g protein",
+      ],
+      why: "Gym AND badminton today — need full fuel.",
     },
     {
-      label: "⚡ Pre-Badminton Snack — 17:00 SHARP",
-      icon: "⚡",
-      color: "#ff9447",
-      showOn: [1, 2],
+      label: "Post-Workout Shake (at gym)",
+      color: C.green,
+      items: [
+        "1 scoop whey in 300ml water",
+        "1 small banana or 5 dates",
+        "Drink BEFORE showering",
+        "~230 kcal | 28g protein",
+      ],
+      why: "Within 20 min of last set. Don't wait until office.",
+    },
+    {
+      label: "LUNCH — Rajma Rice Bowl",
+      color: C.blue,
+      items: [
+        "1 cup Rajma (Tue rotation — highest protein 29g/cup)",
+        "1 cup brown rice",
+        "Raw onion rings + lemon + coriander + green chilli",
+        "150g dahi on side",
+        "5 soaked walnuts",
+        "~640 kcal | 45g protein | 75g carbs",
+      ],
+      why: "Same macros as regular dal/sabzi lunch, completely different experience. Highest protein dal day.",
+    },
+    {
+      label: "Pre-Badminton Snack — 17:00 SHARP",
+      color: C.orange,
       items: [
         "150g Milky Mist Skyr yogurt",
         "2 baby bananas OR 1 regular banana",
         "Eat at exactly 17:00 — 90 min before 19:30 court",
-        "~250 kcal | 17g protein | 48g carbs | 3g fat",
+        "~250 kcal | 17g protein | 48g carbs",
       ],
-      why: "90 min timing is deliberate — carbs are in bloodstream by court time without heaviness. Eating right before = cramps and heavy legs. This snack is what makes the difference in your second game.",
+      why: "90 min timing is deliberate. Eating closer = heavy legs and cramps on court.",
     },
     {
-      label: "⚡ Pre-Badminton Snack — 07:30–07:45",
-      icon: "⚡",
-      color: "#ff9447",
-      showOn: [4],
+      label: "DINNER",
+      color: C.purple,
+      items: [
+        "1-2 ragi rotis",
+        "1 cup greens sabzi",
+        "1 bowl Moong/Masoor/Toor dal",
+        "150g dahi",
+        "AFTER: soaked pumpkin seeds + soaked almonds",
+        "~530 kcal | 40g protein | 55g carbs",
+      ],
+      why: "Light dinner after high-output day. Protein is covered earlier.",
+    },
+  ],
+  2: [
+    // Wednesday
+    {
+      label: "Power Shake",
+      color: C.accent,
+      items: [
+        "2 bananas",
+        "1.5 scoops whey",
+        "3 tbsp oats",
+        "300ml Calci+ milk",
+        "1 tbsp peanut butter",
+        "1 tbsp ground alsi",
+        "1 tsp creatine",
+        "~560 kcal | 65g carbs | 46g protein",
+      ],
+      why: "Gym AND badminton today — need full fuel.",
+    },
+    {
+      label: "Post-Workout Shake (at gym)",
+      color: C.green,
+      items: [
+        "1 scoop whey in 300ml water",
+        "1 small banana or 5 dates",
+        "Drink BEFORE showering",
+        "~230 kcal | 28g protein",
+      ],
+      why: "Within 20 min of last set.",
+    },
+    {
+      label: "LUNCH — Dal + Paneer + Sabzi",
+      color: C.blue,
+      items: [
+        "2 whole wheat rotis OR 1 cup brown rice",
+        "1 cup Masoor Dal (Wed rotation — fastest, no soak)",
+        "100g paneer OR 150g tofu",
+        "1 cup Methi sabzi (Wed) — summer: Tori",
+        "150g dahi",
+        "Salad + 5 soaked walnuts",
+        "~640 kcal | 50g protein | 70g carbs",
+      ],
+      why: "Masoor cooks in 15 min — good for Wed when you're busy with gym + office + badminton.",
+    },
+    {
+      label: "Pre-Badminton Snack — 17:00 SHARP",
+      color: C.orange,
       items: [
         "150g Milky Mist Skyr yogurt",
         "2 baby bananas OR 1 regular banana",
-        "Court is at 9am — eat at 07:30–07:45, not 17:00",
-        "Same 90 min window, just earlier because morning court",
-        "NO almonds/nuts before court — fat sits heavy in stomach during play",
-        "~230 kcal | 16g protein | 32g carbs | 3g fat",
+        "Eat at exactly 17:00 — 90 min before court",
+        "~250 kcal | 17g protein | 48g carbs",
       ],
-      why: "Same principle as evening badminton — 90 min before court. Morning session means eating right after waking up. Keep it light so you're not heavy on court.",
+      why: "90 min timing. Eating closer = cramps.",
     },
     {
-      label: "Dinner (21:15) — LIGHTER",
-      icon: "🍽️",
-      color: "#c47aff",
-      showOn: [0, 1, 2, 3, 4],
+      label: "DINNER — Mexican Paneer Bowl",
+      color: C.purple,
       items: [
-        "1–2 ragi rotis (preferred) OR whole wheat rotis",
-        "1 cup greens sabzi — spinach/methi/lauki per rotation",
-        "1 bowl lighter dal — moong/masoor/toor only (no rajma/chole at night)",
+        "Order: Burrp or Burrito Project on Zomato",
+        "OR make at home in 20 min",
+        "100g paneer + brown rice/quinoa + rajma + capsicum + corn + fresh salsa + hung curd",
+        "Skip sour cream. Ask extra paneer.",
+        "~580 kcal | 38g protein | 65g carbs",
+      ],
+      why: "Wed is highest calorie day — Mexican Bowl hits macros perfectly and feels like a treat.",
+    },
+  ],
+  3: [
+    // Thursday
+    {
+      label: "Light Breakfast — No Gym Today",
+      color: C.orange,
+      items: [
+        "1 banana",
+        "1 scoop whey in 250ml water",
+        "Soaked almonds + soaked walnuts",
+        "1 tsp creatine in the whey water",
+        "~280 kcal | 32g carbs | 28g protein",
+      ],
+      why: "No gym today. Lighter breakfast keeps calorie deficit. Creatine daily even on non-gym days.",
+    },
+    {
+      label: "LUNCH — High Protein Salad Bowl",
+      color: C.blue,
+      items: [
+        "Order Salad Days (Udyog Vihar) or Green Bunz (Sector 31) on Zomato",
+        "BYOS: quinoa + paneer (extra) + chickpeas + cucumber + capsicum + olive oil lemon dressing",
+        "Add 150g Skyr dahi at home for extra protein",
+        "~520 kcal | 34g protein | 48g carbs",
+      ],
+      why: "Thu badminton-only — lighter lunch, fresh legs for 19:30 court.",
+    },
+    {
+      label: "Pre-Badminton Snack — 17:00 SHARP",
+      color: C.orange,
+      items: [
+        "150g Milky Mist Skyr yogurt",
+        "2 baby bananas OR 1 regular banana",
+        "Eat at exactly 17:00 — 90 min before court",
+        "~250 kcal | 17g protein | 48g carbs",
+      ],
+      why: "90 min timing. Eating closer = heavy legs.",
+    },
+    {
+      label: "DINNER",
+      color: C.purple,
+      items: [
+        "1-2 ragi rotis",
+        "1 cup Chana Dal (Thu rotation — lowest GI)",
+        "1 cup greens sabzi",
         "150g dahi",
-        "AFTER DINNER: 30g soaked pumpkin seeds + 10–12 soaked almonds = magnesium stack",
-        "Sat/Sun: eat by 21:00 (earlier than weekdays)",
+        "AFTER: soaked pumpkin seeds + soaked almonds",
         "~530 kcal | 40g protein | 55g carbs",
       ],
-      why: "Ragi roti = highest magnesium flour, aids sleep. Pumpkin seeds + almonds after dinner = full magnesium pill replacement. No rice at dinner — harder to digest late.",
+      why: "Chana dal on Thu = lowest glycemic index, stable energy. Light dinner after badminton.",
     },
   ],
-  calorieCycling: [
+  4: [
+    // Friday
     {
-      day: "🏋️ Gym Day (Mon / Fri)",
-      cal: "2,190 kcal",
-      note: "Full shake + post-workout shake. High protein day.",
+      label: "Power Shake",
+      color: C.accent,
+      items: [
+        "2 bananas",
+        "1.5 scoops whey",
+        "3 tbsp oats",
+        "300ml Calci+ milk",
+        "1 tbsp peanut butter",
+        "1 tbsp ground alsi",
+        "1 tsp creatine",
+        "~560 kcal | 65g carbs | 46g protein",
+      ],
+      why: "Full fuel for heavy leg day — squats and deadlifts need maximum energy.",
     },
     {
-      day: "🏋️🏸 Gym + Badminton (Tue / Wed)",
-      cal: "2,440 kcal",
-      note: "Highest calorie day — gym AND court. You need all of it.",
+      label: "Post-Workout Shake (at gym)",
+      color: C.green,
+      items: [
+        "1 scoop whey in 300ml water",
+        "1 small banana or 5 dates",
+        "Drink BEFORE showering",
+        "~230 kcal | 28g protein",
+      ],
+      why: "Within 20 min of last set. Muscle protein synthesis peaks now.",
     },
     {
-      day: "🏸 Badminton Only (Thu)",
-      cal: "1,940 kcal",
-      note: "Light breakfast, no post-workout shake.",
+      label: "LUNCH — Dal + Paneer + Sabzi",
+      color: C.blue,
+      items: [
+        "2 whole wheat rotis OR 1 cup brown rice",
+        "1 cup Mix Dal (Fri — moong+masoor+toor = complete amino acids)",
+        "100g paneer OR 150g tofu",
+        "1 cup Baingan Bharta (Fri — year round)",
+        "150g dahi",
+        "Salad + 5 soaked walnuts",
+        "~640 kcal | 50g protein | 70g carbs",
+      ],
+      why: "Mix Dal = complete amino acid profile in one bowl. Friday is your best nutrition day.",
     },
     {
-      day: "😴 Full Rest (Sat)",
-      cal: "1,910 kcal",
-      note: "Relaxed meals. Cheat meal optional.",
-    },
-    {
-      day: "🏸 Morning Badminton (Sun)",
-      cal: "1,830 kcal",
-      note: "Light pre-court breakfast. Bigger post-badminton lunch.",
-    },
-  ],
-  supplements: [
-    {
-      name: "Whey Protein ✅ Keep",
-      timing: "Pre-workout shake (07:40) + Post-workout (09:55)",
-      dose: "2.5 scoops/day",
-      canReplace: true,
-      foodAlt:
-        "Whey is just concentrated milk protein — your parents likely won't object to this. If they do: add 250g paneer + extra dal + 200ml milk to replace 1 scoop.",
-    },
-    {
-      name: "Creatine Monohydrate ✅ Added Back",
-      timing:
-        "In pre-workout shake (07:40) — just mix 5g into shake, tasteless",
-      dose: "5g/day, every single day",
-      canReplace: true,
-      foodAlt:
-        "BUY: AS-IT-IS Nutrition Creatine Monohydrate or Optimum Nutrition (ON) Micronised Creatine — both unflavoured, pure, third-party tested. Available on Amazon India. ~₹800–1,200 for 250g (50 days supply). Mix 1 level teaspoon (5g) into your morning shake — completely tasteless and odourless. Take every day including rest days — consistency matters more than timing. Takes 3–4 weeks to feel the effect (muscles saturate gradually). No loading phase needed — just 5g/day from day 1.",
-    },
-    {
-      name: "Vitamin D3 ✅ Fully Replaceable",
-      timing: "Morning sunlight + sun-treated mushrooms",
-      dose: "~600–800 IU achievable",
-      canReplace: true,
-      foodAlt:
-        "1. SUNLIGHT: 15–20 min direct sun on arms/face before 9am, 5x/week — your skin makes D3 directly. 2. MUSHROOMS: Place button/oyster mushrooms gills-up in direct sunlight for 45–60 min before cooking — 100g gives 300–400 IU. Do this 3–4x/week. 3. FORTIFIED MILK: 2 glasses/day. 4. Add ghee or peanut butter with every meal — Vit D is fat-soluble, needs fat to absorb.",
-    },
-    {
-      name: "Magnesium ✅ Fully Replaceable",
-      timing: "Pumpkin seeds + almonds after dinner",
-      dose: "Target 340mg/day",
-      canReplace: true,
-      foodAlt:
-        "MAGNESIUM EVENING STACK (eat after dinner for sleep benefit): 30g pumpkin seeds = 150mg. 10–12 almonds = 80mg. 1 cup spinach sabzi at dinner = 78mg. 1 ragi roti instead of wheat roti = 70mg. Dal at every meal + whole wheat rotis covers the rest. Total from above: ~380mg — meets the full daily target without any pill.",
-    },
-    {
-      name: "Omega-3 ✅ Replaceable",
-      timing: "Add to morning shake daily",
-      dose: "2 tbsp flaxseeds + 5 walnuts",
-      canReplace: true,
-      foodAlt:
-        "1 tbsp ground flaxseeds (alsi) in your morning shake = 1.6g ALA omega-3. 5 walnuts daily = 2.5g ALA. IMPORTANT: grind flaxseeds before adding — whole seeds pass through undigested. Note: plant-based ALA converts to EPA/DHA at only 5–10% efficiency. Good enough for general health. Chia seeds (sabja) are also a good option.",
-    },
-    {
-      name: "Electrolytes ✅ Always food-based",
-      timing: "During gym + badminton",
-      dose: "Pinch salt + lemon in 500ml water",
-      canReplace: true,
-      foodAlt:
-        "Already food-based. On badminton days: 1 glass coconut water after playing = natural electrolytes + potassium. Works better than most commercial sports drinks.",
+      label: "DINNER — Thai Peanut Noodles with Paneer",
+      color: C.purple,
+      items: [
+        "50g whole wheat or rice noodles",
+        "100g paneer — cubed and pan fried golden",
+        "1 capsicum + 1 carrot — sliced",
+        "Peanut sauce: 1 tbsp PB + 1 tbsp soy + 1 tsp honey + lemon + chilli flakes + 2 tbsp water",
+        "Sesame seeds + spring onion on top",
+        "~520 kcal | 34g protein | 48g carbs",
+        "OR: Burma Burma Cyber Hub dine-in (book ahead)",
+      ],
+      why: "Friday leg day — you deserve something special. 15 min at home or dine-in Burma Burma.",
     },
   ],
-  avoid: [
-    "Maida / refined flour (white bread, samosas, biscuits, namkeen) — swap to whole wheat always",
-    "Fruit juices — eat whole fruit instead. Juice = sugar without fibre",
-    "Eating dinner after 22:00 — digestion disrupts sleep quality",
-    "Skipping the post-workout shake — the most common and costly mistake",
-    "Alcohol — empty calories + kills testosterone + destroys sleep architecture",
-    "Packaged 'healthy' snacks (protein bars, granola bars) — most are 40%+ sugar",
-    "Under-eating (below 2,000 kcal) — slows metabolism and destroys muscle",
+  5: [
+    // Saturday
+    {
+      label: "Relaxed Breakfast — Paneer Poha",
+      color: C.orange,
+      items: [
+        "1.5 cups poha — washed and soaked 5 min",
+        "50-75g paneer — crumbled in at the end",
+        "Tadka: mustard seeds + curry leaves + onion + haldi + green chilli",
+        "Squeeze of lemon + coriander on top",
+        "150g dahi on side",
+        "1 tsp creatine in water or milk",
+        "~420 kcal | 22g protein | 52g carbs",
+      ],
+      why: "Paneer poha hits protein + carbs for Saturday. Sit down and enjoy slowly. Rest day.",
+    },
+    {
+      label: "LUNCH or CHEAT MEAL — Your Choice",
+      color: C.purple,
+      items: [
+        "OPTION A Clean: Toor Dal + Lauki+Chana sabzi + rotis + dahi",
+        "OPTION B Cheat: Anything you want — chole bhature, biryani, pizza, burger, paneer tikka",
+        "Greenr Cafe (Golf Course Road): Garden Veg Pizza + Pesto Spaghetti",
+        "Roots Cafe (Sector 29): wood-fired pizza + shikanji",
+        "Can be breakfast, lunch or dinner — ONE meal only",
+        "Rules: still have protein today, creatine taken, +500ml water",
+      ],
+      why: "One cheat meal per week resets leptin and keeps you consistent long term. You earned it.",
+    },
+    {
+      label: "DINNER",
+      color: C.purple,
+      items: [
+        "1-2 ragi rotis",
+        "1 cup Toor Dal (Sat rotation)",
+        "1 cup Lauki sabzi or greens",
+        "150g dahi",
+        "AFTER: soaked pumpkin seeds + soaked almonds",
+        "Eat by 21:00",
+        "~530 kcal | 40g protein | 55g carbs",
+      ],
+      why: "Light dinner on rest day. Earlier than weekdays — better sleep quality.",
+    },
+  ],
+  6: [
+    // Sunday
+    {
+      label: "Pre-Badminton Breakfast — Eat by 07:45",
+      color: C.orange,
+      items: [
+        "150g Milky Mist Skyr yogurt",
+        "1 banana or 2 baby bananas",
+        "1 tsp creatine mixed into yogurt",
+        "Eat by 07:30-07:45 — 90 min before 9am court",
+        "~230 kcal | 17g protein | 32g carbs",
+        "NO almonds or nuts — fat too slow to digest, heavy on court",
+      ],
+      why: "Same 90 min window as evening badminton, just earlier for morning court.",
+    },
+    {
+      label: "LUNCH — Japanese Poke Bowl",
+      color: C.blue,
+      items: [
+        "Best: EatFit High Protein Paneer Bowl on Zomato — order within 30 min of finishing court",
+        "OR home: 100g marinated paneer + 1 cup quinoa + edamame + cucumber + carrot + soy sesame sauce",
+        "~600 kcal | 40g protein | 65g carbs",
+      ],
+      why: "Order EatFit immediately after badminton — 30 min delivery = perfect post-sport timing.",
+    },
+    {
+      label: "DINNER",
+      color: C.purple,
+      items: [
+        "1-2 ragi rotis",
+        "1 cup Chole (Sun rotation — highest fibre)",
+        "1 cup greens sabzi",
+        "150g dahi",
+        "AFTER: soaked pumpkin seeds + soaked almonds",
+        "Eat by 21:00",
+        "~530 kcal | 40g protein | 55g carbs",
+      ],
+      why: "Chole on Sunday = highest fibre meal of week. Great for gut health and active recovery.",
+    },
   ],
 };
 
-const sleepProtocol = [
+const CHEAT_FOODS = [
+  { item: "Chole Bhature", note: "Classic. Go for it.", ok: true },
+  { item: "Veg Biryani", note: "Comfort perfection.", ok: true },
+  { item: "Pizza 2-3 slices", note: "Fine. Not the whole box.", ok: true },
+  { item: "Burger", note: "Fine. Skip triple fries.", ok: true },
   {
-    time: "16:00",
-    action: "Last caffeinated drink",
-    why: "Caffeine half-life is 5–6 hours. Coffee at 4pm = half still active at 10pm. Switch to herbal tea or water after this.",
-    icon: "☕",
+    item: "Paneer Tikka",
+    note: "Actually high protein — barely a cheat.",
+    ok: true,
+  },
+  { item: "Pani Puri or Chaat", note: "Light, fun.", ok: true },
+  {
+    item: "Alcohol",
+    note: "Max 2 drinks. Ruins sleep and recovery more than any food cheat.",
+    ok: false,
   },
   {
-    time: "22:00",
-    action: "Dim all lights in the room",
-    why: "Overhead lighting suppresses melatonin. Use a bedside lamp only. Your brain reads bright light as 'daytime'.",
-    icon: "💡",
+    item: "Eating junk all day",
+    note: "One cheat MEAL not a full cheat DAY.",
+    ok: false,
   },
   {
-    time: "22:15",
-    action: "Stop social media and news",
-    why: "Doom scrolling raises cortisol. A 2025 study found each hour of screen time in bed raises insomnia risk by 59%. Reels are the worst offender.",
-    icon: "📱",
-  },
-  {
-    time: "22:30",
-    action: "📵 PHONE ON CHARGER — NOT IN BEDROOM",
-    why: "People with phones in their bedroom sleep 45 min less per night on average. Alarm on phone is fine — just put it on the far side of the room so you have to get up.",
-    icon: "🔌",
-  },
-  {
-    time: "22:30",
-    action: "Read a physical book for 30 min",
-    why: "Activates a different (slower) brain circuit than screens. Fiction is best — absorbing but not stimulating. Non-fiction about work = bad choice.",
-    icon: "📖",
-  },
-  {
-    time: "23:00",
-    action: "Lights out. Non-negotiable.",
-    why: "23:00 → 07:30 = 7.5 hrs = exactly 5 complete 90-min sleep cycles. This is where recovery, muscle building, fat loss, and hormones happen. Sleep is the most anabolic thing you can do.",
-    icon: "😴",
-  },
-  {
-    time: "07:30",
-    action: "Wake up. ZERO snooze.",
-    why: "Snooze fragmented sleep actually increases grogginess (sleep inertia). One alarm. Stand up immediately. Cold water on face.",
-    icon: "⏰",
-  },
-  {
-    time: "07:31",
-    action: "Sunlight within 5 minutes",
-    why: "Morning sunlight (even cloudy) resets your circadian clock, raises cortisol (good — this is your wake signal), and improves mood and energy all day. Open the window or step outside for 2 min.",
-    icon: "🌞",
+    item: "Skipping creatine",
+    note: "Still 5g in water. 10 seconds.",
+    ok: false,
   },
 ];
 
-const stats = {
-  current: {
-    Weight: "86–90 kg",
-    Height: "183 cm",
-    "Body Fat": "23–25%",
-    "Muscle Mass": "~33 kg",
-    BMI: "~26–27",
-    TDEE: "~2,650 kcal",
+const VARIETY_ROTATION = [
+  {
+    day: "Tuesday",
+    meal: "LUNCH",
+    dish: "Rajma Rice Bowl",
+    restaurant: "Any dhaba near office OR home",
+    zomato: "Search Rajma Rice on Zomato — most dhabas Rs 150-200",
+    order: "Rajma + brown rice + raw onion + lemon + coriander + dahi on side",
+    macros: "640 kcal | 45g protein | 75g carbs",
   },
-  targets: {
-    Weight: "78–82 kg",
-    "Body Fat": "14–16%",
-    "Muscle Mass": "38–40 kg",
-    Timeline: "10–14 months",
+  {
+    day: "Wednesday",
+    meal: "DINNER",
+    dish: "Mexican Paneer Bowl",
+    restaurant: "Burrp / The Burrito Project on Zomato Gurgaon",
+    zomato:
+      "Search Burrito Bowl Paneer. Ask: brown rice, extra paneer, no sour cream.",
+    order: "Paneer bowl + rajma + capsicum + corn + salsa. No sour cream.",
+    macros: "580 kcal | 38g protein | 65g carbs",
   },
-  weeklyTargets: [
-    {
-      metric: "Fat loss rate",
-      target: "0.3–0.4 kg/week",
-      why: "Slow enough to preserve muscle and keep metabolism healthy",
+  {
+    day: "Thursday",
+    meal: "LUNCH",
+    dish: "High Protein Salad Bowl",
+    restaurant: "Salad Days (Udyog Vihar) or Green Bunz (Sector 31) on Zomato",
+    zomato: "Salad Days: Build Your Own. Green Bunz: Green Rice Bowl.",
+    order:
+      "BYOS: quinoa + paneer + chickpeas + cucumber + capsicum + olive oil lemon dressing. Add Skyr dahi at home.",
+    macros: "520 kcal | 34g protein | 48g carbs",
+  },
+  {
+    day: "Friday",
+    meal: "DINNER",
+    dish: "Thai Peanut Noodles with Paneer",
+    restaurant:
+      "Home cooked 15 min OR Burma Burma Cyber Hub (dine-in, book ahead)",
+    zomato:
+      "Burma Burma Cyber Hub — dine-in only. Order: Khao Suey + Shan Noodles.",
+    order:
+      "Home: 50g noodles + 100g paneer + peanut sauce (PB + soy + honey + lemon + chilli)",
+    macros: "520 kcal | 34g protein | 48g carbs",
+  },
+  {
+    day: "Saturday",
+    meal: "LUNCH Cheat",
+    dish: "Wood-Fired Pizza or Pasta",
+    restaurant: "Greenr Cafe (Golf Course Road) — best veg pizza in Gurgaon",
+    zomato: "Greenr on Zomato: Garden Veg Pizza + Pesto Spaghetti",
+    order:
+      "Garden Veg Pizza (whole wheat base) + Pesto Spaghetti. Dine-in Saturday afternoon.",
+    macros: "Cheat meal — enjoy it",
+  },
+  {
+    day: "Sunday",
+    meal: "LUNCH Post-Badminton",
+    dish: "Japanese Poke Bowl",
+    restaurant: "EatFit on Zomato (quickest) OR Imly Cafe (Sector 47) dine-in",
+    zomato:
+      "EatFit: any paneer bowl 500+ kcal. Order within 30 min of finishing badminton.",
+    order: "EatFit High Protein Paneer Bowl + dahi on side.",
+    macros: "600 kcal | 40g protein | 65g carbs",
+  },
+];
+
+const DAL_ROTATION = [
+  {
+    day: "Mon",
+    dal: "Moong Dal",
+    protein: "~24g/cup",
+    why: "Lightest, easiest to digest. Best post-gym day.",
+    cook: "2 whistles. Tadka: ghee + jeera + hing + haldi + tomato + ginger.",
+  },
+  {
+    day: "Tue",
+    dal: "Rajma",
+    protein: "~29g/cup",
+    why: "Highest protein. Make as Rice Bowl for variety.",
+    cook: "Soak overnight. 4-5 whistles. Thick masala gravy.",
+  },
+  {
+    day: "Wed",
+    dal: "Masoor Dal",
+    protein: "~26g/cup",
+    why: "Fastest — 15 min, no soaking needed.",
+    cook: "No soak. 2 whistles. Mustard seeds + curry leaves + tomato.",
+  },
+  {
+    day: "Thu",
+    dal: "Chana Dal",
+    protein: "~27g/cup",
+    why: "Lowest glycemic index. Stable energy for court.",
+    cook: "Soak 1 hour. 3 whistles. Works as dal or dry fry.",
+  },
+  {
+    day: "Fri",
+    dal: "Mix Dal (moong+masoor+toor)",
+    protein: "~25g/cup",
+    why: "Complete amino acid profile in one bowl.",
+    cook: "Equal parts. 2 whistles. Simple jeera + haldi + tomato.",
+  },
+  {
+    day: "Sat",
+    dal: "Toor Dal",
+    protein: "~22g/cup",
+    why: "Classic comfort. B vitamins. Rest day.",
+    cook: "3 whistles. Ghee + jeera + hing + tomato + amchur.",
+  },
+  {
+    day: "Sun",
+    dal: "Chole",
+    protein: "~20g/cup",
+    why: "Highest fibre. Gut health. Active recovery day.",
+    cook: "Soak overnight. 5-6 whistles.",
+  },
+];
+
+const SABZI_ROTATION = [
+  {
+    day: "Mon",
+    sabzi: "Palak Paneer",
+    why: "Highest magnesium + iron + Vit K. Paneer = 18g protein/100g.",
+    cook: "Blanch spinach, blend. Cook with paneer. Use dahi instead of cream.",
+    seasons: {
+      avail: "Winter (Oct-Mar) peak",
+      alt: "Summer/Monsoon: Tinda+Paneer OR Kaddu+Paneer OR Paneer Bhurji",
     },
-    {
-      metric: "Protein daily",
-      target: "121–189g (by day)",
-      why: "~1.8g/kg bodyweight — higher on gym days, lower on rest days",
+  },
+  {
+    day: "Tue",
+    sabzi: "Bhindi Masala (dry)",
+    why: "35 kcal/100g. High zinc. Light on upper pull day.",
+    cook: "Dry only. Mustard seeds + onion + tomato + amchur. Don't cover.",
+    seasons: {
+      avail: "Summer+Monsoon (Apr-Sep) peak",
+      alt: "Winter: Gobhi+Matar OR Gajar Matar OR French Beans",
     },
-    {
-      metric: "Gym sessions",
-      target: "4x/week",
-      why: "Every muscle hit twice a week = maximum stimulus",
+  },
+  {
+    day: "Wed",
+    sabzi: "Methi Sabzi",
+    why: "High magnesium + iron. Reduces inflammation.",
+    cook: "Rough chop. Jeera + onion + garlic + tomato. 8 min max.",
+    seasons: {
+      avail: "Winter (Oct-Mar) peak",
+      alt: "Summer/Monsoon: Tori (ridge gourd) OR Karela",
     },
-    {
-      metric: "Badminton",
-      target: "4x/week (Tue/Wed/Thu/Sun)",
-      why: "Your built-in cardio — no treadmill needed",
+  },
+  {
+    day: "Thu",
+    sabzi: "Gobhi + Matar",
+    why: "Vit C + B6. Peas = 5g protein/half cup.",
+    cook: "Dry sabzi. Jeera + onion + ginger-garlic + tomato.",
+    seasons: {
+      avail: "Winter (Oct-Mar) peak",
+      alt: "Summer/Monsoon: Arbi OR Kathal OR Tinda+Matar (frozen peas ok)",
     },
-    {
-      metric: "Sleep",
-      target: "7.5 hrs",
-      why: "Non-negotiable. Sleep less = more fat, less muscle",
+  },
+  {
+    day: "Fri",
+    sabzi: "Baingan Bharta",
+    why: "25 kcal/100g. Nasunin antioxidant. Year-round.",
+    cook: "Roast on flame until charred. Peel, mash. Mustard seeds + onion + tomato.",
+    seasons: {
+      avail: "Year-round — no swap needed",
+      alt: "Winter bonus: Add fresh matar into bharta",
     },
-    {
-      metric: "Water",
-      target: "3.5–4L active days / 3L rest",
-      why: "Gym + badminton + Gurgaon summer heat = higher than average need",
+  },
+  {
+    day: "Sat",
+    sabzi: "Lauki + Chana",
+    why: "Lauki = 96% water. Perfect rest day light digestion.",
+    cook: "Lauki + soaked chana in pressure cooker. Jeera + tomato. Dahi at end.",
+    seasons: {
+      avail: "Summer+Monsoon (Apr-Sep) peak",
+      alt: "Winter: Sarson ka Saag OR Palak+Chana",
     },
-  ],
-  milestones: [
-    {
-      week: "1–2",
-      goal: "Establish the routine. Don't miss gym. Hit protein target. Nothing else matters yet.",
+  },
+  {
+    day: "Sun",
+    sabzi: "Shimla Mirch + Paneer Bhurji",
+    why: "Capsicum = highest Vit C. Bhurji = 22g protein, 10 min.",
+    cook: "Crumble paneer. Cook with onion + capsicum + tomato + haldi.",
+    seasons: {
+      avail: "Year-round — no swap needed",
+      alt: "Winter bonus: Add spinach or methi into bhurji",
     },
-    {
-      week: "3–4",
-      goal: "Add creatine. Weight may go up 0.5–1kg (water in muscles) — that's a good sign, not fat.",
-    },
-    {
-      week: "5–8",
-      goal: "Strength increases noticeably on compounds. This is your signal the plan is working.",
-    },
-    {
-      week: "9–12",
-      goal: "First visible mirror change. Waist measurement drops. Arms and chest fuller.",
-    },
-    {
-      week: "13–26",
-      goal: "Significant recomposition. Reassess calories — your TDEE rises as you build muscle.",
-    },
-    {
-      week: "26+",
-      goal: "Maintenance phase. Higher calories. New baseline. The body you built is now easy to keep.",
-    },
-  ],
-  trackingTips: [
-    "Weigh yourself Mon + Wed + Fri morning, after bathroom, before food. Use the 3-day average — not single readings.",
-    "Take front/side/back photos monthly. Same lighting, same time of day. Photos don't lie like the mirror does.",
-    "Log every gym set in Notes app. Progressive overload IS the progress — if your lifts go up, your body is changing.",
-    "Measure waist at navel every 2 weeks. This number dropping = fat loss even when the scale stalls.",
-    "Notice: energy levels, sleep quality, mood, how clothes fit. These improve before the scale moves.",
-  ],
+  },
+];
+
+const CALORIE_CYCLING = [
+  {
+    day: "Gym Day (Mon/Fri)",
+    cal: "2,190 kcal",
+    note: "Full shake + post-workout shake.",
+  },
+  {
+    day: "Gym + Badminton (Tue/Wed)",
+    cal: "2,440 kcal",
+    note: "Highest calorie day — gym AND court.",
+  },
+  {
+    day: "Badminton Only (Thu)",
+    cal: "1,940 kcal",
+    note: "Light breakfast, no post-workout shake.",
+  },
+  {
+    day: "Full Rest (Sat)",
+    cal: "1,910 kcal",
+    note: "Relaxed meals. Cheat meal optional.",
+  },
+  {
+    day: "Morning Badminton (Sun)",
+    cal: "1,830 kcal",
+    note: "Light pre-court breakfast. Bigger post-badminton lunch.",
+  },
+];
+
+const AVOID = [
+  "Maida / refined flour — swap to whole wheat always",
+  "Fruit juices — eat whole fruit. Juice = sugar without fibre",
+  "Eating dinner after 22:00 — disrupts sleep quality",
+  "Skipping post-workout shake — the most common mistake",
+  "Alcohol — empty calories + kills testosterone + destroys sleep",
+  "Packaged healthy snacks — most protein bars are 40%+ sugar",
+  "Under-eating below 2,000 kcal — slows metabolism, destroys muscle",
+];
+
+// ─── SLEEP DATA ────────────────────────────────────────────────────
+const SLEEP_PROTOCOL = [
+  {
+    time: "16:00",
+    action: "Last Coffee Cut-Off",
+    why: "Half-life 5-6 hrs. Coffee at 4pm = half in blood at 10pm.",
+  },
+  {
+    time: "22:00",
+    action: "Dim All Lights",
+    why: "Overhead lighting suppresses melatonin. Bedside lamp only.",
+  },
+  {
+    time: "22:15",
+    action: "No Social Media or News",
+    why: "Doom scrolling raises cortisol. 50+ min less sleep for regular phone-before-bed users.",
+  },
+  {
+    time: "22:30",
+    action: "Phone Outside Bedroom",
+    why: "45 min more sleep on average without phone in room.",
+  },
+  {
+    time: "22:30",
+    action: "Read for 30 min",
+    why: "Physical book or Kindle warm mode. Fiction best. Shifts brain to sleep mode.",
+  },
+  {
+    time: "23:00",
+    action: "Lights Out",
+    why: "7.5 hrs = 5 full 90-min cycles. Growth hormone, muscle repair, fat metabolism all peak here.",
+  },
+  {
+    time: "07:30",
+    action: "Wake Up — Zero Snooze",
+    why: "Snooze fragments sleep and worsens grogginess. One alarm.",
+  },
+  {
+    time: "07:31",
+    action: "Sunlight Within 5 Min",
+    why: "Resets circadian clock. Sets you up to feel sleepy at 23:00 tonight.",
+  },
+];
+
+const BOOKS = [
+  "Atomic Habits — James Clear (literally about building this exact system)",
+  "Shoe Dog — Phil Knight (engaging non-fiction, not stressful)",
+  "A Man Called Ove — Fredrik Backman (light fiction, absorbing)",
+  "The Psychology of Money — Morgan Housel (short chapters, perfect before bed)",
+];
+
+// ─── GOALS DATA ────────────────────────────────────────────────────
+const STATS_CURRENT = {
+  Weight: "86-90 kg",
+  Height: "183 cm",
+  "Body Fat": "23-25%",
+  "Muscle Mass": "~33 kg",
+  TDEE: "~2,650 kcal",
+};
+const STATS_TARGET = {
+  Weight: "78-82 kg",
+  "Body Fat": "14-16%",
+  "Muscle Mass": "38-40 kg",
+  Timeline: "10-14 months",
 };
 
-function TagBadge({ type }: { type: string }) {
-  const map = {
-    sleep: { bg: "#1a1a3a", text: "#6a6aff", label: "SLEEP" },
-    health: { bg: "#1a3a1a", text: "#47ff8a", label: "HEALTH" },
-    food: { bg: "#3a1a00", text: "#ff9447", label: "FOOD" },
-    work: { bg: "#1a2a3a", text: "#47b8ff", label: "WORK" },
-    gym: { bg: "#3a1a1a", text: "#ff4747", label: "GYM" },
-    water: { bg: "#001a2a", text: "#00ccff", label: "💧 WATER" },
-  };
-  const s =
-    (map as Record<string, { bg: string; text: string; label: string }>)[
-      type
-    ] || map.health;
-  return (
-    <span
-      style={{
-        backgroundColor: s.bg,
-        color: s.text,
-        fontSize: 9,
-        fontWeight: 700,
-        padding: "2px 7px",
-        borderRadius: 4,
-        letterSpacing: 1,
-      }}
-    >
-      {s.label}
-    </span>
-  );
-}
+const WEEKLY_TARGETS = [
+  {
+    metric: "Gym sessions",
+    target: "4x/week (Mon/Tue/Wed/Fri)",
+    why: "Every muscle hit twice a week = maximum stimulus",
+  },
+  {
+    metric: "Badminton",
+    target: "4x/week (Tue/Wed/Thu/Sun)",
+    why: "Built-in cardio. No treadmill needed.",
+  },
+  {
+    metric: "Protein daily",
+    target: "121-189g by day type",
+    why: "~1.8g/kg bodyweight",
+  },
+  {
+    metric: "Sleep",
+    target: "7.5 hrs (23:00-07:30)",
+    why: "Non-negotiable. Sleep less = more fat, less muscle",
+  },
+  {
+    metric: "Water",
+    target: "3.5-4L active / 3L rest",
+    why: "Gym + badminton + Gurgaon summer",
+  },
+];
 
-function ExerciseTag({ tag }: { tag: string }) {
-  if (!tag) return null;
-  const isCompound = tag.startsWith("COMPOUND");
-  const isHealth = tag.includes("health");
-  return (
-    <span
-      style={{
-        background: isCompound ? "#2a1a00" : "#1a1a2a",
-        color: isCompound ? COLORS.orange : COLORS.blue,
-        fontSize: 9,
-        fontWeight: 700,
-        padding: "2px 6px",
-        borderRadius: 4,
-        letterSpacing: 0.5,
-        flexShrink: 0,
-      }}
-    >
-      {tag}
-    </span>
-  );
-}
+const MILESTONES = [
+  {
+    week: "1-2",
+    goal: "Establish routine. Don't miss gym. Hit protein target.",
+  },
+  {
+    week: "3-4",
+    goal: "Add creatine. Weight may go up 0.5-1kg (water in muscles) — good sign.",
+  },
+  {
+    week: "5-8",
+    goal: "Strength increases noticeably on compounds. Plan is working.",
+  },
+  {
+    week: "9-12",
+    goal: "First visible mirror change. Waist drops. Arms and chest fuller.",
+  },
+  {
+    week: "13-26",
+    goal: "Significant recomposition. Reassess calories as you build muscle.",
+  },
+  {
+    week: "26+",
+    goal: "Maintenance phase. Higher calories. New baseline. Easy to keep.",
+  },
+];
 
+const TRACKING = [
+  "Weigh Mon+Wed+Fri morning after bathroom before food. Use 3-day average.",
+  "Monthly photos: front, side, back. Same lighting, same time.",
+  "Log every gym set in Notes app. Progressive overload IS the metric.",
+  "Measure waist at navel every 2 weeks. Dropping = fat loss.",
+  "Energy, mood, how clothes fit all improve before scale moves.",
+];
+
+// ─── INGREDIENTS DATA ──────────────────────────────────────────────
+const INGREDIENTS = [
+  {
+    day: "Tuesday",
+    meal: "Lunch",
+    dish: "Rajma Rice Bowl",
+    note: "Soak rajma overnight — mandatory. Make extra, refrigerate, use through week.",
+    sections: [
+      {
+        title: "Rajma",
+        items: [
+          "1 cup dry rajma — soaked overnight",
+          "2 onions — chopped",
+          "2 tomatoes — pureed",
+          "1 tsp grated ginger",
+          "4 garlic cloves",
+          "1 green chilli",
+          "1 bay leaf",
+          "1 tsp cumin seeds",
+          "1 tsp rajma masala",
+          "1/2 tsp haldi",
+          "1/2 tsp red chilli powder",
+          "1/2 tsp garam masala",
+          "Salt to taste",
+          "1 tsp ghee",
+        ],
+      },
+      {
+        title: "Bowl Assembly",
+        items: [
+          "1 cup brown rice — cooked",
+          "Raw onion rings",
+          "Fresh coriander",
+          "Half lemon squeezed",
+          "150g dahi on side",
+        ],
+      },
+    ],
+  },
+  {
+    day: "Wednesday",
+    meal: "Dinner",
+    dish: "Mexican Paneer Bowl",
+    note: "20 min. Make salsa fresh — takes 5 min and makes huge difference.",
+    sections: [
+      {
+        title: "Paneer",
+        items: [
+          "100g paneer — cubed",
+          "1/2 tsp cumin powder",
+          "1/2 tsp red chilli powder",
+          "1/2 tsp paprika",
+          "1 garlic clove minced",
+          "Salt + 1 tsp oil",
+        ],
+      },
+      {
+        title: "Bowl",
+        items: [
+          "1 cup brown rice or quinoa",
+          "1/2 cup rajma or chole",
+          "1/2 cup sweet corn",
+          "1 capsicum — diced",
+          "1 onion — diced",
+          "2 tbsp hung curd",
+        ],
+      },
+      {
+        title: "Fresh Salsa (5 min)",
+        items: [
+          "2 tomatoes — chopped",
+          "1 small onion — chopped",
+          "1 green chilli",
+          "Fresh coriander",
+          "Half lemon + salt + chaat masala",
+        ],
+      },
+    ],
+  },
+  {
+    day: "Thursday",
+    meal: "Lunch",
+    dish: "High Protein Salad Bowl",
+    note: "Order Salad Days or Green Bunz on Zomato. Or 15 min at home.",
+    sections: [
+      {
+        title: "Salad Days BYOS — Tell them",
+        items: [
+          "Base: Quinoa",
+          "Protein: Paneer extra portion",
+          "Add: Chickpeas",
+          "Add: Cucumber, capsicum, tomatoes",
+          "Dressing: Olive oil + lemon (NOT creamy)",
+          "Skip: Croutons, cheese, ranch",
+        ],
+      },
+      {
+        title: "Home Version",
+        items: [
+          "1 cup cooked quinoa",
+          "100g paneer — grilled on dry pan",
+          "1/2 cup chickpeas — boiled",
+          "1 cucumber + 1 capsicum + tomatoes",
+          "Dressing: 1 tbsp olive oil + lemon + salt + oregano",
+          "150g Skyr yogurt on side",
+        ],
+      },
+    ],
+  },
+  {
+    day: "Friday",
+    meal: "Dinner",
+    dish: "Thai Peanut Noodles with Paneer",
+    note: "15 min at home. Peanut sauce is the star. Or Burma Burma Cyber Hub.",
+    sections: [
+      {
+        title: "Noodles + Paneer",
+        items: [
+          "50g whole wheat or rice noodles",
+          "100g paneer — cubed",
+          "1 capsicum — sliced",
+          "1 carrot — julienned",
+          "2 spring onions",
+          "1 tsp sesame seeds + 1 tsp oil",
+        ],
+      },
+      {
+        title: "Peanut Sauce",
+        items: [
+          "1 tbsp peanut butter (natural)",
+          "1 tbsp soy sauce",
+          "1 tsp honey",
+          "Half lemon squeezed",
+          "1/2 tsp red chilli flakes",
+          "2 tbsp water to thin",
+          "1 garlic clove (optional)",
+        ],
+      },
+      {
+        title: "Burma Burma (Cyber Hub dine-in)",
+        items: [
+          "Order: Khao Suey — must order",
+          "Add: Shan Noodles or Tea Leaf Rice",
+          "Book table 2 hrs ahead",
+          "20 min from Sector 83 via NH48",
+        ],
+      },
+    ],
+  },
+  {
+    day: "Saturday",
+    meal: "Breakfast",
+    dish: "Paneer Poha",
+    note: "Quick 15 min. Paneer adds the protein that plain poha lacks.",
+    sections: [
+      {
+        title: "Ingredients",
+        items: [
+          "1.5 cups poha — rinse and soak 5 min",
+          "50-75g paneer — crumbled",
+          "1 small onion — finely chopped",
+          "1 tsp mustard seeds",
+          "1/2 tsp haldi",
+          "1-2 green chillies",
+          "8-10 curry leaves",
+          "Salt to taste",
+          "1 tsp oil",
+          "Half lemon + fresh coriander",
+          "150g dahi on side",
+        ],
+      },
+      {
+        title: "Method",
+        items: [
+          "Heat oil, add mustard seeds till they pop",
+          "Add curry leaves + green chilli + onion — cook 2 min",
+          "Add haldi + soaked poha — mix gently",
+          "Cook 3-4 min on low heat",
+          "Add crumbled paneer at the very end — mix gently (don't overcook paneer)",
+          "Squeeze lemon + coriander on top",
+          "Serve with dahi on side",
+        ],
+      },
+    ],
+  },
+  {
+    day: "Saturday",
+    meal: "Cheat Meal Options",
+    dish: "Greenr Cafe or Roots Cafe",
+    note: "Dine-in Saturday afternoon — great outing.",
+    sections: [
+      {
+        title: "Greenr Cafe (Golf Course Road)",
+        items: [
+          "Garden Vegetable Pizza — ask for whole wheat base",
+          "Pesto Spaghetti — their best dish per reviews",
+          "Asparagus Tempura Sushi (optional)",
+        ],
+      },
+      {
+        title: "Roots Cafe (Sector 29)",
+        items: [
+          "Wood-fired pizza (any veg topping)",
+          "Shikanji — their signature drink",
+          "Outdoor seating in greenery",
+          "Opposite Kingdom of Dreams",
+        ],
+      },
+    ],
+  },
+  {
+    day: "Sunday",
+    meal: "Lunch",
+    dish: "Japanese Poke Bowl",
+    note: "Order EatFit within 30 min of finishing. Or marinate paneer night before.",
+    sections: [
+      {
+        title: "EatFit on Zomato (quickest)",
+        items: [
+          "Any High Protein Paneer Bowl 500+ kcal",
+          "Add dahi on side",
+          "Order immediately after badminton — 30 min delivery = perfect timing",
+        ],
+      },
+      {
+        title: "Home Poke Bowl",
+        items: [
+          "100g paneer — marinate overnight: soy sauce + sesame oil + honey + garlic",
+          "1 cup brown rice or quinoa",
+          "1/2 cup edamame — boil 3 min from frozen (Big Basket)",
+          "1 cucumber + 1 carrot — sliced",
+          "Half avocado if available",
+          "Sesame seeds on top",
+          "Sauce: 1 tbsp soy + 1/2 tsp sesame oil + 1 tsp rice vinegar + 1 tsp honey",
+        ],
+      },
+    ],
+  },
+];
+
+const GROCERY = [
+  "Rajma (500g) — soak overnight before Tuesday",
+  "Brown rice (1kg) — Tue/Wed/Sun base",
+  "Quinoa (500g) — Thu salad + Sun poke bowl",
+  "Paneer (500g) — used in all 6 dishes",
+  "Whole wheat or rice noodles (250g) — Friday",
+  "Edamame frozen (200g) — Sunday (Big Basket)",
+  "Peanut butter natural (1 jar) — Friday sauce",
+  "Soy sauce (1 bottle) — Friday + Sunday marinade",
+  "Sesame oil (small bottle) — Friday + Sunday",
+  "Sesame seeds — garnish Fri + Sun",
+  "Capsicum 3-4 — Wed/Thu/Fri",
+  "Cherry tomatoes — Thursday salad",
+  "Sweet corn frozen or canned — Wednesday",
+  "Avocado — Sunday (optional)",
+  "Poha (500g) — Saturday breakfast",
+];
+
+// ─── COMPONENT ─────────────────────────────────────────────────────
 export default function CoachDashboard() {
   const [activeTab, setActiveTab] = useState(0);
+  const [scheduleDay, setScheduleDay] = useState(0);
+  const [mealDay, setMealDay] = useState(0);
   const [expandedDay, setExpandedDay] = useState<number | null>(null);
-  const [expandedExercise, setExpandedExercise] = useState<string | null>(null);
+  const [expandedEx, setExpandedEx] = useState<string | null>(null);
 
-  const [scheduleType, setScheduleType] = useState(0);
-  const scheduleTypes = [
-    { label: "🏋️ Gym Day", sub: "Mon / Fri", data: gymDaySchedule },
-    {
-      label: "🏋️🏸 Gym + Badminton",
-      sub: "Tue / Wed",
-      data: badmintonEveningSchedule,
-    },
-    { label: "🏸 Badminton Only", sub: "Thu", data: badmintonEveningSchedule },
-    { label: "😴 Full Rest", sub: "Sat", data: weekendSchedule },
-    { label: "🏸 Morning Badminton", sub: "Sun", data: weekendSchedule },
-  ];
-
-  const [mealDayType, setMealDayType] = useState(0);
-  const mealDayTypes = [
-    {
-      label: "🏋️ Gym Day",
-      sub: "Mon / Fri",
-      cal: "2,190 kcal",
-      protein: "172g",
-      carbs: "223g",
-      fat: "62g",
-      fiber: "35g",
-      note: "Full power shake + post-workout shake. Highest protein day.",
-    },
-    {
-      label: "🏋️🏸 Gym + Badminton",
-      sub: "Tue / Wed",
-      cal: "2,440 kcal",
-      protein: "189g",
-      carbs: "258g",
-      fat: "65g",
-      fiber: "38g",
-      note: "Highest calorie day — gym AND court. You need every bit of this fuel.",
-    },
-    {
-      label: "🏸 Badminton Only",
-      sub: "Thu",
-      cal: "1,940 kcal",
-      protein: "143g",
-      carbs: "198g",
-      fat: "59g",
-      fiber: "31g",
-      note: "No big morning shake. Pre-badminton snack at 17:00.",
-    },
-    {
-      label: "😴 Full Rest",
-      sub: "Sat",
-      cal: "1,910 kcal",
-      protein: "121g",
-      carbs: "201g",
-      fat: "62g",
-      fiber: "33g",
-      note: "Lowest calorie day. Relaxed meals. Cheat meal optional.",
-    },
-    {
-      label: "🏸 Morning Badminton",
-      sub: "Sun",
-      cal: "1,830 kcal",
-      protein: "121g",
-      carbs: "191g",
-      fat: "57g",
-      fiber: "31g",
-      note: "Light pre-court breakfast early. Bigger post-badminton lunch.",
-    },
-  ];
-
-  const tabStyle = (i: number) => ({
-    fontSize: 12,
-    fontWeight: activeTab === i ? 700 : 500,
-    color: activeTab === i ? COLORS.bg : COLORS.textDim,
-    background: activeTab === i ? COLORS.accent : "transparent",
-    border: "none",
+  const btn = (active: boolean) => ({
+    padding: "8px 10px",
     borderRadius: 8,
+    border: `1px solid ${active ? C.accent : C.border}`,
     cursor: "pointer",
-    whiteSpace: "nowrap",
-    transition: "all 0.15s",
+    fontSize: 11,
+    textAlign: "left" as const,
+    background: active ? "#1a1a00" : C.card,
+    color: active ? C.accent : C.textDim,
+    fontWeight: active ? 700 : 400,
   });
+
+  const currentSchedule = SCHEDULE_TYPES[scheduleDay].data;
+  const currentMeals = (MEALS_BY_DAY as any)[mealDay] || [];
 
   return (
     <div
       style={{
-        backgroundColor: COLORS.bg,
+        background: C.bg,
         minHeight: "100vh",
-        fontFamily: "'Inter', -apple-system, sans-serif",
-        color: COLORS.text,
-        padding: "20px 16px",
+        fontFamily: "Inter,-apple-system,sans-serif",
+        color: C.text,
+        padding: "16px",
       }}
     >
       {/* Header */}
-      <div style={{ marginBottom: 20 }}>
+      <div style={{ marginBottom: 16 }}>
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 12,
+            gap: 10,
             marginBottom: 8,
           }}
         >
           <div
             style={{
-              width: 42,
-              height: 42,
+              width: 38,
+              height: 38,
               borderRadius: "50%",
-              background: COLORS.accent,
+              background: C.accent,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: 22,
+              fontSize: 18,
+              fontWeight: 800,
+              color: C.bg,
             }}
           >
-            💪
+            V
           </div>
           <div>
-            <div style={{ fontSize: 18, fontWeight: 800, letterSpacing: -0.5 }}>
-              VAIBHAV'S TRANSFORMATION PLAN
+            <div style={{ fontSize: 15, fontWeight: 800 }}>
+              VAIBHAV TRANSFORMATION PLAN
             </div>
-            <div style={{ fontSize: 11, color: COLORS.muted }}>
-              27M · 183cm · 86–90kg · 23–25% BF · Vegetarian · Gurgaon · June
-              2026
+            <div style={{ fontSize: 11, color: C.muted }}>
+              27M · 183cm · 86-90kg · 23-25% BF · Vegetarian · Gurgaon
             </div>
           </div>
         </div>
         <div
           style={{
             background: "#1a1a00",
-            border: `1px solid ${COLORS.accentDim}`,
+            border: `1px solid ${C.dim}`,
             borderRadius: 8,
-            padding: "8px 14px",
-            fontSize: 12,
-            color: COLORS.accent,
-            lineHeight: 1.6,
+            padding: "8px 12px",
+            fontSize: 11,
+            color: C.accent,
           }}
         >
-          🎯 Goal: Body recomposition — slow fat loss (0.3–0.4 kg/week), build
-          muscle, raise metabolism. 10–14 months. No crash dieting.
+          Goal: Body recomposition — slow fat loss 0.3-0.4kg/week, build muscle,
+          raise metabolism. 10-14 months.
         </div>
       </div>
 
@@ -1879,209 +2202,168 @@ export default function CoachDashboard() {
       <div
         style={{
           display: "flex",
-          gap: 6,
-          marginBottom: 22,
+          gap: 5,
+          marginBottom: 16,
           overflowX: "auto",
           paddingBottom: 4,
         }}
       >
-        {(tabs as any[]).map((t: any, i: number) => (
-          <button key={i} style={tabStyle(i)} onClick={() => setActiveTab(i)}>
+        {TABS.map((t: string, i: number) => (
+          <button
+            key={i}
+            onClick={() => setActiveTab(i)}
+            style={{
+              ...btn(activeTab === i),
+              whiteSpace: "nowrap",
+              padding: "8px 12px",
+              fontSize: 12,
+            }}
+          >
             {t}
           </button>
         ))}
       </div>
 
-      {/* TAB: SCHEDULE */}
+      {/* SCHEDULE TAB */}
       {activeTab === 0 && (
         <div>
-          {/* Day type selector */}
-          <div style={{ marginBottom: 16 }}>
+          <div style={{ marginBottom: 14 }}>
             <div
               style={{
                 fontSize: 11,
-                color: COLORS.muted,
+                color: C.muted,
+                marginBottom: 8,
                 letterSpacing: 1,
-                textTransform: "uppercase",
-                marginBottom: 10,
               }}
             >
-              Select your day type
+              SELECT DAY
             </div>
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-              {scheduleTypes.map((s: any, i: number) => (
+            <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
+              {SCHEDULE_TYPES.map((st: any, i: number) => (
                 <button
                   key={i}
-                  onClick={() => setScheduleType(i)}
-                  style={{
-                    padding: "8px 12px",
-                    borderRadius: 8,
-                    border: `1px solid ${
-                      scheduleType === i ? COLORS.accent : COLORS.cardBorder
-                    }`,
-                    background: scheduleType === i ? "#1a1a00" : COLORS.card,
-                    color: scheduleType === i ? COLORS.accent : COLORS.textDim,
-                    cursor: "pointer",
-                    fontSize: 12,
-                    fontWeight: scheduleType === i ? 700 : 400,
-                    textAlign: "left" as const,
-                  }}
+                  onClick={() => setScheduleDay(i)}
+                  style={btn(scheduleDay === i)}
                 >
-                  <div>{s.label}</div>
-                  <div
-                    style={{ fontSize: 10, color: COLORS.muted, marginTop: 2 }}
-                  >
-                    {s.sub}
+                  <div style={{ fontSize: 12, fontWeight: 700 }}>
+                    {st.label}
+                  </div>
+                  <div style={{ fontSize: 10, color: C.muted, marginTop: 1 }}>
+                    {st.sub}
                   </div>
                 </button>
               ))}
             </div>
           </div>
-
-          {/* Schedule entries — filtered by showOn if present */}
-          {(scheduleTypes[scheduleType].data as any[])
-            .filter(
-              (item: any) => !item.showOn || item.showOn.includes(scheduleType)
-            )
-            .map((item: any, i: number) => (
-              <div
-                key={i}
-                style={{ display: "flex", gap: 14, marginBottom: 12 }}
-              >
-                <div
-                  style={{ minWidth: 52, textAlign: "right", paddingTop: 10 }}
-                >
-                  <div
-                    style={{
-                      fontSize: 12,
-                      fontWeight: 700,
-                      color: COLORS.accent,
-                      fontVariantNumeric: "tabular-nums",
-                    }}
-                  >
-                    {item.time}
-                  </div>
-                </div>
-                <div
-                  style={{
-                    width: 2,
-                    background: COLORS.cardBorder,
-                    borderRadius: 1,
-                    flexShrink: 0,
-                    position: "relative",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: 8,
-                      height: 8,
-                      borderRadius: "50%",
-                      background: COLORS.accent,
-                      position: "absolute",
-                      top: 12,
-                      left: -3,
-                    }}
-                  />
-                </div>
-                <div
-                  style={{
-                    flex: 1,
-                    background: COLORS.card,
-                    border: `1px solid ${COLORS.cardBorder}`,
-                    borderRadius: 10,
-                    padding: "10px 14px",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 8,
-                      marginBottom: 4,
-                    }}
-                  >
-                    <span style={{ fontSize: 15 }}>{item.icon}</span>
-                    <span style={{ fontSize: 13, fontWeight: 700 }}>
-                      {item.label}
-                    </span>
-                    <TagBadge type={item.type} />
-                  </div>
-                  <div
-                    style={{
-                      fontSize: 12,
-                      color: COLORS.textDim,
-                      lineHeight: 1.6,
-                    }}
-                  >
-                    {item.detail}
-                  </div>
+          {currentSchedule.map((item: any, i: number) => (
+            <div key={i} style={{ display: "flex", gap: 12, marginBottom: 10 }}>
+              <div style={{ minWidth: 48, textAlign: "right", paddingTop: 10 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: C.accent }}>
+                  {item.time}
                 </div>
               </div>
-            ))}
+              <div
+                style={{
+                  width: 2,
+                  background: C.border,
+                  flexShrink: 0,
+                  position: "relative",
+                }}
+              >
+                <div
+                  style={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: "50%",
+                    background: C.accent,
+                    position: "absolute",
+                    top: 12,
+                    left: -3,
+                  }}
+                />
+              </div>
+              <div
+                style={{
+                  flex: 1,
+                  background: C.card,
+                  border: `1px solid ${C.border}`,
+                  borderRadius: 10,
+                  padding: "10px 12px",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    marginBottom: 4,
+                  }}
+                >
+                  <span style={{ fontSize: 13, fontWeight: 700 }}>
+                    {item.label}
+                  </span>
+                  <Badge type={item.type} />
+                </div>
+                <div
+                  style={{ fontSize: 12, color: C.textDim, lineHeight: 1.6 }}
+                >
+                  {item.detail}
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
-      {/* TAB: WORKOUT */}
+      {/* WORKOUT TAB */}
       {activeTab === 1 && (
         <div>
           <div
             style={{
-              background: COLORS.card,
-              border: `1px solid ${COLORS.cardBorder}`,
+              background: C.card,
+              border: `1px solid ${C.border}`,
               borderRadius: 10,
-              padding: 14,
-              marginBottom: 14,
+              padding: 12,
+              marginBottom: 12,
             }}
           >
             <div
               style={{
                 fontSize: 13,
                 fontWeight: 700,
-                color: COLORS.accent,
+                color: C.accent,
                 marginBottom: 4,
               }}
             >
-              🏆 {workoutPlan.split}
+              4-Day Upper/Lower Split — Mon, Tue, Wed, Fri
             </div>
-            <div
-              style={{ fontSize: 12, color: COLORS.textDim, lineHeight: 1.6 }}
-            >
-              {workoutPlan.note}
+            <div style={{ fontSize: 12, color: C.textDim, lineHeight: 1.6 }}>
+              Leg days only on Friday — never on Tue/Wed/Thu when you have
+              evening badminton. Upper body gym + same-day badminton is fine.
             </div>
           </div>
-
-          {/* Week template */}
           <div
             style={{
               fontSize: 11,
-              color: COLORS.muted,
+              color: C.muted,
+              marginBottom: 8,
               letterSpacing: 1,
-              textTransform: "uppercase",
-              marginBottom: 10,
             }}
           >
-            📅 Weekly Template
+            WEEKLY TEMPLATE
           </div>
-          {(workoutPlan.weekTemplate as any[]).map((d: any, i: number) => (
-            <div
-              key={i}
-              style={{
-                display: "flex",
-                gap: 10,
-                marginBottom: 8,
-                alignItems: "flex-start",
-              }}
-            >
+          {WEEKLY_TEMPLATE.map((d: any, i: number) => (
+            <div key={i} style={{ display: "flex", gap: 8, marginBottom: 8 }}>
               <div
                 style={{
-                  minWidth: 40,
-                  background: COLORS.cardBorder,
+                  minWidth: 36,
+                  background: C.border,
                   borderRadius: 6,
                   padding: "4px 0",
                   textAlign: "center",
                   fontSize: 11,
                   fontWeight: 800,
-                  color: COLORS.accent,
+                  color: C.accent,
                 }}
               >
                 {d.day}
@@ -2089,47 +2371,36 @@ export default function CoachDashboard() {
               <div
                 style={{
                   flex: 1,
-                  background: COLORS.card,
-                  border: `1px solid ${COLORS.cardBorder}`,
+                  background: C.card,
+                  border: `1px solid ${C.border}`,
                   borderRadius: 8,
-                  padding: "8px 12px",
+                  padding: "8px 10px",
                 }}
               >
-                <div
-                  style={{
-                    display: "flex",
-                    gap: 8,
-                    flexWrap: "wrap",
-                    marginBottom: 3,
-                  }}
-                >
+                <div style={{ display: "flex", gap: 8, marginBottom: 3 }}>
                   <span
                     style={{ fontSize: 12, fontWeight: 700, color: d.gymColor }}
                   >
                     {d.gym}
                   </span>
-                  <span style={{ fontSize: 11, color: COLORS.muted }}>·</span>
-                  <span style={{ fontSize: 11, color: COLORS.textDim }}>
+                  <span style={{ fontSize: 11, color: C.muted }}>·</span>
+                  <span style={{ fontSize: 11, color: C.textDim }}>
                     {d.badminton}
                   </span>
                 </div>
-                <div
-                  style={{ fontSize: 11, color: COLORS.muted, lineHeight: 1.5 }}
-                >
+                <div style={{ fontSize: 11, color: C.muted, lineHeight: 1.5 }}>
                   {d.note}
                 </div>
               </div>
             </div>
           ))}
-
-          {/* Mesocycle note */}
           <div
             style={{
               background: "#1a1500",
               border: "1px solid #3a3000",
               borderRadius: 10,
               padding: 12,
-              margin: "16px 0",
+              margin: "12px 0",
             }}
           >
             <div
@@ -2137,67 +2408,35 @@ export default function CoachDashboard() {
                 fontSize: 12,
                 fontWeight: 700,
                 color: "#ffcc00",
-                marginBottom: 6,
+                marginBottom: 4,
               }}
             >
-              📈 HOW VARIATIONS WORK (Every 4 Weeks)
+              PROGRESSIVE OVERLOAD
             </div>
-            <div
-              style={{ fontSize: 12, color: COLORS.textDim, lineHeight: 1.7 }}
-            >
-              {workoutPlan.mesocycleNote}
-            </div>
-          </div>
-
-          <div
-            style={{
-              background: "#001a0a",
-              border: "1px solid #003a14",
-              borderRadius: 10,
-              padding: 12,
-              marginBottom: 16,
-            }}
-          >
-            <div
-              style={{
-                fontSize: 12,
-                fontWeight: 700,
-                color: COLORS.green,
-                marginBottom: 6,
-              }}
-            >
-              📈 PROGRESSIVE OVERLOAD — The only thing that actually builds
-              muscle
-            </div>
-            <div
-              style={{ fontSize: 12, color: COLORS.textDim, lineHeight: 1.7 }}
-            >
-              Every 1–2 weeks: add 2.5–5kg to the bar, OR do 1 more rep, OR
-              reduce rest by 10 seconds. Log every set. Muscle confusion is a
-              marketing myth — muscles respond to measurable stress, not
-              novelty. Keep your compounds the same for months.
+            <div style={{ fontSize: 12, color: C.textDim, lineHeight: 1.7 }}>
+              Every 1-2 weeks: add 2.5-5kg to bar, OR 1 more rep, OR reduce rest
+              by 10s. Log every set. Keep compounds same for months — swap 1-2
+              accessories every 4 weeks only.
             </div>
           </div>
-
           <div
             style={{
               fontSize: 11,
-              color: COLORS.muted,
+              color: C.muted,
+              marginBottom: 8,
               letterSpacing: 1,
-              textTransform: "uppercase",
-              marginBottom: 10,
             }}
           >
-            🏋️ Tap day to see exercises + variations
+            TAP DAY TO SEE EXERCISES
           </div>
-          {(workoutPlan.days as any[]).map((day: any, i: number) => (
+          {EXERCISES.map((day: any, i: number) => (
             <div
               key={i}
               style={{
-                background: COLORS.card,
-                border: `1px solid ${COLORS.cardBorder}`,
+                background: C.card,
+                border: `1px solid ${C.border}`,
                 borderRadius: 10,
-                marginBottom: 12,
+                marginBottom: 10,
                 overflow: "hidden",
               }}
             >
@@ -2206,7 +2445,7 @@ export default function CoachDashboard() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
-                  padding: "12px 16px",
+                  padding: "12px 14px",
                   cursor: "pointer",
                   borderLeft: `4px solid ${day.color}`,
                 }}
@@ -2214,14 +2453,9 @@ export default function CoachDashboard() {
               >
                 <div>
                   <div
-                    style={{
-                      fontSize: 11,
-                      color: COLORS.muted,
-                      marginBottom: 2,
-                      letterSpacing: 1,
-                    }}
+                    style={{ fontSize: 11, color: C.muted, marginBottom: 2 }}
                   >
-                    {day.day.toUpperCase()}
+                    {day.day}
                   </div>
                   <div
                     style={{ fontSize: 14, fontWeight: 700, color: day.color }}
@@ -2229,30 +2463,24 @@ export default function CoachDashboard() {
                     {day.type}
                   </div>
                   {day.compounds ? (
-                    <div
-                      style={{
-                        fontSize: 10,
-                        color: COLORS.muted,
-                        marginTop: 2,
-                      }}
-                    >
-                      🔒 {day.compounds}
+                    <div style={{ fontSize: 10, color: C.muted, marginTop: 2 }}>
+                      {day.compounds}
                     </div>
                   ) : null}
                 </div>
-                <div style={{ fontSize: 18, color: COLORS.muted }}>
+                <div style={{ fontSize: 16, color: C.muted }}>
                   {expandedDay === i ? "▲" : "▼"}
                 </div>
               </div>
               {expandedDay === i && (
-                <div style={{ padding: "0 16px 16px" }}>
-                  {(day.exercises as any[]).map((ex: any, j: number) => {
-                    const exKey = `${i}-${j}`;
+                <div style={{ padding: "0 14px 14px" }}>
+                  {day.exercises.map((ex: any, j: number) => {
+                    const k = i + "-" + j;
                     return (
                       <div
                         key={j}
                         style={{
-                          borderTop: `1px solid ${COLORS.cardBorder}`,
+                          borderTop: `1px solid ${C.border}`,
                           paddingTop: 10,
                           marginTop: 10,
                         }}
@@ -2261,7 +2489,6 @@ export default function CoachDashboard() {
                           style={{
                             display: "flex",
                             justifyContent: "space-between",
-                            alignItems: "flex-start",
                             marginBottom: 4,
                           }}
                         >
@@ -2275,39 +2502,49 @@ export default function CoachDashboard() {
                             >
                               {ex.name}
                             </div>
-                            {ex.tag && <ExerciseTag tag={ex.tag} />}
+                            {ex.tag ? (
+                              <span
+                                style={{
+                                  fontSize: 9,
+                                  fontWeight: 700,
+                                  padding: "2px 6px",
+                                  borderRadius: 4,
+                                  background: ex.tag.startsWith("C")
+                                    ? "#2a1a00"
+                                    : "#1a1a2a",
+                                  color: ex.tag.startsWith("C")
+                                    ? C.orange
+                                    : C.blue,
+                                }}
+                              >
+                                {ex.tag}
+                              </span>
+                            ) : null}
                           </div>
                           <div
-                            style={{
-                              display: "flex",
-                              gap: 5,
-                              flexShrink: 0,
-                              marginLeft: 8,
-                              flexWrap: "wrap",
-                              justifyContent: "flex-end",
-                            }}
+                            style={{ display: "flex", gap: 4, marginLeft: 8 }}
                           >
                             {ex.sets !== "—" && (
                               <span
                                 style={{
-                                  background: "#2a2a00",
-                                  color: COLORS.accent,
                                   fontSize: 11,
                                   padding: "2px 6px",
                                   borderRadius: 4,
+                                  background: "#2a2a00",
+                                  color: C.accent,
                                   fontWeight: 700,
                                 }}
                               >
-                                {ex.sets}×
+                                {ex.sets}x
                               </span>
                             )}
                             <span
                               style={{
-                                background: "#1a2a1a",
-                                color: COLORS.green,
                                 fontSize: 11,
                                 padding: "2px 6px",
                                 borderRadius: 4,
+                                background: "#1a2a1a",
+                                color: C.green,
                                 fontWeight: 700,
                               }}
                             >
@@ -2316,11 +2553,11 @@ export default function CoachDashboard() {
                             {ex.rest !== "—" && (
                               <span
                                 style={{
-                                  background: "#1a1a2a",
-                                  color: COLORS.blue,
                                   fontSize: 11,
                                   padding: "2px 6px",
                                   borderRadius: 4,
+                                  background: "#1a1a2a",
+                                  color: C.blue,
                                 }}
                               >
                                 {ex.rest}
@@ -2331,54 +2568,50 @@ export default function CoachDashboard() {
                         <div
                           style={{
                             fontSize: 11,
-                            color: COLORS.muted,
+                            color: C.muted,
                             fontStyle: "italic",
-                            marginTop: 4,
+                            marginBottom: 4,
                           }}
                         >
-                          💬 {ex.note}
+                          {ex.note}
                         </div>
-                        {ex.variations && ex.variations.length > 0 && (
+                        {ex.vars && ex.vars.length > 0 && (
                           <div>
                             <div
                               style={{
                                 fontSize: 11,
-                                color: COLORS.orange,
-                                marginTop: 6,
+                                color: C.orange,
                                 cursor: "pointer",
                                 fontWeight: 600,
                               }}
                               onClick={() =>
-                                setExpandedExercise(
-                                  expandedExercise === exKey ? null : exKey
-                                )
+                                setExpandedEx(expandedEx === k ? null : k)
                               }
                             >
-                              🔄 {expandedExercise === exKey ? "Hide" : "Show"}{" "}
-                              4-week variations
+                              {expandedEx === k
+                                ? "Hide variations"
+                                : "Show 4-week variations"}
                             </div>
-                            {expandedExercise === exKey && (
+                            {expandedEx === k && (
                               <div
                                 style={{
-                                  marginTop: 6,
+                                  marginTop: 4,
                                   paddingLeft: 8,
-                                  borderLeft: `2px solid ${COLORS.orange}`,
+                                  borderLeft: `2px solid ${C.orange}`,
                                 }}
                               >
-                                {(ex.variations as any[]).map(
-                                  (v: any, k: number) => (
-                                    <div
-                                      key={k}
-                                      style={{
-                                        fontSize: 11,
-                                        color: COLORS.textDim,
-                                        marginBottom: 4,
-                                      }}
-                                    >
-                                      • {v}
-                                    </div>
-                                  )
-                                )}
+                                {ex.vars.map((v: string, m: number) => (
+                                  <div
+                                    key={m}
+                                    style={{
+                                      fontSize: 11,
+                                      color: C.textDim,
+                                      marginBottom: 3,
+                                    }}
+                                  >
+                                    {v}
+                                  </div>
+                                ))}
                               </div>
                             )}
                           </div>
@@ -2393,60 +2626,43 @@ export default function CoachDashboard() {
         </div>
       )}
 
-      {/* TAB: MEALS */}
+      {/* MEALS TAB */}
       {activeTab === 2 && (
         <div>
-          {/* Day type selector for meals */}
-          <div style={{ marginBottom: 16 }}>
+          <div style={{ marginBottom: 12 }}>
             <div
               style={{
                 fontSize: 11,
-                color: COLORS.muted,
+                color: C.muted,
+                marginBottom: 8,
                 letterSpacing: 1,
-                textTransform: "uppercase",
-                marginBottom: 10,
               }}
             >
-              What day is it?
+              SELECT DAY
             </div>
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-              {mealDayTypes.map((d: any, i: number) => (
+            <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
+              {MEAL_DAYS.map((d: any, i: number) => (
                 <button
                   key={i}
-                  onClick={() => setMealDayType(i)}
-                  style={{
-                    padding: "8px 12px",
-                    borderRadius: 8,
-                    border: `1px solid ${
-                      mealDayType === i ? COLORS.accent : COLORS.cardBorder
-                    }`,
-                    background: mealDayType === i ? "#1a1a00" : COLORS.card,
-                    color: mealDayType === i ? COLORS.accent : COLORS.textDim,
-                    cursor: "pointer",
-                    fontSize: 12,
-                    fontWeight: mealDayType === i ? 700 : 400,
-                    textAlign: "left" as const,
-                  }}
+                  onClick={() => setMealDay(i)}
+                  style={btn(mealDay === i)}
                 >
-                  <div>{d.label}</div>
-                  <div
-                    style={{ fontSize: 10, color: COLORS.muted, marginTop: 2 }}
-                  >
+                  <div style={{ fontSize: 12, fontWeight: 700 }}>{d.label}</div>
+                  <div style={{ fontSize: 10, color: C.muted, marginTop: 1 }}>
                     {d.sub}
                   </div>
                 </button>
               ))}
             </div>
           </div>
-
-          {/* Day-specific macro banner */}
+          {/* Macro banner */}
           <div
             style={{
               background: "#1a1a00",
-              border: `1px solid ${COLORS.accentDim}`,
+              border: `1px solid ${C.dim}`,
               borderRadius: 10,
-              padding: "12px 14px",
-              marginBottom: 16,
+              padding: "10px 12px",
+              marginBottom: 12,
             }}
           >
             <div
@@ -2454,495 +2670,172 @@ export default function CoachDashboard() {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                marginBottom: 10,
+                marginBottom: 8,
               }}
             >
               <div>
-                <div
-                  style={{ fontSize: 11, color: COLORS.muted, marginBottom: 2 }}
-                >
-                  Today's target
+                <div style={{ fontSize: 11, color: C.muted, marginBottom: 2 }}>
+                  Today target
                 </div>
-                <div
-                  style={{
-                    fontSize: 20,
-                    fontWeight: 800,
-                    color: COLORS.accent,
-                  }}
-                >
-                  {mealDayTypes[mealDayType].cal}
+                <div style={{ fontSize: 20, fontWeight: 800, color: C.accent }}>
+                  {MEAL_DAYS[mealDay].cal}
                 </div>
               </div>
               <div
                 style={{
                   fontSize: 11,
-                  color: COLORS.textDim,
+                  color: C.textDim,
                   maxWidth: "50%",
-                  textAlign: "right" as const,
+                  textAlign: "right",
                   lineHeight: 1.5,
                 }}
               >
-                {mealDayTypes[mealDayType].note}
+                {MEAL_DAYS[mealDay].note}
               </div>
             </div>
-            <div style={{ display: "flex", gap: 8 }}>
+            <div style={{ display: "flex", gap: 6 }}>
               {[
-                {
-                  label: "Protein",
-                  val: mealDayTypes[mealDayType].protein,
-                  col: COLORS.green,
-                },
-                {
-                  label: "Carbs",
-                  val: mealDayTypes[mealDayType].carbs,
-                  col: COLORS.blue,
-                },
-                {
-                  label: "Fat",
-                  val: mealDayTypes[mealDayType].fat,
-                  col: COLORS.orange,
-                },
-                {
-                  label: "Fiber",
-                  val: mealDayTypes[mealDayType].fiber,
-                  col: "#c47aff",
-                },
+                { l: "Protein", v: MEAL_DAYS[mealDay].protein, c: C.green },
+                { l: "Carbs", v: MEAL_DAYS[mealDay].carbs, c: C.blue },
+                { l: "Fat", v: MEAL_DAYS[mealDay].fat, c: C.orange },
+                { l: "Fiber", v: MEAL_DAYS[mealDay].fiber, c: C.purple },
               ].map((m: any, i: number) => (
                 <div
                   key={i}
                   style={{
-                    background: COLORS.card,
+                    background: C.card,
                     borderRadius: 6,
-                    padding: "6px 8px",
+                    padding: "5px 8px",
                     flex: 1,
-                    textAlign: "center" as const,
+                    textAlign: "center",
                   }}
                 >
                   <div
-                    style={{
-                      fontSize: 10,
-                      color: COLORS.muted,
-                      marginBottom: 2,
-                    }}
+                    style={{ fontSize: 10, color: C.muted, marginBottom: 2 }}
                   >
-                    {m.label}
+                    {m.l}
                   </div>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: m.col }}>
-                    {m.val}
+                  <div style={{ fontSize: 13, fontWeight: 700, color: m.c }}>
+                    {m.v}
                   </div>
                 </div>
               ))}
             </div>
           </div>
-
-          {/* Day-specific breakfast swap */}
-          {mealDayType === 2 && (
+          {/* Meal cards */}
+          {currentMeals.map((meal: any, i: number) => (
             <div
+              key={i}
               style={{
-                background: "#1a1000",
-                border: "1px solid #3a2000",
+                background: C.card,
+                border: `1px solid ${C.border}`,
+                borderLeft: `4px solid ${meal.color}`,
                 borderRadius: 10,
                 padding: "12px 14px",
-                marginBottom: 16,
+                marginBottom: 10,
               }}
             >
+              <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 8 }}>
+                {meal.label}
+              </div>
+              {meal.items.map((item: string, j: number) => (
+                <div
+                  key={j}
+                  style={{
+                    fontSize: 12,
+                    color: C.textDim,
+                    marginBottom: 4,
+                    paddingLeft: 10,
+                    borderLeft: `2px solid ${C.border}`,
+                  }}
+                >
+                  {item}
+                </div>
+              ))}
               <div
                 style={{
-                  fontSize: 12,
-                  fontWeight: 700,
-                  color: COLORS.orange,
-                  marginBottom: 6,
+                  marginTop: 8,
+                  fontSize: 11,
+                  color: meal.color,
+                  background: meal.color + "18",
+                  padding: "6px 10px",
+                  borderRadius: 6,
+                  lineHeight: 1.6,
                 }}
               >
-                ⚠️ Thu Breakfast Change — Skip Big Shake
-              </div>
-              <div
-                style={{ fontSize: 12, color: COLORS.textDim, lineHeight: 1.7 }}
-              >
-                No gym this morning. Replace power shake with:{" "}
-                <span style={{ color: COLORS.accent }}>
-                  1 banana + 1 scoop whey in water + soaked almonds + soaked
-                  walnuts
-                </span>
-                . ~280 kcal. Still add creatine — mix into the whey water. Don't
-                skip it on rest days.
+                {meal.why}
               </div>
             </div>
-          )}
-          {mealDayType === 3 && (
-            <div
-              style={{
-                background: "#1a1000",
-                border: "1px solid #3a2000",
-                borderRadius: 10,
-                padding: "12px 14px",
-                marginBottom: 16,
-              }}
-            >
-              <div
-                style={{
-                  fontSize: 12,
-                  fontWeight: 700,
-                  color: COLORS.orange,
-                  marginBottom: 6,
-                }}
-              >
-                😴 Sat — Full Rest Day Breakfast
-              </div>
-              <div
-                style={{ fontSize: 12, color: COLORS.textDim, lineHeight: 1.7 }}
-              >
-                No shake. Have:{" "}
-                <span style={{ color: COLORS.accent }}>
-                  2 rotis + dahi + 1 fruit OR poha + dahi
-                </span>
-                . ~350 kcal. Sit down, enjoy it slowly. Still take creatine —
-                mix into a glass of water or milk.
-              </div>
-            </div>
-          )}
-
-          {/* Cheat Meal Card — Sat only */}
-          {mealDayType === 3 && (
+          ))}
+          {/* Sat cheat guide */}
+          {mealDay === 5 && (
             <div
               style={{
                 background: "#1a0a1a",
                 border: "1px solid #7a1a7a",
                 borderRadius: 10,
-                padding: "14px 16px",
-                marginBottom: 16,
+                padding: 14,
+                marginBottom: 12,
               }}
             >
               <div
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  marginBottom: 10,
+                  fontSize: 14,
+                  fontWeight: 700,
+                  color: "#e87aff",
+                  marginBottom: 4,
                 }}
               >
-                <span style={{ fontSize: 20 }}>🍕</span>
-                <div>
-                  <div
-                    style={{ fontSize: 14, fontWeight: 700, color: "#e87aff" }}
-                  >
-                    Cheat Meal — Any One Meal, Any Time (Sat Only)
-                  </div>
-                  <div style={{ fontSize: 11, color: COLORS.muted }}>
-                    Breakfast, lunch or dinner — your call. Other two meals stay
-                    clean.
-                  </div>
-                </div>
+                Cheat Meal Guide — Any One Meal
               </div>
-
-              <div
-                style={{
-                  fontSize: 11,
-                  color: COLORS.muted,
-                  letterSpacing: 1,
-                  textTransform: "uppercase",
-                  marginBottom: 8,
-                }}
-              >
-                ✅ Green Light — Eat Freely
+              <div style={{ fontSize: 11, color: C.muted, marginBottom: 10 }}>
+                Breakfast, lunch, or dinner — your choice. Other two stay clean.
               </div>
-              {[
-                { item: "Chole Bhature", note: "Classic. Go for it." },
-                {
-                  item: "Veg Biryani",
-                  note: "Rice + spices + veggies = comfort perfection.",
-                },
-                {
-                  item: "Pizza (2–3 slices)",
-                  note: "Fine. 6 slices is a problem. 2–3 is a treat.",
-                },
-                {
-                  item: "Burger / Veg Zinger",
-                  note: "Fine. Skip the triple extra fries.",
-                },
-                {
-                  item: "Samosa / Kachori (2–3)",
-                  note: "With chai. Don't go overboard.",
-                },
-                {
-                  item: "Paneer Tikka / Tandoori",
-                  note: "Actually high protein — barely a cheat.",
-                },
-                {
-                  item: "Pasta / Mac & Cheese",
-                  note: "Carb heavy but fine once a week.",
-                },
-                {
-                  item: "Pani Puri / Papdi Chaat",
-                  note: "Light, fun, won't wreck anything.",
-                },
-                {
-                  item: "Gulab Jamun / Rasgulla (2 pcs)",
-                  note: "Dessert is allowed. 2 pieces, not the full bowl.",
-                },
-              ].map((c: any, i: number) => (
+              {CHEAT_FOODS.map((f: any, i: number) => (
                 <div
                   key={i}
-                  style={{
-                    display: "flex",
-                    gap: 10,
-                    marginBottom: 6,
-                    alignItems: "flex-start",
-                  }}
-                >
-                  <span
-                    style={{ color: COLORS.green, flexShrink: 0, fontSize: 12 }}
-                  >
-                    ✓
-                  </span>
-                  <div>
-                    <span
-                      style={{
-                        fontSize: 12,
-                        fontWeight: 600,
-                        color: COLORS.text,
-                      }}
-                    >
-                      {c.item}{" "}
-                    </span>
-                    <span style={{ fontSize: 11, color: COLORS.muted }}>
-                      {c.note}
-                    </span>
-                  </div>
-                </div>
-              ))}
-
-              <div
-                style={{
-                  fontSize: 11,
-                  color: COLORS.muted,
-                  letterSpacing: 1,
-                  textTransform: "uppercase",
-                  marginBottom: 8,
-                  marginTop: 14,
-                }}
-              >
-                ⚠️ Yellow Flag — Be Careful
-              </div>
-              {[
-                {
-                  item: "Alcohol",
-                  note: "Max 2 drinks. Ruins sleep quality + muscle recovery more than any food cheat. Extra 500ml water if you drink.",
-                },
-                {
-                  item: "Eating junk all day",
-                  note: "One cheat MEAL not a cheat DAY. Breakfast + lunch + dinner all junk = a real problem.",
-                },
-                {
-                  item: "Cold drinks / packaged juices",
-                  note: "Pure empty sugar. Have the real food instead.",
-                },
-              ].map((c: any, i: number) => (
-                <div
-                  key={i}
-                  style={{
-                    display: "flex",
-                    gap: 10,
-                    marginBottom: 6,
-                    alignItems: "flex-start",
-                  }}
+                  style={{ display: "flex", gap: 8, marginBottom: 6 }}
                 >
                   <span
                     style={{
-                      color: COLORS.orange,
+                      color: f.ok ? C.green : C.red,
                       flexShrink: 0,
                       fontSize: 12,
                     }}
                   >
-                    ⚠
+                    {f.ok ? "v" : "x"}
                   </span>
                   <div>
-                    <span
-                      style={{
-                        fontSize: 12,
-                        fontWeight: 600,
-                        color: COLORS.text,
-                      }}
-                    >
-                      {c.item}{" "}
+                    <span style={{ fontSize: 12, fontWeight: 600 }}>
+                      {f.item}{" "}
                     </span>
-                    <span style={{ fontSize: 11, color: COLORS.muted }}>
-                      {c.note}
+                    <span style={{ fontSize: 11, color: C.muted }}>
+                      {f.note}
                     </span>
                   </div>
                 </div>
               ))}
-
-              <div
-                style={{
-                  fontSize: 11,
-                  color: COLORS.muted,
-                  letterSpacing: 1,
-                  textTransform: "uppercase",
-                  marginBottom: 8,
-                  marginTop: 14,
-                }}
-              >
-                ❌ Still Don't Do These
-              </div>
-              {[
-                "Skip creatine — still 5g in water, takes 10 seconds",
-                "Skip protein entirely — have dal / dahi / paneer somewhere in the day",
-                "Alcohol + skip sleep — wrecks Sunday morning badminton completely",
-              ].map((c: any, i: number) => (
-                <div
-                  key={i}
-                  style={{
-                    display: "flex",
-                    gap: 10,
-                    marginBottom: 6,
-                    alignItems: "flex-start",
-                  }}
-                >
-                  <span
-                    style={{ color: COLORS.red, flexShrink: 0, fontSize: 12 }}
-                  >
-                    ✗
-                  </span>
-                  <span style={{ fontSize: 12, color: COLORS.textDim }}>
-                    {c}
-                  </span>
-                </div>
-              ))}
-
-              <div
-                style={{
-                  marginTop: 12,
-                  background: "#0f0a0f",
-                  borderRadius: 8,
-                  padding: "10px 12px",
-                  fontSize: 12,
-                  color: "#e87aff",
-                  lineHeight: 1.7,
-                }}
-              >
-                💜 One cheat meal per week will NOT derail your progress. It
-                resets leptin levels and keeps you sane long-term. People who
-                try to be 100% perfect every day are the ones who quit after 3
-                weeks. Enjoy Saturday.
-              </div>
             </div>
           )}
-          {mealDayType === 4 && (
-            <div
-              style={{
-                background: "#1a1000",
-                border: "1px solid #3a2000",
-                borderRadius: 10,
-                padding: "12px 14px",
-                marginBottom: 16,
-              }}
-            >
-              <div
-                style={{
-                  fontSize: 12,
-                  fontWeight: 700,
-                  color: COLORS.orange,
-                  marginBottom: 6,
-                }}
-              >
-                🏸 Sun — Pre-Badminton Light Breakfast (eat by 07:45)
-              </div>
-              <div
-                style={{ fontSize: 12, color: COLORS.textDim, lineHeight: 1.7 }}
-              >
-                Badminton at 9am = eat 90 min before = 07:30–07:45. Have:{" "}
-                <span style={{ color: COLORS.accent }}>
-                  150g Skyr yogurt + 1 banana (or 2 baby bananas)
-                </span>
-                . ~230 kcal. NO nuts before court — fat digests too slowly,
-                makes legs heavy. Creatine mixed into yogurt.
-              </div>
-            </div>
-          )}
-
-          {/* Meals */}
-          {(mealPlan.meals as any[])
-            .filter(
-              (meal: any) => !meal.showOn || meal.showOn.includes(mealDayType)
-            )
-            .map((meal: any, i: number) => (
-              <div
-                key={i}
-                style={{
-                  background: COLORS.card,
-                  border: `1px solid ${COLORS.cardBorder}`,
-                  borderLeft: `4px solid ${meal.color}`,
-                  borderRadius: 10,
-                  padding: "14px 16px",
-                  marginBottom: 14,
-                }}
-              >
-                <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 8 }}>
-                  {meal.icon} {meal.label}
-                </div>
-                <ul style={{ margin: 0, paddingLeft: 16 }}>
-                  {meal.items.map((item: any, j: number) => (
-                    <li
-                      key={j}
-                      style={{
-                        fontSize: 12,
-                        color: COLORS.textDim,
-                        marginBottom: 4,
-                        lineHeight: 1.6,
-                      }}
-                    >
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <div
-                  style={{
-                    marginTop: 10,
-                    fontSize: 11,
-                    color: meal.color,
-                    background: `${meal.color}15`,
-                    padding: "6px 10px",
-                    borderRadius: 6,
-                    lineHeight: 1.6,
-                  }}
-                >
-                  🧠 {meal.why}
-                </div>
-              </div>
-            ))}
-
-          {/* Dal Rotation */}
-          <div style={{ marginTop: 20, marginBottom: 20 }}>
+          {/* Variety rotation */}
+          <div style={{ marginTop: 14 }}>
             <div
               style={{
                 fontSize: 11,
-                color: COLORS.muted,
+                color: C.muted,
+                marginBottom: 8,
                 letterSpacing: 1,
-                textTransform: "uppercase",
-                marginBottom: 4,
               }}
             >
-              🫘 Dal Rotation — One Per Day
+              VARIETY ROTATION — 3 DAYS/WEEK
             </div>
-            <div
-              style={{
-                fontSize: 11,
-                color: COLORS.muted,
-                marginBottom: 12,
-                lineHeight: 1.6,
-              }}
-            >
-              Rotating dals weekly gives you different proteins, amino acids,
-              and micronutrients. Never eat the same dal every day.
-            </div>
-            {(mealPlan.dalRotation as any[]).map((d: any, i: number) => (
+            {VARIETY_ROTATION.map((v: any, i: number) => (
               <div
                 key={i}
                 style={{
-                  background: COLORS.card,
-                  border: `1px solid ${COLORS.cardBorder}`,
-                  borderLeft: `4px solid ${COLORS.orange}`,
+                  background: C.card,
+                  border: `1px solid ${C.border}`,
+                  borderLeft: `4px solid ${C.accent}`,
                   borderRadius: 10,
                   padding: "12px 14px",
                   marginBottom: 10,
@@ -2952,8 +2845,111 @@ export default function CoachDashboard() {
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
-                    alignItems: "center",
+                    alignItems: "flex-start",
                     marginBottom: 6,
+                  }}
+                >
+                  <div>
+                    <div
+                      style={{
+                        fontSize: 11,
+                        color: C.accent,
+                        fontWeight: 700,
+                        marginBottom: 2,
+                      }}
+                    >
+                      {v.day} · {v.meal}
+                    </div>
+                    <div style={{ fontSize: 14, fontWeight: 700 }}>
+                      {v.dish}
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 10,
+                      background: "#1a1a00",
+                      color: C.accent,
+                      padding: "2px 8px",
+                      borderRadius: 4,
+                      marginLeft: 8,
+                      flexShrink: 0,
+                    }}
+                  >
+                    {v.macros.split("|")[0]}
+                  </div>
+                </div>
+                <div
+                  style={{
+                    fontSize: 11,
+                    color: C.green,
+                    background: "#001a00",
+                    padding: "5px 8px",
+                    borderRadius: 6,
+                    marginBottom: 4,
+                    lineHeight: 1.5,
+                  }}
+                >
+                  {v.restaurant}
+                </div>
+                <div
+                  style={{
+                    fontSize: 11,
+                    color: C.blue,
+                    background: "#001020",
+                    padding: "5px 8px",
+                    borderRadius: 6,
+                    marginBottom: 4,
+                    lineHeight: 1.5,
+                  }}
+                >
+                  {v.zomato}
+                </div>
+                <div
+                  style={{
+                    fontSize: 11,
+                    color: C.muted,
+                    background: "#0a0a00",
+                    padding: "5px 8px",
+                    borderRadius: 6,
+                    marginBottom: 4,
+                    lineHeight: 1.5,
+                  }}
+                >
+                  {v.order}
+                </div>
+                <div style={{ fontSize: 10, color: C.textDim }}>{v.macros}</div>
+              </div>
+            ))}
+          </div>
+          {/* Dal rotation */}
+          <div style={{ marginTop: 14 }}>
+            <div
+              style={{
+                fontSize: 11,
+                color: C.muted,
+                marginBottom: 8,
+                letterSpacing: 1,
+              }}
+            >
+              DAL ROTATION — ONE PER DAY
+            </div>
+            {DAL_ROTATION.map((d: any, i: number) => (
+              <div
+                key={i}
+                style={{
+                  background: C.card,
+                  border: `1px solid ${C.border}`,
+                  borderLeft: `4px solid ${C.orange}`,
+                  borderRadius: 10,
+                  padding: "10px 12px",
+                  marginBottom: 8,
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    marginBottom: 4,
                   }}
                 >
                   <div style={{ fontSize: 13, fontWeight: 700 }}>
@@ -2961,191 +2957,130 @@ export default function CoachDashboard() {
                   </div>
                   <span
                     style={{
-                      background: "#2a1a00",
-                      color: COLORS.orange,
                       fontSize: 10,
-                      fontWeight: 700,
+                      background: "#2a1a00",
+                      color: C.orange,
                       padding: "2px 8px",
                       borderRadius: 4,
-                      flexShrink: 0,
-                      marginLeft: 8,
                     }}
                   >
                     {d.protein}
                   </span>
                 </div>
                 <div
-                  style={{
-                    fontSize: 11,
-                    color: COLORS.textDim,
-                    marginBottom: 6,
-                    lineHeight: 1.5,
-                  }}
+                  style={{ fontSize: 11, color: C.textDim, marginBottom: 4 }}
                 >
-                  💡 {d.why}
+                  {d.why}
                 </div>
                 <div
                   style={{
                     fontSize: 11,
-                    color: COLORS.muted,
+                    color: C.muted,
                     background: "#1a1200",
-                    padding: "6px 8px",
+                    padding: "5px 8px",
                     borderRadius: 6,
-                    lineHeight: 1.6,
                   }}
                 >
-                  🍳 {d.cook}
+                  {d.cook}
                 </div>
               </div>
             ))}
           </div>
-
-          {/* Sabzi Rotation */}
-          <div style={{ marginBottom: 20 }}>
+          {/* Sabzi rotation */}
+          <div style={{ marginTop: 14 }}>
             <div
               style={{
                 fontSize: 11,
-                color: COLORS.muted,
+                color: C.muted,
+                marginBottom: 8,
                 letterSpacing: 1,
-                textTransform: "uppercase",
-                marginBottom: 4,
               }}
             >
-              🥬 Sabzi Rotation — One Per Day
+              SABZI ROTATION — ONE PER DAY
             </div>
-            <div
-              style={{
-                fontSize: 11,
-                color: COLORS.muted,
-                marginBottom: 12,
-                lineHeight: 1.6,
-              }}
-            >
-              Each sabzi chosen for specific nutritional purpose. Seasonal swaps
-              shown below each — use whatever is fresh and available in the
-              market.
-            </div>
-            {(mealPlan.sabziRotation as any[]).map((s: any, i: number) => (
+            {SABZI_ROTATION.map((s: any, i: number) => (
               <div
                 key={i}
                 style={{
-                  background: COLORS.card,
-                  border: `1px solid ${COLORS.cardBorder}`,
-                  borderLeft: `4px solid ${COLORS.green}`,
+                  background: C.card,
+                  border: `1px solid ${C.border}`,
+                  borderLeft: `4px solid ${C.green}`,
                   borderRadius: 10,
-                  padding: "12px 14px",
-                  marginBottom: 10,
+                  padding: "10px 12px",
+                  marginBottom: 8,
                 }}
               >
-                <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 6 }}>
+                <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 4 }}>
                   {s.day}: {s.sabzi}
                 </div>
                 <div
+                  style={{ fontSize: 11, color: C.textDim, marginBottom: 4 }}
+                >
+                  {s.why}
+                </div>
+                <div
                   style={{
                     fontSize: 11,
-                    color: COLORS.textDim,
-                    marginBottom: 6,
+                    color: C.muted,
+                    background: "#001a00",
+                    padding: "5px 8px",
+                    borderRadius: 6,
+                    marginBottom: 4,
+                  }}
+                >
+                  {s.cook}
+                </div>
+                <div
+                  style={{
+                    fontSize: 11,
+                    color: C.green,
+                    background: "#001500",
+                    padding: "4px 8px",
+                    borderRadius: 6,
+                    marginBottom: 4,
+                  }}
+                >
+                  {s.seasons.avail}
+                </div>
+                <div
+                  style={{
+                    fontSize: 11,
+                    color: "#ffcc00",
+                    background: "#1a1200",
+                    padding: "4px 8px",
+                    borderRadius: 6,
                     lineHeight: 1.5,
                   }}
                 >
-                  💡 {s.why}
+                  {s.seasons.alt}
                 </div>
-                <div
-                  style={{
-                    fontSize: 11,
-                    color: COLORS.muted,
-                    background: "#001a00",
-                    padding: "6px 8px",
-                    borderRadius: 6,
-                    lineHeight: 1.6,
-                    marginBottom: 6,
-                  }}
-                >
-                  🍳 {s.cook}
-                </div>
-                {s.seasons && (
-                  <div>
-                    <div
-                      style={{
-                        fontSize: 11,
-                        color: COLORS.green,
-                        background: "#001a00",
-                        padding: "5px 8px",
-                        borderRadius: 6,
-                        marginBottom: 4,
-                        lineHeight: 1.5,
-                      }}
-                    >
-                      ✅ {s.seasons.available}
-                    </div>
-                    {s.seasons.summer && (
-                      <div
-                        style={{
-                          fontSize: 11,
-                          color: "#ffcc00",
-                          background: "#1a1200",
-                          padding: "5px 8px",
-                          borderRadius: 6,
-                          marginBottom: 4,
-                          lineHeight: 1.6,
-                        }}
-                      >
-                        {s.seasons.summer}
-                      </div>
-                    )}
-                    {s.seasons.winter && (
-                      <div
-                        style={{
-                          fontSize: 11,
-                          color: "#88ccff",
-                          background: "#001020",
-                          padding: "5px 8px",
-                          borderRadius: 6,
-                          lineHeight: 1.6,
-                        }}
-                      >
-                        {s.seasons.winter}
-                      </div>
-                    )}
-                  </div>
-                )}
               </div>
             ))}
           </div>
-
           {/* Calorie cycling */}
-          <div style={{ marginTop: 8 }}>
+          <div style={{ marginTop: 14 }}>
             <div
               style={{
                 fontSize: 11,
-                color: COLORS.muted,
+                color: C.muted,
+                marginBottom: 8,
                 letterSpacing: 1,
-                textTransform: "uppercase",
-                marginBottom: 10,
               }}
             >
-              🔄 Calorie Cycling by Day Type
+              CALORIE CYCLING BY DAY TYPE
             </div>
-            {(mealPlan.calorieCycling as any[]).map((c: any, i: number) => (
-              <div
-                key={i}
-                style={{
-                  display: "flex",
-                  gap: 10,
-                  marginBottom: 8,
-                  alignItems: "center",
-                }}
-              >
+            {CALORIE_CYCLING.map((c: any, i: number) => (
+              <div key={i} style={{ display: "flex", gap: 8, marginBottom: 8 }}>
                 <div
                   style={{
-                    background: COLORS.accent,
-                    color: COLORS.bg,
+                    background: C.accent,
+                    color: C.bg,
                     borderRadius: 6,
                     padding: "4px 10px",
                     fontSize: 11,
                     fontWeight: 800,
                     flexShrink: 0,
-                    minWidth: 60,
+                    minWidth: 68,
                     textAlign: "center",
                   }}
                 >
@@ -3153,10 +3088,10 @@ export default function CoachDashboard() {
                 </div>
                 <div
                   style={{
-                    background: COLORS.card,
-                    border: `1px solid ${COLORS.cardBorder}`,
+                    background: C.card,
+                    border: `1px solid ${C.border}`,
                     borderRadius: 8,
-                    padding: "8px 12px",
+                    padding: "8px 10px",
                     flex: 1,
                   }}
                 >
@@ -3165,18 +3100,15 @@ export default function CoachDashboard() {
                   >
                     {c.day}
                   </div>
-                  <div style={{ fontSize: 11, color: COLORS.muted }}>
-                    {c.note}
-                  </div>
+                  <div style={{ fontSize: 11, color: C.muted }}>{c.note}</div>
                 </div>
               </div>
             ))}
           </div>
-
           {/* Avoid */}
           <div
             style={{
-              marginTop: 20,
+              marginTop: 14,
               background: "#1a0000",
               border: "1px solid #3a0000",
               borderRadius: 10,
@@ -3187,25 +3119,25 @@ export default function CoachDashboard() {
               style={{
                 fontSize: 12,
                 fontWeight: 700,
-                color: COLORS.red,
-                marginBottom: 10,
+                color: C.red,
+                marginBottom: 8,
               }}
             >
-              🚫 AVOID (These kill progress)
+              AVOID — These Kill Progress
             </div>
-            {(mealPlan.avoid as any[]).map((a: any, i: number) => (
+            {AVOID.map((a: string, i: number) => (
               <div
                 key={i}
                 style={{
-                  fontSize: 12,
-                  color: COLORS.textDim,
-                  marginBottom: 7,
                   display: "flex",
                   gap: 8,
+                  marginBottom: 6,
+                  fontSize: 12,
+                  color: C.textDim,
                   lineHeight: 1.5,
                 }}
               >
-                <span style={{ color: COLORS.red, flexShrink: 0 }}>✗</span>
+                <span style={{ color: C.red, flexShrink: 0 }}>x</span>
                 <span>{a}</span>
               </div>
             ))}
@@ -3213,7 +3145,7 @@ export default function CoachDashboard() {
         </div>
       )}
 
-      {/* TAB: SLEEP */}
+      {/* SLEEP TAB */}
       {activeTab === 3 && (
         <div>
           <div
@@ -3222,7 +3154,7 @@ export default function CoachDashboard() {
               border: "1px solid #1a1a3a",
               borderRadius: 10,
               padding: 14,
-              marginBottom: 20,
+              marginBottom: 14,
             }}
           >
             <div
@@ -3233,63 +3165,40 @@ export default function CoachDashboard() {
                 marginBottom: 6,
               }}
             >
-              😴 Sleep is where you actually build muscle and lose fat
+              Sleep is where you build muscle and lose fat
             </div>
-            <div
-              style={{ fontSize: 12, color: COLORS.textDim, lineHeight: 1.7 }}
-            >
-              You can train perfectly and eat perfectly — but sleeping 5–6 hours
-              cuts your results by ~40%. Growth hormone, testosterone, and
-              muscle protein synthesis all peak during deep sleep. Target:{" "}
-              <span style={{ color: COLORS.accent, fontWeight: 700 }}>
-                23:00 → 07:30 = 7.5 hours = 5 full sleep cycles
+            <div style={{ fontSize: 12, color: C.textDim, lineHeight: 1.7 }}>
+              Train perfectly and eat perfectly — but sleeping 5-6 hours cuts
+              results by ~40%. Target:{" "}
+              <span style={{ color: C.accent, fontWeight: 700 }}>
+                23:00 to 07:30 = 7.5 hrs = 5 full sleep cycles
               </span>
-              .
             </div>
           </div>
-          {(sleepProtocol as any[]).map((item: any, i: number) => (
+          {SLEEP_PROTOCOL.map((item: any, i: number) => (
             <div
               key={i}
               style={{
-                background: COLORS.card,
-                border: `1px solid ${COLORS.cardBorder}`,
+                background: C.card,
+                border: `1px solid ${C.border}`,
                 borderRadius: 10,
                 padding: "12px 14px",
-                marginBottom: 12,
+                marginBottom: 10,
                 display: "flex",
                 gap: 12,
               }}
             >
-              <div style={{ fontSize: 22, flexShrink: 0 }}>{item.icon}</div>
+              <div style={{ minWidth: 48, textAlign: "center" }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: C.accent }}>
+                  {item.time}
+                </div>
+              </div>
               <div>
-                <div
-                  style={{
-                    display: "flex",
-                    gap: 8,
-                    alignItems: "center",
-                    marginBottom: 4,
-                    flexWrap: "wrap",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: 12,
-                      fontWeight: 700,
-                      color: COLORS.accent,
-                    }}
-                  >
-                    {item.time}
-                  </span>
-                  <span style={{ fontSize: 13, fontWeight: 700 }}>
-                    {item.action}
-                  </span>
+                <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 4 }}>
+                  {item.action}
                 </div>
                 <div
-                  style={{
-                    fontSize: 12,
-                    color: COLORS.textDim,
-                    lineHeight: 1.6,
-                  }}
+                  style={{ fontSize: 12, color: C.textDim, lineHeight: 1.6 }}
                 >
                   {item.why}
                 </div>
@@ -3302,36 +3211,31 @@ export default function CoachDashboard() {
               border: "1px solid #3a1a00",
               borderRadius: 10,
               padding: 14,
-              marginTop: 4,
+              marginTop: 8,
             }}
           >
             <div
               style={{
                 fontSize: 12,
                 fontWeight: 700,
-                color: COLORS.orange,
+                color: C.orange,
                 marginBottom: 8,
               }}
             >
-              📚 Books for Night Reading (Start with These)
+              Books for Night Reading
             </div>
-            {[
-              "Atomic Habits — James Clear (literally about building this exact system you're starting)",
-              "Shoe Dog — Phil Knight (engaging non-fiction, no stress before bed)",
-              "A Man Called Ove — Fredrik Backman (light fiction, absorbing)",
-              "The Psychology of Money — Morgan Housel (short chapters, perfect for before bed)",
-            ].map((b: any, i: number) => (
+            {BOOKS.map((b: string, i: number) => (
               <div
                 key={i}
                 style={{
                   fontSize: 12,
-                  color: COLORS.textDim,
-                  marginBottom: 7,
+                  color: C.textDim,
+                  marginBottom: 6,
                   display: "flex",
                   gap: 8,
                 }}
               >
-                <span style={{ color: COLORS.orange, flexShrink: 0 }}>→</span>
+                <span style={{ color: C.orange, flexShrink: 0 }}>-</span>
                 {b}
               </div>
             ))}
@@ -3339,50 +3243,43 @@ export default function CoachDashboard() {
         </div>
       )}
 
-      {/* TAB: GOALS */}
+      {/* GOALS TAB */}
       {activeTab === 4 && (
         <div>
           <div
             style={{
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
-              gap: 12,
-              marginBottom: 20,
+              gap: 10,
+              marginBottom: 14,
             }}
           >
             <div
               style={{
-                background: COLORS.card,
-                border: `1px solid ${COLORS.cardBorder}`,
+                background: C.card,
+                border: `1px solid ${C.border}`,
                 borderRadius: 10,
-                padding: 14,
+                padding: 12,
               }}
             >
               <div
                 style={{
                   fontSize: 11,
-                  color: COLORS.muted,
+                  color: C.muted,
+                  marginBottom: 8,
                   letterSpacing: 1,
-                  textTransform: "uppercase",
-                  marginBottom: 10,
                 }}
               >
-                📍 Right Now
+                RIGHT NOW
               </div>
-              {Object.entries(stats.current).map(([k, v]: [string, any]) => (
-                <div key={k} style={{ marginBottom: 8 }}>
+              {Object.entries(STATS_CURRENT).map(([k, v]: [string, string]) => (
+                <div key={k} style={{ marginBottom: 6 }}>
                   <div
-                    style={{
-                      fontSize: 10,
-                      color: COLORS.muted,
-                      marginBottom: 1,
-                    }}
+                    style={{ fontSize: 10, color: C.muted, marginBottom: 1 }}
                   >
                     {k}
                   </div>
-                  <div
-                    style={{ fontSize: 13, fontWeight: 700, color: COLORS.red }}
-                  >
+                  <div style={{ fontSize: 13, fontWeight: 700, color: C.red }}>
                     {v}
                   </div>
                 </div>
@@ -3390,40 +3287,31 @@ export default function CoachDashboard() {
             </div>
             <div
               style={{
-                background: COLORS.card,
-                border: `1px solid ${COLORS.cardBorder}`,
+                background: C.card,
+                border: `1px solid ${C.border}`,
                 borderRadius: 10,
-                padding: 14,
+                padding: 12,
               }}
             >
               <div
                 style={{
                   fontSize: 11,
-                  color: COLORS.muted,
+                  color: C.muted,
+                  marginBottom: 8,
                   letterSpacing: 1,
-                  textTransform: "uppercase",
-                  marginBottom: 10,
                 }}
               >
-                🎯 Target
+                TARGET
               </div>
-              {Object.entries(stats.targets).map(([k, v]: [string, any]) => (
-                <div key={k} style={{ marginBottom: 8 }}>
+              {Object.entries(STATS_TARGET).map(([k, v]: [string, string]) => (
+                <div key={k} style={{ marginBottom: 6 }}>
                   <div
-                    style={{
-                      fontSize: 10,
-                      color: COLORS.muted,
-                      marginBottom: 1,
-                    }}
+                    style={{ fontSize: 10, color: C.muted, marginBottom: 1 }}
                   >
                     {k}
                   </div>
                   <div
-                    style={{
-                      fontSize: 13,
-                      fontWeight: 700,
-                      color: COLORS.green,
-                    }}
+                    style={{ fontSize: 13, fontWeight: 700, color: C.green }}
                   >
                     {v}
                   </div>
@@ -3431,92 +3319,37 @@ export default function CoachDashboard() {
               ))}
             </div>
           </div>
-
-          <div style={{ marginBottom: 20 }}>
+          <div style={{ marginBottom: 14 }}>
             <div
               style={{
                 fontSize: 11,
-                color: COLORS.muted,
+                color: C.muted,
+                marginBottom: 8,
                 letterSpacing: 1,
-                textTransform: "uppercase",
-                marginBottom: 12,
               }}
             >
-              📊 Daily Macros by Day Type
+              DAILY MACROS BY DAY
             </div>
-            <div
-              style={{
-                fontSize: 11,
-                color: COLORS.muted,
-                marginBottom: 12,
-                lineHeight: 1.6,
-              }}
-            >
-              Each day is different based on activity. Gym + Badminton days are
-              your highest calorie days — you need the fuel. Full rest and
-              Sunday are lowest.
-            </div>
-            {[
-              {
-                day: "🏋️ Gym Day",
-                sub: "Mon / Fri",
-                kcal: 2190,
-                protein: 172,
-                carbs: 223,
-                fat: 62,
-                fiber: 35,
-                color: COLORS.red,
-              },
-              {
-                day: "🏋️🏸 Gym + Badminton",
-                sub: "Tue / Wed",
-                kcal: 2440,
-                protein: 189,
-                carbs: 258,
-                fat: 65,
-                fiber: 38,
-                color: COLORS.orange,
-              },
-              {
-                day: "🏸 Badminton Only",
-                sub: "Thu",
-                kcal: 1940,
-                protein: 143,
-                carbs: 198,
-                fat: 59,
-                fiber: 31,
-                color: COLORS.blue,
-              },
-              {
-                day: "😴 Full Rest",
-                sub: "Sat",
-                kcal: 1910,
-                protein: 121,
-                carbs: 201,
-                fat: 62,
-                fiber: 33,
-                color: COLORS.muted,
-              },
-              {
-                day: "🏸 Morning Badminton",
-                sub: "Sun",
-                kcal: 1830,
-                protein: 121,
-                carbs: 191,
-                fat: 57,
-                fiber: 31,
-                color: COLORS.green,
-              },
-            ].map((d: any, i: number) => (
+            {MEAL_DAYS.map((d: any, i: number) => (
               <div
                 key={i}
                 style={{
-                  background: COLORS.card,
-                  border: `1px solid ${COLORS.cardBorder}`,
-                  borderLeft: `4px solid ${d.color}`,
+                  background: C.card,
+                  border: `1px solid ${C.border}`,
+                  borderLeft: `4px solid ${
+                    [
+                      C.red,
+                      C.orange,
+                      C.orange,
+                      C.blue,
+                      C.purple,
+                      C.muted,
+                      C.green,
+                    ][i]
+                  }`,
                   borderRadius: 10,
-                  padding: "12px 14px",
-                  marginBottom: 10,
+                  padding: "10px 12px",
+                  marginBottom: 8,
                 }}
               >
                 <div
@@ -3524,63 +3357,57 @@ export default function CoachDashboard() {
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    marginBottom: 10,
+                    marginBottom: 8,
                   }}
                 >
                   <div>
-                    <div style={{ fontSize: 13, fontWeight: 700 }}>{d.day}</div>
-                    <div style={{ fontSize: 11, color: COLORS.muted }}>
-                      {d.sub}
+                    <div style={{ fontSize: 13, fontWeight: 700 }}>
+                      {d.label}
                     </div>
+                    <div style={{ fontSize: 11, color: C.muted }}>{d.sub}</div>
                   </div>
                   <div
                     style={{
                       background: "#1a1a00",
-                      color: COLORS.accent,
+                      color: C.accent,
                       fontSize: 14,
                       fontWeight: 800,
-                      padding: "4px 12px",
+                      padding: "4px 10px",
                       borderRadius: 6,
                     }}
                   >
-                    {d.kcal} kcal
+                    {d.cal}
                   </div>
                 </div>
-                <div
-                  style={{ display: "flex", gap: 8, flexWrap: "wrap" as const }}
-                >
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                   {[
-                    {
-                      label: "Protein",
-                      val: `${d.protein}g`,
-                      col: COLORS.green,
-                    },
-                    { label: "Carbs", val: `${d.carbs}g`, col: COLORS.blue },
-                    { label: "Fat", val: `${d.fat}g`, col: COLORS.orange },
-                    { label: "Fiber", val: `${d.fiber}g`, col: "#c47aff" },
+                    { l: "Protein", v: d.protein, c: C.green },
+                    { l: "Carbs", v: d.carbs, c: C.blue },
+                    { l: "Fat", v: d.fat, c: C.orange },
+                    { l: "Fiber", v: d.fiber, c: C.purple },
                   ].map((m: any, j: number) => (
                     <div
                       key={j}
                       style={{
-                        background: COLORS.bg,
+                        background: C.bg,
                         borderRadius: 6,
-                        padding: "5px 10px",
+                        padding: "4px 8px",
                         flex: "1 1 20%",
                       }}
                     >
                       <div
                         style={{
                           fontSize: 10,
-                          color: COLORS.muted,
-                          marginBottom: 2,
+                          color: C.muted,
+                          marginBottom: 1,
                         }}
                       >
-                        {m.label}
+                        {m.l}
                       </div>
                       <div
-                        style={{ fontSize: 13, fontWeight: 700, color: m.col }}
+                        style={{ fontSize: 13, fontWeight: 700, color: m.c }}
                       >
-                        {m.val}
+                        {m.v}
                       </div>
                     </div>
                   ))}
@@ -3588,138 +3415,146 @@ export default function CoachDashboard() {
               </div>
             ))}
           </div>
-          {(stats.weeklyTargets as any[]).map((t: any, i: number) => (
-            <div key={i} style={{ display: "flex", gap: 10, marginBottom: 8 }}>
-              <div
-                style={{
-                  background: COLORS.accent,
-                  color: COLORS.bg,
-                  borderRadius: 6,
-                  padding: "4px 10px",
-                  fontSize: 11,
-                  fontWeight: 800,
-                  flexShrink: 0,
-                  alignSelf: "flex-start",
-                }}
-              >
-                {t.target}
-              </div>
-              <div
-                style={{
-                  background: COLORS.card,
-                  border: `1px solid ${COLORS.cardBorder}`,
-                  borderRadius: 8,
-                  padding: "8px 12px",
-                  flex: 1,
-                }}
-              >
-                <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 2 }}>
-                  {t.metric}
+          <div style={{ marginBottom: 14 }}>
+            <div
+              style={{
+                fontSize: 11,
+                color: C.muted,
+                marginBottom: 8,
+                letterSpacing: 1,
+              }}
+            >
+              WEEKLY TARGETS
+            </div>
+            {WEEKLY_TARGETS.map((t: any, i: number) => (
+              <div key={i} style={{ display: "flex", gap: 8, marginBottom: 8 }}>
+                <div
+                  style={{
+                    background: C.accent,
+                    color: C.bg,
+                    borderRadius: 6,
+                    padding: "4px 8px",
+                    fontSize: 10,
+                    fontWeight: 800,
+                    flexShrink: 0,
+                    alignSelf: "flex-start",
+                  }}
+                >
+                  {t.target}
                 </div>
-                <div style={{ fontSize: 11, color: COLORS.muted }}>{t.why}</div>
+                <div
+                  style={{
+                    background: C.card,
+                    border: `1px solid ${C.border}`,
+                    borderRadius: 8,
+                    padding: "8px 10px",
+                    flex: 1,
+                  }}
+                >
+                  <div
+                    style={{ fontSize: 12, fontWeight: 600, marginBottom: 2 }}
+                  >
+                    {t.metric}
+                  </div>
+                  <div style={{ fontSize: 11, color: C.muted }}>{t.why}</div>
+                </div>
               </div>
-            </div>
-          ))}
-
-          <div
-            style={{
-              fontSize: 11,
-              color: COLORS.muted,
-              letterSpacing: 1,
-              textTransform: "uppercase",
-              marginBottom: 12,
-              marginTop: 20,
-            }}
-          >
-            📅 Milestone Timeline
+            ))}
           </div>
-          {(stats.milestones as any[]).map((m: any, i: number) => (
-            <div key={i} style={{ display: "flex", gap: 12, marginBottom: 10 }}>
-              <div
-                style={{
-                  background: COLORS.accent,
-                  color: COLORS.bg,
-                  borderRadius: 6,
-                  padding: "4px 8px",
-                  fontSize: 10,
-                  fontWeight: 800,
-                  alignSelf: "flex-start",
-                  flexShrink: 0,
-                  minWidth: 52,
-                  textAlign: "center",
-                }}
-              >
-                WK {m.week}
-              </div>
-              <div
-                style={{
-                  background: COLORS.card,
-                  border: `1px solid ${COLORS.cardBorder}`,
-                  borderRadius: 8,
-                  padding: "10px 14px",
-                  flex: 1,
-                  fontSize: 12,
-                  color: COLORS.textDim,
-                  lineHeight: 1.6,
-                }}
-              >
-                {m.goal}
-              </div>
+          <div style={{ marginBottom: 14 }}>
+            <div
+              style={{
+                fontSize: 11,
+                color: C.muted,
+                marginBottom: 8,
+                letterSpacing: 1,
+              }}
+            >
+              MILESTONE TIMELINE
             </div>
-          ))}
-
+            {MILESTONES.map((m: any, i: number) => (
+              <div
+                key={i}
+                style={{ display: "flex", gap: 10, marginBottom: 8 }}
+              >
+                <div
+                  style={{
+                    background: C.accent,
+                    color: C.bg,
+                    borderRadius: 6,
+                    padding: "4px 8px",
+                    fontSize: 10,
+                    fontWeight: 800,
+                    flexShrink: 0,
+                    minWidth: 52,
+                    textAlign: "center",
+                  }}
+                >
+                  Wk {m.week}
+                </div>
+                <div
+                  style={{
+                    background: C.card,
+                    border: `1px solid ${C.border}`,
+                    borderRadius: 8,
+                    padding: "8px 10px",
+                    flex: 1,
+                    fontSize: 12,
+                    color: C.textDim,
+                    lineHeight: 1.6,
+                  }}
+                >
+                  {m.goal}
+                </div>
+              </div>
+            ))}
+          </div>
           <div
             style={{
               background: "#001a00",
               border: "1px solid #003a00",
               borderRadius: 10,
               padding: 14,
-              marginTop: 16,
+              marginBottom: 12,
             }}
           >
             <div
               style={{
                 fontSize: 13,
                 fontWeight: 700,
-                color: COLORS.green,
-                marginBottom: 10,
+                color: C.green,
+                marginBottom: 8,
               }}
             >
-              📏 How to Actually Track Progress
+              How to Track Progress
             </div>
-            {(stats.trackingTips as any[]).map((tip: any, i: number) => (
+            {TRACKING.map((t: string, i: number) => (
               <div
                 key={i}
                 style={{
                   display: "flex",
                   gap: 8,
-                  marginBottom: 8,
+                  marginBottom: 6,
                   fontSize: 12,
-                  color: COLORS.textDim,
+                  color: C.textDim,
                   lineHeight: 1.6,
                 }}
               >
                 <span
-                  style={{
-                    color: COLORS.green,
-                    fontWeight: 700,
-                    flexShrink: 0,
-                  }}
+                  style={{ color: C.green, fontWeight: 700, flexShrink: 0 }}
                 >
                   {i + 1}.
                 </span>
-                {tip}
+                {t}
               </div>
             ))}
           </div>
-
           <div
             style={{
               background: "#1a1500",
               border: "1px solid #3a3000",
               borderRadius: 10,
               padding: 14,
-              marginTop: 14,
             }}
           >
             <div
@@ -3730,21 +3565,170 @@ export default function CoachDashboard() {
                 marginBottom: 8,
               }}
             >
-              ⚠️ The Honest Truth
+              The Honest Truth
             </div>
-            <div
-              style={{ fontSize: 12, color: COLORS.textDim, lineHeight: 1.8 }}
-            >
-              At 23–25% body fat you're in the ideal zone for recomposition —
-              your body can burn fat AND build muscle simultaneously. The first
-              8 weeks feel slow. Months 4–9 are where you'll visibly transform.
-              The biggest killer is{" "}
-              <span style={{ color: COLORS.accent, fontWeight: 700 }}>
-                inconsistency, not imperfect execution
+            <div style={{ fontSize: 12, color: C.textDim, lineHeight: 1.8 }}>
+              At 23-25% body fat you are in the ideal zone for recomposition.
+              The first 8 weeks feel slow. Months 4-9 are where you will visibly
+              transform. The biggest killer is{" "}
+              <span style={{ color: C.accent, fontWeight: 700 }}>
+                inconsistency not imperfect execution
               </span>
-              . A 70% plan done every single week beats a perfect plan done for
-              3 weeks. Show up Monday.
+              . A 70% plan done every week beats a perfect plan done 3 weeks
+              then abandoned. Show up Monday.
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* INGREDIENTS TAB */}
+      {activeTab === 5 && (
+        <div>
+          <div
+            style={{
+              fontSize: 11,
+              color: C.muted,
+              marginBottom: 4,
+              letterSpacing: 1,
+            }}
+          >
+            VARIETY MEAL INGREDIENTS
+          </div>
+          <div
+            style={{
+              fontSize: 11,
+              color: C.muted,
+              marginBottom: 14,
+              lineHeight: 1.6,
+            }}
+          >
+            Full ingredient lists for all variety dishes. Save before grocery
+            shopping.
+          </div>
+          {INGREDIENTS.map((dish: any, i: number) => (
+            <div
+              key={i}
+              style={{
+                background: C.card,
+                border: `1px solid ${C.border}`,
+                borderRadius: 12,
+                marginBottom: 14,
+                overflow: "hidden",
+              }}
+            >
+              <div
+                style={{
+                  background: "#1a1a00",
+                  padding: "10px 12px",
+                  borderBottom: `1px solid ${C.border}`,
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: 11,
+                    color: C.accent,
+                    fontWeight: 700,
+                    marginBottom: 2,
+                  }}
+                >
+                  {dish.day} · {dish.meal}
+                </div>
+                <div style={{ fontSize: 15, fontWeight: 800 }}>{dish.dish}</div>
+                <div
+                  style={{
+                    fontSize: 11,
+                    color: C.muted,
+                    marginTop: 4,
+                    lineHeight: 1.5,
+                  }}
+                >
+                  {dish.note}
+                </div>
+              </div>
+              <div style={{ padding: "10px 12px" }}>
+                {dish.sections.map((section: any, j: number) => (
+                  <div
+                    key={j}
+                    style={{
+                      marginBottom: j < dish.sections.length - 1 ? 12 : 0,
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: 11,
+                        fontWeight: 700,
+                        color: C.accent,
+                        marginBottom: 6,
+                        textTransform: "uppercase",
+                        letterSpacing: 0.5,
+                      }}
+                    >
+                      {section.title}
+                    </div>
+                    {section.items.map((item: string, k: number) => (
+                      <div
+                        key={k}
+                        style={{ display: "flex", gap: 8, marginBottom: 4 }}
+                      >
+                        <span
+                          style={{
+                            color: C.green,
+                            fontSize: 11,
+                            flexShrink: 0,
+                          }}
+                        >
+                          -
+                        </span>
+                        <span
+                          style={{
+                            fontSize: 12,
+                            color: C.textDim,
+                            lineHeight: 1.5,
+                          }}
+                        >
+                          {item}
+                        </span>
+                      </div>
+                    ))}
+                    {j < dish.sections.length - 1 && (
+                      <div
+                        style={{
+                          borderBottom: `1px solid ${C.border}`,
+                          marginTop: 10,
+                        }}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+          <div
+            style={{
+              background: "#001a00",
+              border: "1px solid #003a00",
+              borderRadius: 10,
+              padding: 14,
+            }}
+          >
+            <div
+              style={{
+                fontSize: 12,
+                fontWeight: 700,
+                color: C.green,
+                marginBottom: 8,
+              }}
+            >
+              Weekly Grocery List
+            </div>
+            {GROCERY.map((item: string, i: number) => (
+              <div key={i} style={{ display: "flex", gap: 8, marginBottom: 6 }}>
+                <span style={{ color: C.accent, fontSize: 12, flexShrink: 0 }}>
+                  □
+                </span>
+                <span style={{ fontSize: 12, color: C.textDim }}>{item}</span>
+              </div>
+            ))}
           </div>
         </div>
       )}
@@ -3754,11 +3738,10 @@ export default function CoachDashboard() {
           marginTop: 32,
           textAlign: "center",
           fontSize: 10,
-          color: COLORS.muted,
+          color: C.muted,
         }}
       >
-        Built for Vaibhav · Gurgaon · June 2026 · Consult a physician before
-        starting new supplements or exercise
+        Built for Vaibhav · Gurgaon · June 2026
       </div>
     </div>
   );
