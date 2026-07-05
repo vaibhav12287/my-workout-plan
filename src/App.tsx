@@ -332,7 +332,7 @@ const TUE_SCHEDULE = [
     time: "21:15",
     label: "DINNER — Toor Dal + Bhindi",
     detail:
-      "Ragi roti + Toor Dal + Bhindi sabzi (Tue rotation) + dahi. Finish by 21:45. After: soaked pumpkin seeds + soaked almonds.",
+      "Ragi roti + Toor Dal + Bhindi sabzi (Tue rotation). NO dahi at night — triggers cough. Finish by 21:45. After: soaked pumpkin seeds + soaked almonds.",
     type: "food",
   },
   ...WIND_DOWN,
@@ -356,7 +356,7 @@ const WED_SCHEDULE = [
     time: "21:15",
     label: "DINNER — Mexican Paneer Bowl",
     detail:
-      "Mexican Paneer Bowl tonight — variety day. Burrp or Burrito Project on Zomato, or home in 20 min. Paneer + brown rice + rajma + capsicum + corn + fresh salsa + hung curd. See Ingredients tab.",
+      "Mexican Paneer Bowl tonight — variety day. Burrp or Burrito Project on Zomato, or home in 20 min. Paneer + brown rice + rajma + capsicum + corn + fresh salsa. Ask for no sour cream, no hung curd — dairy at night triggers cough. See Ingredients tab.",
     type: "food",
   },
   ...WIND_DOWN,
@@ -399,7 +399,7 @@ const THU_SCHEDULE = [
     time: "21:15",
     label: "DINNER — Masoor Dal + Gobhi",
     detail:
-      "Ragi roti + Masoor Dal (fastest digest, no soaking) + Gobhi+Matar sabzi (Thu) or summer: Arbi + dahi. Finish by 21:45. After: soaked pumpkin seeds + soaked almonds.",
+      "Ragi roti + Masoor Dal (fastest digest, no soaking) + Gobhi+Matar sabzi (Thu) or summer: Arbi. NO dahi at night — triggers cough. Finish by 21:45. After: soaked pumpkin seeds + soaked almonds.",
     type: "food",
   },
   ...WIND_DOWN,
@@ -494,7 +494,7 @@ const SAT_SCHEDULE = [
     time: "20:30",
     label: "DINNER — Toor Dal + Lauki",
     detail:
-      "Ragi roti + Toor Dal (Sat) + Lauki+Chana sabzi or summer: Sarson ka Saag + dahi. Eat by 21:00. After: soaked pumpkin seeds + soaked almonds.",
+      "Ragi roti + Toor Dal (Sat) + Lauki+Chana sabzi or summer: Sarson ka Saag. NO dahi at night — triggers cough. Eat by 21:00. After: soaked pumpkin seeds + soaked almonds.",
     type: "food",
   },
   {
@@ -584,7 +584,7 @@ const SUN_SCHEDULE = [
     time: "20:30",
     label: "DINNER — Moong Dal + Shimla Mirch Bhurji",
     detail:
-      "Ragi roti + Moong Dal (lightest, best for sleep) + Shimla Mirch+Paneer Bhurji (Sun, year-round) + dahi. Eat by 21:00. After: soaked pumpkin seeds + soaked almonds. Prep Monday gym bag.",
+      "Ragi roti + Moong Dal (lightest, best for sleep) + Shimla Mirch+Paneer Bhurji (Sun, year-round). NO dahi at night — triggers cough. Eat by 21:00. After: soaked pumpkin seeds + soaked almonds. Prep Monday gym bag.",
     type: "food",
   },
   {
@@ -1207,11 +1207,11 @@ const MEALS_BY_DAY = {
         "2 ragi rotis",
         "1 cup Toor Dal — light, classic comfort",
         "1.5 cups Bhindi sabzi (Tue) — winter: 1.5 cups Gobhi+Matar",
-        "150g dahi",
+        "NO dahi at night — triggers cough",
         "AFTER: soaked pumpkin seeds + soaked almonds",
-        "~530 kcal | 40g protein | 55g carbs",
+        "~490 kcal | 36g protein | 52g carbs",
       ],
-      why: "Toor dal is light enough for night after gym + badminton double session. Bhindi is low calorie (35 kcal/100g) — perfect light dinner sabzi.",
+      why: "Toor dal is light enough for night after gym + badminton double session. Bhindi is low calorie (35 kcal/100g) — perfect light dinner sabzi. Dahi dropped from dinner — cooling dairy triggers your cough at night.",
     },
   ],
   2: [
@@ -1273,11 +1273,11 @@ const MEALS_BY_DAY = {
       items: [
         "Order: Burrp or Burrito Project on Zomato",
         "OR make at home in 20 min",
-        "100g paneer + 1 cup brown rice or quinoa + 1/2 cup rajma + 1 capsicum + 1/2 cup sweet corn + fresh salsa + 2 tbsp hung curd",
-        "Skip sour cream. Ask extra paneer.",
+        "120g paneer + 1 cup brown rice or quinoa + 1/2 cup rajma + 1 capsicum + 1/2 cup sweet corn + fresh salsa",
+        "Skip sour cream AND hung curd — dairy at night triggers cough. Ask extra paneer instead.",
         "~580 kcal | 38g protein | 65g carbs",
       ],
-      why: "Wed is highest calorie day — Mexican Bowl hits macros and feels like a treat. No burrito place nearby? Home shortcut: rajma + rice + chopped onion + tomato + lemon + coriander + green chilli + hung curd = same flavour in 10 min with leftover rajma from Tuesday.",
+      why: "Wed is highest calorie day — Mexican Bowl hits macros and feels like a treat. No burrito place nearby? Home shortcut: rajma + rice + chopped onion + tomato + lemon + coriander + green chilli = same flavour in 10 min with leftover rajma from Tuesday. Extra paneer replaces the protein hung curd used to add.",
     },
   ],
   3: [
@@ -1323,11 +1323,11 @@ const MEALS_BY_DAY = {
         "2 ragi rotis",
         "1 cup Masoor Dal — fastest digest, no soaking needed",
         "1.5 cups Gobhi+Matar sabzi — winter / 1.5 cups Arbi — summer",
-        "150g dahi",
+        "NO dahi at night — triggers cough",
         "AFTER: soaked pumpkin seeds + soaked almonds",
-        "~530 kcal | 40g protein | 55g carbs",
+        "~490 kcal | 36g protein | 52g carbs",
       ],
-      why: "Masoor at night is lighter than Chana Dal — digests faster after evening badminton. Chana Dal reserved for Thu lunch rotation.",
+      why: "Masoor at night is lighter than Chana Dal — digests faster after evening badminton. Chana Dal reserved for Thu lunch rotation. Dahi dropped from dinner — cooling dairy triggers cough.",
     },
   ],
   4: [
@@ -1423,12 +1423,12 @@ const MEALS_BY_DAY = {
         "2 ragi rotis",
         "1 cup Toor Dal (Sat rotation)",
         "1.5 cups Lauki sabzi or greens",
-        "150g dahi",
+        "NO dahi at night — triggers cough",
         "AFTER: soaked pumpkin seeds + soaked almonds",
         "Eat by 21:00",
-        "~530 kcal | 40g protein | 55g carbs",
+        "~490 kcal | 36g protein | 52g carbs",
       ],
-      why: "Light dinner on rest day. Earlier than weekdays — better sleep quality.",
+      why: "Light dinner on rest day. Earlier than weekdays — better sleep quality. Dahi dropped from dinner — cooling dairy triggers cough at night.",
     },
   ],
   6: [
@@ -1460,15 +1460,15 @@ const MEALS_BY_DAY = {
       label: "DINNER",
       color: C.purple,
       items: [
-        "1-2 ragi rotis",
+        "2 ragi rotis",
         "1 cup Moong Dal — lightest, best for sleep",
         "1 cup greens sabzi (Shimla Mirch Bhurji — year round)",
-        "150g dahi",
+        "NO dahi at night — triggers cough",
         "AFTER: soaked pumpkin seeds + soaked almonds",
         "Eat by 21:00",
-        "~530 kcal | 40g protein | 55g carbs",
+        "~490 kcal | 36g protein | 52g carbs",
       ],
-      why: "Moong dal at night = lightest dal, digests in 2 hrs. Chole moved to Sunday lunch where it belongs. Ragi roti = magnesium for deep sleep.",
+      why: "Moong dal at night = lightest dal, digests in 2 hrs. Chole moved to Sunday lunch where it belongs. Ragi roti = magnesium for deep sleep. Dahi dropped from dinner — cooling dairy triggers cough.",
     },
   ],
 };
@@ -1962,7 +1962,7 @@ const INGREDIENTS = [
       {
         title: "Paneer",
         items: [
-          "100g paneer — cubed",
+          "120g paneer — cubed",
           "1/2 tsp cumin powder",
           "1/2 tsp red chilli powder",
           "1/2 tsp paprika",
@@ -1978,7 +1978,7 @@ const INGREDIENTS = [
           "1/2 cup sweet corn",
           "1 capsicum — diced",
           "1 onion — diced",
-          "2 tbsp hung curd",
+          "NO hung curd or sour cream — dairy at night triggers cough",
         ],
       },
       {
