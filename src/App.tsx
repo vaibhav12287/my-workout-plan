@@ -181,9 +181,9 @@ const GYM_BLOCK = [
   },
   {
     time: "08:35",
-    label: "Gym — Main Session 75 min",
+    label: "Gym — Main Session 60-75 min",
     detail:
-      "Per weekly split (Workout tab). Compounds first. LOG EVERY SET — weight + reps in Notes app.",
+      "Per weekly split (Workout tab). Wednesday is the short one — under 60 min, badminton follows. Compounds first. LOG EVERY SET — weight + reps in Notes app.",
     type: "gym",
   },
   {
@@ -286,7 +286,7 @@ const MON_SCHEDULE = [
     time: "14:00",
     label: "LUNCH — Rajma Chawal Bowl",
     detail:
-      "1 cup rajma + 1 cup brown rice + raw onion rings + lemon + coriander + 150g dahi on side + 5 soaked walnuts. Rajma cooks once on Sunday, eats through the week. ~620 kcal | 41g protein.",
+      "1 cup rajma + 1 cup brown rice + raw onion rings + lemon + coriander + 150g dahi on side + 5 soaked walnuts. Rajma cooks once on Sunday, eats through the week. ~640 kcal | 29g protein.",
     type: "food",
   },
   ...POST_LUNCH,
@@ -308,7 +308,7 @@ const MON_SCHEDULE = [
     time: "21:00",
     label: "DINNER — Paneer Poke Bowl",
     detail:
-      "120g marinated paneer (soy + lemon + garlic) pan fried + brown rice or quinoa + cucumber + carrot + edamame (boiled from frozen, NOT roasted) + sesame soy sauce. Light, high protein, digests well before sleep. 15 min. ~735 kcal | 39g protein. See Ingredients tab.",
+      "120g marinated paneer (soy + lemon + garlic) pan fried + brown rice or quinoa + cucumber + carrot + edamame (boiled from frozen, NOT roasted) + sesame soy sauce. Light, high protein, digests well before sleep. 15 min. ~1,030 kcal | 52g protein. See Ingredients tab.",
     type: "food",
   },
   ...WIND_DOWN,
@@ -322,7 +322,7 @@ const TUE_SCHEDULE = [
     time: "14:00",
     label: "LUNCH — Mexican Paneer Bowl",
     detail:
-      "120g paneer + brown rice or quinoa + 1/2 cup rajma + capsicum + corn + fresh salsa. Burrp / Burrito Project on Zomato, or home in 20 min. ~780 kcal | 38g protein.",
+      "120g paneer + brown rice or quinoa + 1/2 cup rajma + capsicum + corn + fresh salsa. Burrp / Burrito Project on Zomato, or home in 20 min. ~806 kcal | 40g protein.",
     type: "food",
   },
   ...POST_LUNCH,
@@ -332,7 +332,7 @@ const TUE_SCHEDULE = [
     time: "21:15",
     label: "DINNER — Tofu Buddha Bowl",
     detail:
-      "200g tofu (non-dairy — lighter after the gym + badminton double) + quinoa + broccoli + French beans + peanut-tahini sauce. NO dahi at night — triggers cough. Finish by 21:45. After: soaked pumpkin seeds + soaked almonds. ~610 kcal | 39g protein.",
+      "200g tofu (non-dairy — lighter after the gym + badminton double) + quinoa + broccoli + French beans + peanut-tahini sauce. NO dahi at night — triggers cough. Finish by 21:45. After: 30g soaked pumpkin seeds + 10 soaked almonds (~240 kcal, counted). ~1,010 kcal | 62g protein.",
     type: "food",
   },
   ...WIND_DOWN,
@@ -346,7 +346,7 @@ const WED_SCHEDULE = [
     time: "14:00",
     label: "LUNCH — Chole Chawal Bowl",
     detail:
-      "1 cup chole + 1 cup brown rice + 100g paneer + raw onion + lemon + 150g dahi on side. Highest-calorie day, and the burn matches it. ~860 kcal | 45g protein.",
+      "1 cup chole + 1 cup brown rice + 100g paneer + raw onion + lemon + 150g dahi on side. Highest-calorie day, and the burn matches it. ~920 kcal | 46g protein.",
     type: "food",
   },
   ...POST_LUNCH,
@@ -356,7 +356,7 @@ const WED_SCHEDULE = [
     time: "21:15",
     label: "DINNER — Paneer Burrito Bowl",
     detail:
-      "120g paneer + brown rice or quinoa + rajma + capsicum + corn + fresh salsa. Burrp or Burrito Project on Zomato, or home in 20 min. Ask for no sour cream, no hung curd — dairy at night triggers cough. ~780 kcal | 38g protein. See Ingredients tab.",
+      "120g paneer + brown rice or quinoa + rajma + capsicum + corn + fresh salsa. Burrp or Burrito Project on Zomato, or home in 20 min. Ask for no sour cream, no hung curd — dairy at night triggers cough. ~806 kcal | 40g protein. See Ingredients tab.",
     type: "food",
   },
   ...WIND_DOWN,
@@ -368,7 +368,7 @@ const THU_SCHEDULE = [
     time: "07:40",
     label: "Light Breakfast — No Gym Today",
     detail:
-      "1 banana + 1 scoop whey in water + soaked almonds + soaked walnuts. ~280 kcal. Not lifting this morning — save energy for court tonight.",
+      "1 banana + 1 scoop whey in water + 1 tsp creatine + soaked almonds + soaked walnuts. ~360 kcal. Not lifting this morning — save energy for court tonight. Creatine is daily, gym day or not.",
     type: "food",
   },
   {
@@ -389,7 +389,7 @@ const THU_SCHEDULE = [
     time: "14:00",
     label: "LUNCH — Masoor Dal + Paneer Bhurji",
     detail:
-      "Dal-sabzi slot 1 of 3. 2 rotis + 1 cup masoor dal + paneer bhurji with 120g paneer (onion + capsicum + tomato). Winter: add palak or methi into the bhurji. Summer: extra capsicum. ~760 kcal | 49g protein.",
+      "Dal-sabzi slot 1 of 3. 2 rotis + 1 cup masoor dal + paneer bhurji with 120g paneer (onion + capsicum + tomato). Winter: add palak or methi into the bhurji. Summer: extra capsicum. ~1,060 kcal | 56g protein.",
     type: "food",
   },
   ...POST_LUNCH,
@@ -399,7 +399,7 @@ const THU_SCHEDULE = [
     time: "21:15",
     label: "DINNER — Soya Keema Bowl",
     detail:
-      "Your one soya day of the week. 50g dry soya chunks (soaked, squeezed, minced) cooked keema-style with onion + tomato + peas, over brown rice. NO dahi at night — triggers cough. Finish by 21:45. After: soaked pumpkin seeds + soaked almonds. ~560 kcal | 33g protein.",
+      "Your one soya day of the week. 50g dry soya chunks (soaked, squeezed, minced) cooked keema-style with onion + tomato + peas, over brown rice. NO dahi at night — triggers cough. Finish by 21:45. After: 30g soaked pumpkin seeds + 10 soaked almonds (~240 kcal, counted). ~790 kcal | 48g protein.",
     type: "food",
   },
   ...WIND_DOWN,
@@ -413,7 +413,7 @@ const FRI_SCHEDULE = [
     time: "14:00",
     label: "LUNCH — Mexican Paneer Bowl",
     detail:
-      "120g paneer + brown rice or quinoa + 1/2 cup rajma + capsicum + corn + fresh salsa. Best nutrition day of the week — leg day earns it. ~780 kcal | 38g protein.",
+      "120g paneer + brown rice or quinoa + 1/2 cup rajma + capsicum + corn + fresh salsa. Best nutrition day of the week — leg day earns it. ~806 kcal | 40g protein.",
     type: "food",
   },
   ...POST_LUNCH,
@@ -436,7 +436,7 @@ const FRI_SCHEDULE = [
     time: "21:00",
     label: "DINNER — Thai Peanut Paneer Bowl",
     detail:
-      "Home in 15 min, or Burma Burma Cyber Hub (book ahead). 120g paneer + brown rice or quinoa base + capsicum + carrot + peanut sauce (PB + soy + honey + lemon + chilli). Bowl base, not noodles. ~700 kcal | 34g protein. See Ingredients tab.",
+      "Home in 15 min, or Burma Burma Cyber Hub (book ahead). 120g paneer + brown rice or quinoa base + capsicum + carrot + peanut sauce (PB + soy + honey + lemon + chilli). Bowl base, not noodles. ~775 kcal | 35g protein. See Ingredients tab.",
     type: "food",
   },
   ...WIND_DOWN,
@@ -448,7 +448,7 @@ const SAT_SCHEDULE = [
     time: "07:40",
     label: "Relaxed Breakfast",
     detail:
-      "Paneer Poha — 1.5 cups poha + 100g crumbled paneer + onion + mustard seeds + haldi + lemon, 150g dahi on side. Sit down and enjoy slowly. 1 tsp creatine in water or milk. ~690 kcal | 32g protein.",
+      "Paneer Poha — 1.5 cups poha + 100g crumbled paneer + onion + mustard seeds + haldi + lemon, 150g dahi on side. Sit down and enjoy slowly. 1 tsp creatine in water or milk. ~700 kcal | 31g protein.",
     type: "food",
   },
   {
@@ -468,7 +468,7 @@ const SAT_SCHEDULE = [
     time: "13:30",
     label: "LUNCH — WEEKLY CHEAT MEAL",
     detail:
-      "This is the cheat meal, not an option. Chole bhature / biryani / pizza / burger / paneer tikka — whatever you're craving. Greenr Cafe (Golf Course Road): Garden Veg Pizza + Pesto Spaghetti. Roots Cafe (Sector 29): wood-fired pizza. Rules stay: get some protein in, take creatine, +500ml water. Clean fallback if you'd rather: 150g paneer bowl.",
+      "This is the cheat meal, not an option. Chole bhature / biryani / pizza / burger / paneer tikka — whatever you're craving. Greenr Cafe (Golf Course Road): Garden Veg Pizza + Pesto Spaghetti. Roots Cafe (Sector 29): wood-fired pizza. Rules stay: get some protein in, take creatine, +500ml water. Skipping the cheat this week? Clean swap: 150g paneer bowl.",
     type: "food",
   },
   {
@@ -494,7 +494,7 @@ const SAT_SCHEDULE = [
     time: "20:30",
     label: "DINNER — Toor Dal + Baingan Bharta",
     detail:
-      "Dal-sabzi slot 2 of 3. 2 ragi rotis + 1.5 cups Toor Dal + Baingan Bharta as a pure sabzi — no paneer forced in, that combo isn't a real dish. Winter swap: Sarson ka Saag or Palak. NO dahi at night — triggers cough. Eat by 21:00. After: soaked pumpkin seeds + soaked almonds. ~570 kcal | 24g protein.",
+      "Dal-sabzi slot 2 of 3. 2 ragi rotis + 1.5 cups Toor Dal + Baingan Bharta as a pure sabzi — no paneer forced in, that combo isn't a real dish. Winter swap: Sarson ka Saag or Palak. NO dahi at night — triggers cough. Eat by 21:00. After: 30g soaked pumpkin seeds + 10 soaked almonds (~240 kcal, counted). ~985 kcal | 39g protein.",
     type: "food",
   },
   {
@@ -553,7 +553,7 @@ const SUN_SCHEDULE = [
     time: "12:00",
     label: "LUNCH — Japanese Poke Bowl",
     detail:
-      "Best option: EatFit High Protein Paneer Bowl on Zomato — order immediately after court (30 min delivery = perfect timing). OR home Poke Bowl: 130g marinated paneer + quinoa + edamame (boiled from frozen, NOT roasted) + cucumber + carrot + soy sesame sauce. ~760 kcal | 43g protein. See Ingredients tab.",
+      "Best option: EatFit High Protein Paneer Bowl on Zomato — order immediately after court (30 min delivery = perfect timing). OR home Poke Bowl: 130g marinated paneer + quinoa + edamame (boiled from frozen, NOT roasted) + cucumber + carrot + soy sesame sauce. ~820 kcal | 45g protein. See Ingredients tab.",
     type: "food",
   },
   {
@@ -584,7 +584,7 @@ const SUN_SCHEDULE = [
     time: "20:30",
     label: "DINNER — Moong Dal + Shimla Mirch Paneer Bhurji",
     detail:
-      "Dal-sabzi slot 3 of 3. 2 ragi rotis + 1 cup Moong Dal (lightest, best for sleep) + Shimla Mirch + Paneer Bhurji with 120g paneer — a real everyday combo, year-round. Winter bonus: palak or methi into the bhurji. NO dahi at night — triggers cough. Eat by 21:00. After: soaked pumpkin seeds + soaked almonds. Prep Monday gym bag. ~640 kcal | 36g protein.",
+      "Dal-sabzi slot 3 of 3. 2 ragi rotis + 1 cup Moong Dal (lightest, best for sleep) + Shimla Mirch + Paneer Bhurji with 120g paneer — a real everyday combo, year-round. Winter bonus: palak or methi into the bhurji. NO dahi at night — triggers cough. Eat by 21:00. After: 30g soaked pumpkin seeds + 10 soaked almonds (~240 kcal, counted). Prep Monday gym bag. ~1,175 kcal | 58g protein.",
     type: "food",
   },
   {
@@ -1017,79 +1017,82 @@ const EXERCISES = [
 ];
 
 // ─── MEAL DATA ─────────────────────────────────────────────────────
-// Totals recomputed from published per-ingredient values (Jul 20 audit).
-// The old numbers under-counted calorie-dense staples — besan, oats, paneer,
-// rice, milk — by 200-250 kcal a meal on the heavy days.
+// Every total below is the sum of that day's cards, computed from USDA-cooked
+// values. Two corrections drive the numbers: dal protein is per COOKED cup (the
+// familiar 22-29g figures are dry weight, roughly double), and the nightly
+// seeds + almonds are now counted instead of being a free item.
+// The honest consequence is in the notes: this week does not currently run a
+// deficit. Saturday is the reason.
 const MEAL_DAYS = [
   {
     label: "Monday",
     sub: "Gym Day",
-    cal: "2,395 kcal",
-    protein: "166g",
-    carbs: "279g",
-    fat: "68g",
-    fiber: "36g",
-    note: "Power shake (real 810 kcal) + post-workout. Rajma Chawal lunch, Poke Bowl dinner.",
+    cal: "2,690 kcal",
+    protein: "164g",
+    carbs: "300g",
+    fat: "99g",
+    fiber: "40g",
+    note: "Burn ~2,850. Deficit ~160 kcal — thin but real.",
   },
   {
     label: "Tuesday",
     sub: "Gym + Badminton",
-    cal: "2,680 kcal",
-    protein: "180g",
-    carbs: "306g",
-    fat: "81g",
-    fiber: "40g",
-    note: "Mexican Paneer Bowl lunch. Tofu Buddha Bowl dinner — non-dairy after the double session.",
+    cal: "3,037 kcal",
+    protein: "203g",
+    carbs: "318g",
+    fat: "114g",
+    fiber: "45g",
+    note: "Burn ~3,200. Deficit ~165 kcal. Best protein day of the week.",
   },
   {
     label: "Wednesday",
     sub: "Gym + Badminton",
-    cal: "2,930 kcal",
-    protein: "186g",
-    carbs: "351g",
-    fat: "87g",
-    fiber: "42g",
-    note: "Highest day both ways — burn on gym+court days runs 3,000-3,500, so this still sits in deficit.",
+    cal: "2,946 kcal",
+    protein: "187g",
+    carbs: "350g",
+    fat: "94g",
+    fiber: "48g",
+    note: "Burn ~3,200. Deficit ~255 kcal — the strongest day.",
   },
   {
     label: "Thursday",
     sub: "Badminton Only",
-    cal: "1,850 kcal",
-    protein: "127g",
-    carbs: "212g",
-    fat: "54g",
-    fiber: "33g",
-    note: "Dal-sabzi lunch (Masoor + Paneer Bhurji). Soya Keema dinner — the one soya day.",
+    cal: "2,410 kcal",
+    protein: "151g",
+    carbs: "263g",
+    fat: "87g",
+    fiber: "38g",
+    note: "Burn ~2,450. Deficit only ~40 kcal — the bhurji lunch is bigger than it looks.",
   },
   {
     label: "Friday",
     sub: "Gym Day",
-    cal: "2,520 kcal",
+    cal: "2,601 kcal",
     protein: "158g",
-    carbs: "266g",
-    fat: "85g",
-    fiber: "36g",
-    note: "Leg day. Mexican Paneer Bowl lunch, Thai Peanut Paneer Bowl dinner.",
+    carbs: "279g",
+    fat: "99g",
+    fiber: "38g",
+    note: "Burn ~2,900. Deficit ~300 kcal. Leg day.",
   },
   {
     label: "Saturday",
     sub: "Full Rest",
-    cal: "~2,300 kcal",
-    protein: "85g",
-    carbs: "230g",
-    fat: "70g",
-    fiber: "30g",
-    note: "Includes the weekly cheat lunch (~800-1,000 kcal, varies). Clean part is ~1,460 kcal / 62g protein.",
+    cal: "2,760 kcal",
+    protein: "99g",
+    carbs: "355g",
+    fat: "105g",
+    fiber: "40g",
+    note: "Burn ~1,950. SURPLUS ~810 kcal — this single day cancels the whole week's deficit. Also the lowest protein day at 1.1 g/kg.",
   },
   {
     label: "Sunday",
     sub: "Morning Badminton",
-    cal: "1,830 kcal",
-    protein: "102g",
-    carbs: "179g",
-    fat: "75g",
-    fiber: "30g",
-    note: "Light pre-court breakfast. Poke Bowl (130g paneer) post-badminton, dal-sabzi dinner.",
+    cal: "2,370 kcal",
+    protein: "125g",
+    carbs: "240g",
+    fat: "108g",
+    fiber: "35g",
+    note: "Burn ~2,400 after two hours of court. Roughly break-even.",
   },
 ];
 
@@ -1107,7 +1110,7 @@ const MEALS_BY_DAY = {
         "1 tbsp peanut butter",
         "1 tbsp ground alsi (grind DRY)",
         "1 tsp creatine (5g) — tasteless",
-        "~810 kcal | 93g carbs | 58g protein (verified — old 560 figure was wrong)",
+        "~811 kcal | 94g carbs | 58g protein | 25g fat",
       ],
       why: "Creatine is tasteless here. Oats give sustained energy so you don't crash mid-session.",
     },
@@ -1118,7 +1121,7 @@ const MEALS_BY_DAY = {
         "1 scoop whey in 300ml water — carry dry powder",
         "1 small banana or 5 dates",
         "Drink BEFORE showering — within 20 min of last set",
-        "~230 kcal | 28g protein | 25g carbs",
+        "~210 kcal | 25g protein | 25g carbs",
       ],
       why: "Muscle protein synthesis peaks now. Don't wait until office.",
     },
@@ -1126,12 +1129,12 @@ const MEALS_BY_DAY = {
       label: "LUNCH — Rajma Chawal Bowl (Mon)",
       color: C.blue,
       items: [
-        "1 cup rajma — cooked (highest-protein legume you eat, 29g/cup)",
+        "1 cup rajma — cooked (~15g protein per cooked cup — the 29g figure everyone quotes is DRY weight)",
         "1 cup brown rice",
         "Raw onion rings + lemon + coriander + green chilli",
         "150g dahi on side — dahi at lunch is fine, only nights are the problem",
         "5 soaked walnuts",
-        "~620 kcal | 41g protein | 92g carbs",
+        "~640 kcal | 29g protein | 103g carbs",
       ],
       why: "Cook rajma once on Sunday, eat it Monday and Thursday. Chilla/paratha lunch dropped — besan is 387 kcal/100g and the old card under-counted it by ~180 kcal.",
     },
@@ -1146,8 +1149,8 @@ const MEALS_BY_DAY = {
         "1 carrot — julienned",
         "Sesame soy sauce: 1 tbsp soy + 1/2 tsp sesame oil + 1 tsp honey + 1 tsp rice vinegar",
         "Sesame seeds on top",
-        "AFTER: soaked pumpkin seeds + soaked almonds",
-        "~735 kcal | 39g protein | 69g carbs",
+        "AFTER: 30g soaked pumpkin seeds + 10 soaked almonds — ~240 kcal, 11g protein. Counted in the total below.",
+        "~1,030 kcal | 52g protein | 78g carbs — includes the after-dinner seeds + almonds",
       ],
       why: "Light, no heavy spices, digests in 2 hrs — ideal before sleep. Paneer up to 120g so the bowl carries real protein. Much better recovery sleep than dal + sabzi on gym nights.",
     },
@@ -1165,7 +1168,7 @@ const MEALS_BY_DAY = {
         "1 tbsp peanut butter",
         "1 tbsp ground alsi",
         "1 tsp creatine",
-        "~810 kcal | 93g carbs | 58g protein (verified — old 560 figure was wrong)",
+        "~811 kcal | 94g carbs | 58g protein | 25g fat",
       ],
       why: "Gym AND badminton today — need full fuel.",
     },
@@ -1176,7 +1179,7 @@ const MEALS_BY_DAY = {
         "1 scoop whey in 300ml water",
         "1 small banana or 5 dates",
         "Drink BEFORE showering",
-        "~230 kcal | 28g protein",
+        "~210 kcal | 25g protein",
       ],
       why: "Within 20 min of last set. Don't wait until office.",
     },
@@ -1189,7 +1192,7 @@ const MEALS_BY_DAY = {
         "1/2 cup rajma (leftover from Monday)",
         "1 capsicum + 1/2 cup sweet corn + fresh salsa",
         "Order: Burrp or The Burrito Project on Zomato — extra paneer, no sour cream",
-        "~780 kcal | 38g protein | 85g carbs",
+        "~806 kcal | 40g protein | 92g carbs",
       ],
       why: "Gym + badminton day needs the calories. Order it or build it at home in 20 min from Monday's leftover rajma.",
     },
@@ -1200,7 +1203,7 @@ const MEALS_BY_DAY = {
         "150g Milky Mist Skyr yogurt",
         "2 baby bananas OR 1 regular banana",
         "Eat at exactly 17:00 — 90 min before 19:30 court",
-        "~250 kcal | 17g protein | 48g carbs",
+        "~200 kcal | 18g protein | 32g carbs",
       ],
       why: "90 min timing is deliberate. Eating closer = heavy legs and cramps on court.",
     },
@@ -1213,10 +1216,10 @@ const MEALS_BY_DAY = {
         "1 cup broccoli + French beans — steamed 4 min",
         "Peanut-tahini sauce: 1 tbsp PB + 1 tbsp soy + lemon + chilli + water to thin",
         "NO dahi at night — triggers cough",
-        "AFTER: soaked pumpkin seeds + soaked almonds",
-        "~610 kcal | 39g protein | 55g carbs",
+        "AFTER: 30g soaked pumpkin seeds + 10 soaked almonds — ~240 kcal, 11g protein. Counted in the total below.",
+        "~1,010 kcal | 62g protein | 75g carbs — includes the after-dinner seeds + almonds",
       ],
-      why: "Fully non-dairy, which is what you want at night after a gym + badminton double. Tofu is ~12g protein/100g, so 200g carries the meal without paneer's fat load. Tofu is not the soya-chunk day — that stays Thursday only.",
+      why: "Fully non-dairy, which is what you want at night after a gym + badminton double. Firm tofu is ~16g protein/100g, so 200g gives ~32g and carries the meal without paneer's fat load. Tofu is not the soya-chunk day — that stays Thursday only.",
     },
   ],
   2: [
@@ -1232,7 +1235,7 @@ const MEALS_BY_DAY = {
         "1 tbsp peanut butter",
         "1 tbsp ground alsi",
         "1 tsp creatine",
-        "~810 kcal | 93g carbs | 58g protein (verified — old 560 figure was wrong)",
+        "~811 kcal | 94g carbs | 58g protein | 25g fat",
       ],
       why: "Gym AND badminton today — need full fuel.",
     },
@@ -1243,7 +1246,7 @@ const MEALS_BY_DAY = {
         "1 scoop whey in 300ml water",
         "1 small banana or 5 dates",
         "Drink BEFORE showering",
-        "~230 kcal | 28g protein",
+        "~210 kcal | 25g protein",
       ],
       why: "Within 20 min of last set.",
     },
@@ -1256,9 +1259,9 @@ const MEALS_BY_DAY = {
         "100g paneer — cubed, pan fried, tossed in",
         "Raw onion + lemon + green chilli + coriander",
         "150g dahi on side",
-        "~860 kcal | 45g protein | 100g carbs",
+        "~920 kcal | 46g protein | 107g carbs",
       ],
-      why: "Wednesday is the biggest day — gym plus court, burn runs 3,000-3,500. This is the one lunch that earns its calories. Old card said 640 kcal; verified, it was 890.",
+      why: "Wednesday is the biggest day — gym plus court, burn runs 3,000-3,500. This is the one lunch that earns its calories. Old card said 640 kcal; recomputed, it is ~920.",
     },
     {
       label: "Pre-Badminton Snack — 17:00 SHARP",
@@ -1267,7 +1270,7 @@ const MEALS_BY_DAY = {
         "150g Milky Mist Skyr yogurt",
         "2 baby bananas OR 1 regular banana",
         "Eat at exactly 17:00 — 90 min before court",
-        "~250 kcal | 17g protein | 48g carbs",
+        "~200 kcal | 18g protein | 32g carbs",
       ],
       why: "90 min timing. Eating closer = cramps.",
     },
@@ -1279,7 +1282,7 @@ const MEALS_BY_DAY = {
         "OR make at home in 20 min",
         "120g paneer + 1 cup brown rice or quinoa + 1/2 cup rajma + 1 capsicum + 1/2 cup sweet corn + fresh salsa",
         "Skip sour cream AND hung curd — dairy at night triggers cough. Ask extra paneer instead.",
-        "~780 kcal | 38g protein | 85g carbs",
+        "~806 kcal | 40g protein | 92g carbs",
       ],
       why: "Wed is the highest calorie day and the burn matches it. No burrito place nearby? Home shortcut: rajma + rice + chopped onion + tomato + lemon + coriander + green chilli = same flavour in 10 min with leftover rajma. Extra paneer replaces the protein hung curd used to add.",
     },
@@ -1294,7 +1297,7 @@ const MEALS_BY_DAY = {
         "1 scoop whey in 250ml water",
         "Soaked almonds + soaked walnuts",
         "1 tsp creatine in the whey water",
-        "~280 kcal | 32g carbs | 28g protein",
+        "~360 kcal | 29g protein | 33g carbs",
       ],
       why: "No gym today. Lighter breakfast keeps calorie deficit. Creatine daily even on non-gym days.",
     },
@@ -1307,7 +1310,7 @@ const MEALS_BY_DAY = {
         "Paneer Bhurji with 120g paneer — onion + capsicum + tomato + haldi, 10 min, no gravy",
         "Winter: add palak or methi into the bhurji. Summer: extra capsicum.",
         "150g dahi on side — lunch only",
-        "~760 kcal | 49g protein | 74g carbs",
+        "~1,060 kcal | 56g protein | 105g carbs",
       ],
       why: "One of your 3 dal-sabzi slots. Bhurji cooks in 10 min with no gravy, and the extra paneer is what pulls Thursday's protein up. Paneer bhurji also shows up Sunday dinner — same dish, different dal, so vary the veg if it starts feeling repetitive.",
     },
@@ -1318,7 +1321,7 @@ const MEALS_BY_DAY = {
         "150g Milky Mist Skyr yogurt",
         "2 baby bananas OR 1 regular banana",
         "Eat at exactly 17:00 — 90 min before court",
-        "~250 kcal | 17g protein | 48g carbs",
+        "~200 kcal | 18g protein | 32g carbs",
       ],
       why: "90 min timing. Eating closer = heavy legs.",
     },
@@ -1330,10 +1333,10 @@ const MEALS_BY_DAY = {
         "Cook keema-style: onion + tomato + ginger-garlic + garam masala + 1/2 cup peas",
         "1 cup brown rice",
         "NO dahi at night — triggers cough",
-        "AFTER: soaked pumpkin seeds + soaked almonds",
-        "~560 kcal | 33g protein | 58g carbs",
+        "AFTER: 30g soaked pumpkin seeds + 10 soaked almonds — ~240 kcal, 11g protein. Counted in the total below.",
+        "~790 kcal | 48g protein | 93g carbs — includes the after-dinner seeds + almonds",
       ],
-      why: "Your one soya day of the week — this is the only slot it appears in, as you asked. Soya chunks are ~52g protein per 100g dry, so 50g does the work of 250g paneer at a fraction of the calories, which is what keeps Thursday light before court.",
+      why: "Your one soya day of the week — this is the only slot it appears in, as you asked. Soya chunks are ~52g protein per 100g dry, so 50g gives ~26g protein — same protein as ~135g paneer for a third of the calories, which is what keeps Thursday light before court.",
     },
   ],
   4: [
@@ -1349,7 +1352,7 @@ const MEALS_BY_DAY = {
         "1 tbsp peanut butter",
         "1 tbsp ground alsi",
         "1 tsp creatine",
-        "~810 kcal | 93g carbs | 58g protein (verified — old 560 figure was wrong)",
+        "~811 kcal | 94g carbs | 58g protein | 25g fat",
       ],
       why: "Full fuel for heavy leg day — squats and deadlifts need maximum energy.",
     },
@@ -1360,7 +1363,7 @@ const MEALS_BY_DAY = {
         "1 scoop whey in 300ml water",
         "1 small banana or 5 dates",
         "Drink BEFORE showering",
-        "~230 kcal | 28g protein",
+        "~210 kcal | 25g protein",
       ],
       why: "Within 20 min of last set. Muscle protein synthesis peaks now.",
     },
@@ -1373,7 +1376,7 @@ const MEALS_BY_DAY = {
         "1/2 cup rajma",
         "1 capsicum + 1/2 cup sweet corn + fresh salsa",
         "Order: Burrp or The Burrito Project on Zomato — extra paneer, no sour cream",
-        "~780 kcal | 38g protein | 85g carbs",
+        "~806 kcal | 40g protein | 92g carbs",
       ],
       why: "Same bowl as Tuesday, and that's deliberate — one ordering habit, two days. Leg day earns the calories.",
     },
@@ -1386,7 +1389,7 @@ const MEALS_BY_DAY = {
         "1 capsicum + 1 carrot — sliced",
         "Peanut sauce: 1 tbsp PB + 1 tbsp soy + 1 tsp honey + lemon + chilli flakes + 2 tbsp water",
         "Sesame seeds + spring onion on top",
-        "~700 kcal | 34g protein | 63g carbs",
+        "~775 kcal | 35g protein | 68g carbs",
         "OR: Burma Burma Cyber Hub dine-in (book ahead)",
       ],
       why: "Friday leg day — you deserve something different. 15 min at home. Noodles swapped for a rice/quinoa base so it matches the rest of the week's bowls and carries more protein. No paneer? Burma Burma Cyber Hub (book ahead) or any EatFit paneer bowl on Zomato.",
@@ -1404,7 +1407,7 @@ const MEALS_BY_DAY = {
         "Squeeze of lemon + coriander on top",
         "150g dahi on side",
         "1 tsp creatine in water or milk",
-        "~690 kcal | 32g protein | 70g carbs",
+        "~700 kcal | 31g protein | 75g carbs",
       ],
       why: "Paneer up from 60g to 100g — Saturday was the weakest protein day of the week and breakfast is the easiest place to fix it. Sit down and enjoy slowly. Rest day.",
     },
@@ -1417,10 +1420,21 @@ const MEALS_BY_DAY = {
         "Greenr Cafe (Golf Course Road): Garden Veg Pizza + Pesto Spaghetti",
         "Roots Cafe (Sector 29): wood-fired pizza + shikanji",
         "Rules that stay: get some protein in, creatine taken, +500ml water",
-        "Clean fallback if you'd rather: 150g paneer bowl + salad",
-        "Typically ~800-1,000 kcal — varies, and that's fine",
+        "Skipping the cheat this week? Clean swap: 150g paneer bowl + salad",
+        "Typically ~900 kcal | 25g protein — a Greenr pizza + pasta order runs higher, closer to 1,200",
       ],
       why: "One cheat meal per week resets leptin and keeps you consistent long term. Fixed to Saturday lunch so it's a decision you don't make seven times a week.",
+    },
+    {
+      label: "17:00 Snack",
+      color: C.orange,
+      items: [
+        "10 soaked almonds",
+        "1 fruit — banana or seasonal",
+        "OR makhana if you want volume for fewer calories",
+        "~175 kcal | 4g protein | 30g carbs",
+      ],
+      why: "It was in the schedule but never in the totals. On a 1,950 kcal burn day it is not a rounding error — drop it entirely if you want Saturday back in deficit.",
     },
     {
       label: "DINNER — Toor Dal + Baingan Bharta (dal-sabzi day)",
@@ -1431,9 +1445,9 @@ const MEALS_BY_DAY = {
         "Baingan Bharta as a pure sabzi — no paneer in it",
         "Winter swap: Sarson ka Saag or Palak. Summer: Bhindi or Tori.",
         "NO dahi at night — triggers cough",
-        "AFTER: soaked pumpkin seeds + soaked almonds",
+        "AFTER: 30g soaked pumpkin seeds + 10 soaked almonds — ~240 kcal, 11g protein. Counted in the total below.",
         "Eat by 21:00",
-        "~570 kcal | 24g protein | 95g carbs",
+        "~985 kcal | 39g protein | 140g carbs — includes the after-dinner seeds + almonds",
       ],
       why: "Baingan bharta + paneer is not a dish anyone makes — it got forced in to hit a protein number and then removed. The dal portion carries it instead. Rest day, so 24g at dinner is fine; the cheat lunch already covered the calories.",
     },
@@ -1448,7 +1462,7 @@ const MEALS_BY_DAY = {
         "1 banana or 2 baby bananas",
         "1 tsp creatine mixed into yogurt",
         "Eat by 07:30-07:45 — 90 min before 9am court",
-        "~230 kcal | 17g protein | 32g carbs",
+        "~200 kcal | 18g protein | 32g carbs",
         "NO almonds or nuts — fat too slow to digest, heavy on court",
       ],
       why: "Same 90 min window as evening badminton, just earlier for morning court.",
@@ -1459,9 +1473,19 @@ const MEALS_BY_DAY = {
       items: [
         "Best: EatFit High Protein Paneer Bowl on Zomato — order within 30 min of finishing court",
         "OR home: 130g marinated paneer + 1 cup quinoa + 1/2 cup edamame (boil from frozen 3 min in salted water — NOT roasted) + 1 cucumber + 1 carrot + soy sesame sauce",
-        "~760 kcal | 43g protein | 62g carbs",
+        "~820 kcal | 45g protein | 65g carbs",
       ],
       why: "Order EatFit within 30 min of finishing court — delivery timing = perfect. No EatFit? Alternatives: (1) Home: leftover dal + rice + dahi — quick and clean. (2) Any nearby restaurant: paneer dish + roti + dahi. (3) Dhaba: dal fry + 2 rotis + salad. The poke bowl is the ideal but any protein + carb combo works post-badminton.",
+    },
+    {
+      label: "17:00 Snack",
+      color: C.orange,
+      items: [
+        "10 soaked almonds",
+        "1 fruit",
+        "~175 kcal | 4g protein | 30g carbs",
+      ],
+      why: "No evening court on Sunday, so this is optional. It was previously missing from the day total.",
     },
     {
       label: "DINNER — Moong Dal + Shimla Mirch Paneer Bhurji (dal-sabzi day)",
@@ -1472,9 +1496,9 @@ const MEALS_BY_DAY = {
         "Shimla Mirch + Paneer Bhurji with 120g paneer — a real everyday combo, year-round",
         "Winter bonus: palak or methi into the bhurji",
         "NO dahi at night — triggers cough",
-        "AFTER: soaked pumpkin seeds + soaked almonds",
+        "AFTER: 30g soaked pumpkin seeds + 10 soaked almonds — ~240 kcal, 11g protein. Counted in the total below.",
         "Eat by 21:00",
-        "~640 kcal | 36g protein | 60g carbs",
+        "~1,175 kcal | 58g protein | 113g carbs — includes the after-dinner seeds + almonds",
       ],
       why: "Moong dal at night = lightest dal, digests in 2 hrs. Paneer up to 120g — Sunday was one of the low-protein days and the bhurji is the natural place to fix it. Ragi roti = magnesium for deep sleep.",
     },
@@ -1520,7 +1544,7 @@ const VARIETY_ROTATION = [
       "Nothing to order. Edamame from the Big Basket frozen section — frozen, never roasted.",
     order:
       "Lunch: rajma + brown rice + onion + lemon + dahi. Dinner: 120g marinated paneer + rice/quinoa + edamame + cucumber + carrot + sesame soy sauce.",
-    macros: "Lunch 620 kcal | 41g protein  ·  Dinner 735 kcal | 39g protein",
+    macros: "Lunch 640 kcal | 29g protein  ·  Dinner 1,030 kcal | 52g protein",
   },
   {
     day: "Tuesday",
@@ -1531,7 +1555,7 @@ const VARIETY_ROTATION = [
       "Search Burrito Bowl Paneer. Ask: brown rice, extra paneer, no sour cream.",
     order:
       "Lunch: 120g paneer + rice + rajma + capsicum + corn + salsa. Dinner: 200g tofu + quinoa + broccoli + beans + peanut-tahini sauce.",
-    macros: "Lunch 780 kcal | 38g protein  ·  Dinner 610 kcal | 39g protein",
+    macros: "Lunch 806 kcal | 40g protein  ·  Dinner 1,010 kcal | 62g protein",
   },
   {
     day: "Wednesday",
@@ -1541,7 +1565,7 @@ const VARIETY_ROTATION = [
     zomato: "Same burrito order as Tuesday lunch — no sour cream, no hung curd.",
     order:
       "Lunch: chole + brown rice + 100g paneer + onion + dahi. Dinner: 120g paneer burrito bowl + rajma + corn + salsa.",
-    macros: "Lunch 860 kcal | 45g protein  ·  Dinner 780 kcal | 38g protein",
+    macros: "Lunch 920 kcal | 46g protein  ·  Dinner 806 kcal | 40g protein",
   },
   {
     day: "Thursday",
@@ -1551,7 +1575,7 @@ const VARIETY_ROTATION = [
     zomato: "No order. Soya chunks keep in the pantry — this is the one soya day.",
     order:
       "Lunch: 2 rotis + masoor dal + 120g paneer bhurji. Dinner: 50g dry soya chunks minced keema-style + peas + brown rice.",
-    macros: "Lunch 760 kcal | 49g protein  ·  Dinner 560 kcal | 33g protein",
+    macros: "Lunch 1,060 kcal | 56g protein  ·  Dinner 790 kcal | 48g protein",
   },
   {
     day: "Friday",
@@ -1562,7 +1586,7 @@ const VARIETY_ROTATION = [
     zomato: "Burma Burma Cyber Hub — dine-in only. Khao Suey + Shan Noodles.",
     order:
       "Lunch: same Mexican bowl as Tuesday. Dinner: 120g paneer + rice/quinoa base + capsicum + carrot + peanut sauce.",
-    macros: "Lunch 780 kcal | 38g protein  ·  Dinner 700 kcal | 34g protein",
+    macros: "Lunch 806 kcal | 40g protein  ·  Dinner 775 kcal | 35g protein",
   },
   {
     day: "Saturday",
@@ -1573,7 +1597,7 @@ const VARIETY_ROTATION = [
     zomato: "Greenr on Zomato: Garden Veg Pizza + Pesto Spaghetti.",
     order:
       "Lunch: whatever you're craving — this is the cheat. Dinner: 2 ragi rotis + 1.5 cups toor dal + baingan bharta as a pure sabzi.",
-    macros: "Cheat lunch ~800-1,000 kcal  ·  Dinner 570 kcal | 24g protein",
+    macros: "Cheat lunch ~900 kcal | 25g protein  ·  Dinner 985 kcal | 39g protein",
   },
   {
     day: "Sunday",
@@ -1584,7 +1608,7 @@ const VARIETY_ROTATION = [
       "EatFit: any High Protein Paneer Bowl 500+ kcal. Order within 30 min of finishing badminton.",
     order:
       "Lunch: 130g marinated paneer + quinoa + edamame + cucumber + carrot. Dinner: 2 ragi rotis + moong dal + 120g paneer bhurji with capsicum.",
-    macros: "Lunch 760 kcal | 43g protein  ·  Dinner 640 kcal | 36g protein",
+    macros: "Lunch 820 kcal | 45g protein  ·  Dinner 1,175 kcal | 58g protein",
   },
 ];
 
@@ -1593,21 +1617,21 @@ const DAL_ROTATION = [
   {
     day: "Thu lunch",
     dal: "Masoor Dal",
-    protein: "~26g/cup",
+    protein: "~18g per cooked cup",
     why: "Fastest dal you have — 15 min, no soaking. Pairs with the paneer bhurji.",
     cook: "No soak. 2 whistles. Mustard seeds + curry leaves + tomato.",
   },
   {
     day: "Sat dinner",
     dal: "Toor Dal — 1.5 cups",
-    protein: "~22g/cup",
+    protein: "~11g per cooked cup",
     why: "Bumped to 1.5 cups because the baingan bharta beside it carries no protein. Rest day, classic comfort.",
     cook: "3 whistles. Ghee + jeera + hing + tomato + amchur.",
   },
   {
     day: "Sun dinner",
     dal: "Moong Dal",
-    protein: "~24g/cup",
+    protein: "~14g per cooked cup",
     why: "Lightest dal, digests in 2 hrs — the right one before an early Sunday night.",
     cook: "No soak. 2 whistles. Jeera + haldi + ghee tadka at the end.",
   },
@@ -1647,41 +1671,48 @@ const SABZI_ROTATION = [
   },
 ];
 
+// Intake vs measured burn. The week currently nets about ZERO — read the
+// Saturday row before changing anything else.
 const CALORIE_CYCLING = [
   {
     day: "Gym Day (Mon)",
-    cal: "2,395 kcal",
-    note: "Real burn ~2,700-3,000. Still a deficit.",
-  },
-  {
-    day: "Gym Day (Fri)",
-    cal: "2,520 kcal",
-    note: "Leg day — biggest single session of the week.",
+    cal: "2,690 kcal",
+    note: "Burn ~2,850. Deficit ~160.",
   },
   {
     day: "Gym + Badminton (Tue)",
-    cal: "2,680 kcal",
-    note: "Double session. Burn runs 3,000-3,500.",
+    cal: "3,037 kcal",
+    note: "Burn ~3,200. Deficit ~165. Highest intake day and it earns it.",
   },
   {
     day: "Gym + Badminton (Wed)",
-    cal: "2,930 kcal",
-    note: "Highest intake day, and the highest burn day. Near maintenance, by design.",
+    cal: "2,946 kcal",
+    note: "Burn ~3,200. Deficit ~255 — the best day of the week.",
   },
   {
     day: "Badminton Only (Thu)",
-    cal: "1,850 kcal",
-    note: "Light breakfast, no post-workout shake.",
+    cal: "2,410 kcal",
+    note: "Burn ~2,450. Deficit ~40 — effectively maintenance.",
+  },
+  {
+    day: "Gym Day (Fri)",
+    cal: "2,601 kcal",
+    note: "Burn ~2,900. Deficit ~300. Leg day.",
   },
   {
     day: "Full Rest (Sat)",
-    cal: "~2,300 kcal",
-    note: "Includes the weekly cheat lunch. Burn ~1,900-2,000 — this is the one day near maintenance without training.",
+    cal: "2,760 kcal",
+    note: "Burn ~1,950. SURPLUS ~810 — cheat lunch on top of a full day of food, on the one day you do not train.",
   },
   {
     day: "Morning Badminton (Sun)",
-    cal: "1,830 kcal",
-    note: "Light pre-court breakfast. Bigger post-badminton lunch.",
+    cal: "2,370 kcal",
+    note: "Burn ~2,400. Break-even.",
+  },
+  {
+    day: "WEEK",
+    cal: "18,814 kcal in / 18,950 out",
+    note: "Net ~136 kcal deficit for the whole week — about 20 g of fat. Fixing Saturday is worth more than every other change combined.",
   },
 ];
 
@@ -1774,12 +1805,12 @@ const WEEKLY_TARGETS = [
   },
   {
     metric: "Protein daily",
-    target: "121-189g by day type",
-    why: "~1.8g/kg bodyweight",
+    target: "~155g/day average (99-203g by day type)",
+    why: "1.76 g/kg at 88kg. Sat 99g and Sun 125g are the weak days.",
   },
   {
     metric: "Sleep",
-    target: "7.5 hrs (23:00-07:30)",
+    target: "8.5 hrs (23:00-07:30)",
     why: "Non-negotiable. Sleep less = more fat, less muscle",
   },
   {
@@ -1840,6 +1871,7 @@ const INGREDIENTS = [
           "Half lemon squeezed",
           "1 garlic clove — minced",
           "1/2 tsp chilli flakes (optional)",
+          "1 tsp oil for the pan",
           "Marinate 10 min, then pan fry on medium heat until golden — 5 min",
         ],
       },
@@ -1910,6 +1942,60 @@ const INGREDIENTS = [
     ],
   },
   {
+    day: "Tuesday + Friday",
+    meal: "Lunch",
+    dish: "Mexican Paneer Bowl",
+    note: "Order it (Burrp / The Burrito Project) or build it in 20 min from Monday's leftover rajma. Same bowl both days on purpose — one habit, two lunches.",
+    sections: [
+      {
+        title: "Order — say this",
+        items: [
+          "Base: brown rice",
+          "Protein: paneer, extra portion",
+          "Add: rajma or black beans, capsicum, sweet corn, fresh salsa",
+          "Skip: sour cream, queso, creamy dressings",
+          "Guacamole only in a small amount — good fat, but calorie dense",
+        ],
+      },
+      {
+        title: "Home version (20 min)",
+        items: [
+          "120g paneer — cubed, tossed in 1/2 tsp cumin + 1/2 tsp paprika + 1/2 tsp chilli + salt, pan fried in 1 tsp oil",
+          "1 cup brown rice or quinoa",
+          "1/2 cup rajma — leftover from Monday",
+          "1 capsicum diced + 1/2 cup sweet corn",
+          "Fresh salsa: 2 tomatoes + 1 small onion + green chilli + coriander + lemon + salt",
+        ],
+      },
+    ],
+  },
+  {
+    day: "Wednesday",
+    meal: "Lunch",
+    dish: "Chole Chawal Bowl",
+    note: "Soak chole overnight — no shortcut. Biggest lunch of the week, on the biggest burn day.",
+    sections: [
+      {
+        title: "Chole",
+        items: [
+          "1 cup chole — soaked overnight, 5-6 whistles with salt and a tea bag for colour",
+          "2 onions + 2 tomatoes pureed + ginger-garlic paste",
+          "1 tsp chole masala + 1/2 tsp haldi + 1/2 tsp red chilli + 1/2 tsp amchur",
+          "1 tsp oil. Simmer 10 min until it thickens.",
+        ],
+      },
+      {
+        title: "Bowl",
+        items: [
+          "1 cup brown rice",
+          "100g paneer — cubed, pan fried, tossed in at the end",
+          "Raw onion rings + lemon + green chilli + coriander",
+          "150g dahi on side — lunch, so dahi is fine",
+        ],
+      },
+    ],
+  },
+  {
     day: "Tuesday",
     meal: "Dinner",
     dish: "Tofu Buddha Bowl",
@@ -1920,6 +2006,7 @@ const INGREDIENTS = [
         items: [
           "200g firm tofu — pressed 10 min, cubed",
           "1 tbsp soy sauce + 1 garlic clove minced",
+          "1 tsp oil for the pan",
           "Pan fry on medium until edges are golden — 6-7 min",
         ],
       },
@@ -2022,7 +2109,7 @@ const INGREDIENTS = [
     day: "Thursday",
     meal: "Dinner",
     dish: "Soya Keema Bowl",
-    note: "The one soya day of the week. 50g dry soya = ~26g protein for 260 kcal — nothing else comes close on a light day.",
+    note: "The one soya day of the week. 50g dry soya = ~26g protein for ~172 kcal — nothing else comes close on a light day.",
     sections: [
       {
         title: "Soya Prep",
@@ -2047,7 +2134,7 @@ const INGREDIENTS = [
         items: [
           "1 cup brown rice",
           "NO dahi at night — triggers cough",
-          "AFTER: soaked pumpkin seeds + soaked almonds",
+          "AFTER: 30g soaked pumpkin seeds + 10 soaked almonds — about 240 kcal. It counts.",
         ],
       },
     ],
@@ -2149,6 +2236,7 @@ const INGREDIENTS = [
           "1 large baingan — roast directly on the flame until the skin chars and it collapses",
           "Peel under cold water, mash roughly",
           "Mustard seeds + 1 onion + 2 tomatoes + green chilli + garlic",
+          "1 tsp oil + salt to taste",
           "Cook 10 min until the oil separates. Coriander on top.",
           "Winter swap: Sarson ka Saag or Palak. Summer: Bhindi or Tori.",
         ],
@@ -2254,7 +2342,18 @@ const INGREDIENTS = [
 ];
 
 const GROCERY = [
-  "Paneer (900g) — Mon 120g, Tue 120g, Wed 220g, Thu 120g, Fri 240g, Sat 100g, Sun 250g. Buy twice a week, it does not keep.",
+  "Paneer (1.2kg) — Mon 120g, Tue 120g, Wed 220g, Thu 120g, Fri 240g, Sat 100g, Sun 250g = 1,170g. Buy twice a week, it does not keep.",
+  "Whey protein — 1.5 scoops x 4 gym days + 1 scoop x 4 post-workout/Thu = ~10 scoops/week",
+  "Bananas (16-18) — 2 per power shake x 4, plus post-workout, snacks, Thu and Sun breakfast",
+  "Calci+ milk (1.5L) — 300ml per power shake x 4 gym days",
+  "Rolled oats (500g) — 3 tbsp per power shake",
+  "Ground alsi (flaxseed) — 1 tbsp per power shake. Grind DRY, store in the fridge.",
+  "Creatine — 5g every single day, gym or rest",
+  "Dahi (1.5kg) — Mon/Wed lunch, Thu lunch, Sat breakfast. NEVER at dinner.",
+  "Milky Mist Skyr (6 x 150g) — Tue/Wed/Thu pre-badminton + Sunday pre-court",
+  "Pumpkin seeds (250g) — 30g soaked every night. This is ~240 kcal a night, it is not free.",
+  "Almonds (250g) — 10 soaked nightly + Thu breakfast + weekend snacks",
+  "Walnuts (150g) — 5 with lunch on rajma days + Thu breakfast",
   "Tofu firm (200g) — Tuesday dinner only",
   "Soya chunks (100g pack) — Thursday dinner ONLY. One soya day a week, that is the rule.",
   "Rajma (500g) — soak Sunday night. Monday lunch + Tue/Wed/Fri bowls.",
@@ -2278,6 +2377,14 @@ const GROCERY = [
   "Peanut butter natural (1 jar) — Tue tahini sauce + Fri peanut sauce + power shake",
   "Poha (500g) — Saturday breakfast",
   "Avocado — Sunday (optional)",
+  "Whole wheat atta — Thu lunch rotis (ragi flour covers Sat + Sun)",
+  "Honey (small jar) — poke bowl sauce Mon + Sun, peanut sauce Fri",
+  "Onions (2kg), tomatoes (1.5kg) — base for nearly every dish",
+  "Cucumbers (6), carrots (6) — poke bowls, Buddha bowl, salads",
+  "Lemons (10), garlic, ginger, green chillies, fresh coriander, curry leaves",
+  "Spring onion — Friday bowl garnish",
+  "Ghee — dal tadka, Thu/Sat/Sun",
+  "Cooking oil — 1 tsp per cooked dish, it counts toward the totals",
 ];
 
 // ─── COMPONENT ─────────────────────────────────────────────────────
@@ -2300,7 +2407,9 @@ export default function CoachDashboard() {
     fontWeight: active ? 700 : 400,
   });
 
-  const currentSchedule = SCHEDULE_TYPES[scheduleDay].data;
+  const currentSchedule = [...SCHEDULE_TYPES[scheduleDay].data].sort((a: any, b: any) =>
+    a.time.localeCompare(b.time),
+  );
   const currentMeals = (MEALS_BY_DAY as any)[mealDay] || [];
 
   return (
@@ -2951,10 +3060,10 @@ export default function CoachDashboard() {
                   marginBottom: 4,
                 }}
               >
-                Cheat Meal Guide — Any One Meal
+                Cheat Meal Guide — Saturday LUNCH
               </div>
               <div style={{ fontSize: 11, color: C.muted, marginBottom: 10 }}>
-                Breakfast, lunch, or dinner — your choice. Other two stay clean.
+                Fixed to Saturday lunch. Breakfast and dinner stay clean.
               </div>
               {CHEAT_FOODS.map((f: any, i: number) => (
                 <div
@@ -3336,7 +3445,7 @@ export default function CoachDashboard() {
               Train perfectly and eat perfectly — but sleeping 5-6 hours cuts
               results by ~40%. Target:{" "}
               <span style={{ color: C.accent, fontWeight: 700 }}>
-                23:00 to 07:30 = 7.5 hrs = 5 full sleep cycles
+                23:00 to 07:30 = 8.5 hrs
               </span>
             </div>
           </div>
